@@ -1,0 +1,11 @@
+VERSION = 1,
+option ParadiseZ.Coords  {
+	type = string, default = 9948;12631;0, 
+	page = ParadiseZ, translation = ParadiseZ_Coords,
+}
+option ParadiseZ.ShowPvETag
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_ShowPvETag,
+}
+

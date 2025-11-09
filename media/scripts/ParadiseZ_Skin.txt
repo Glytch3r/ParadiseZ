@@ -1,0 +1,13 @@
+module Skin {
+    imports { Base }
+	
+    item ScareCrow
+	{
+		DisplayCategory = ZedDmg,		
+		Type = Clothing,		
+		ClothingItem = ScareCrow,
+		BodyLocation = ZedDmg, 
+		WorldRender = FALSE,		
+		
+	}		
+}
