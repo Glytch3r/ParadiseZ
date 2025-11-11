@@ -1,0 +1,19 @@
+
+
+module ParadiseZ {
+    imports { Base }
+    /* getPlayer():getInventory():AddItem('ParadiseZ.PiggyBank') */
+	item PiggyBank
+	{
+		DisplayName	     = Piggy Bank,
+		WorldStaticModel = PiggyBank,
+		Icon	         = PiggyBank,
+        Tooltip          = Used to store Cash,
+
+        StoredCash       = 0,
+		Weight	         = 1,
+        
+	    DisplayCategory  = Material,
+		Type	         = Normal,
+	}
+}

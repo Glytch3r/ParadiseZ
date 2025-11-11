@@ -7,6 +7,7 @@
 		<m_Type>BOOL</m_Type>
 		<m_BoolValue>true</m_BoolValue>
 	</m_Conditions>
+	<m_Priority>4</m_Priority>
 
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_BlendTime>0.50</m_BlendTime>

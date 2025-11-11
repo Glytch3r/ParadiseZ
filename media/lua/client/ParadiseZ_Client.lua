@@ -12,7 +12,7 @@ function ParadiseZ.ScareCrow()
     if not isIngameState() then return end    
     local pl = getPlayer() 
     if not pl then return end   
-    isScareCrow = ParadiseZ.isScareCrow(pl)
+    local isScareCrow = ParadiseZ.isScareCrow(pl)
     if isScareCrow then
         pl:setVariable("isScareCrow", true)
         if isClient() then
@@ -25,7 +25,7 @@ function ParadiseZ.ScareCrow()
         end
     end
 end
-Events.OnWeaponSwing.Add(ParadiseZ.ScareCrow)
+--Events.OnWeaponSwing.Add(ParadiseZ.ScareCrow)
 Events.OnMiniScoreboardUpdate.Add(ParadiseZ.ScareCrow)
 Events.OnScoreboardUpdate.Add(ParadiseZ.ScareCrow)
 Events.OnClothingUpdated.Add(ParadiseZ.ScareCrow)

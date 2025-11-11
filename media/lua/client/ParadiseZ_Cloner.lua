@@ -52,7 +52,7 @@ function ParadiseZ.cloneMultipleStuff(item, int)
 	end
 end
 
-function ParadiseZ.context(player, context, items)    
+function ParadiseZ.cloner(player, context, items)    
     if string.lower(getPlayer():getAccessLevel()) == "admin"  then
         local duplicateOption = context:addOption("Cloner: ")
         local subMenu= ISContextMenu:getNew(context)
@@ -72,4 +72,4 @@ function ParadiseZ.context(player, context, items)
         end
     end
 end
-Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.context);
+Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.cloner);

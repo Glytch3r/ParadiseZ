@@ -8,4 +8,65 @@ option ParadiseZ.ShowPvETag
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ShowPvETag,
 }
+option ParadiseZ.GunUpdater
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_GunUpdater,
+}
+
+option ParadiseZ.GunVersionKey
+{
+	type = string, default = adfawfq3,
+	page = ParadiseZ, translation = ParadiseZ_GunVersionKey,
+}
+option ParadiseZ.GunTooltip
+{
+	type = string, default = Updated Paradise Server Gun,
+	page = ParadiseZ, translation = ParadiseZ_GunTooltip,
+}
+
+option ParadiseZ.PerkModifierShotgun
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.001,
+	page = ParadiseZ, translation = ParadiseZ_PerkModifierShotgun,
+}
+option ParadiseZ.MinAngleShotgun
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.99,
+	page = ParadiseZ, translation = ParadiseZ_MinAngleShotgun,
+}
+
+
+option ParadiseZ.PerkModifierRifle
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.0005,
+	page = ParadiseZ, translation = ParadiseZ_PerkModifierRifle,
+}
+option ParadiseZ.MinAngleRifle
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.999,
+	page = ParadiseZ, translation = ParadiseZ_MinAngleRifle,
+}
+
+
+option ParadiseZ.PerkModifierPistol
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.0005,
+	page = ParadiseZ, translation = ParadiseZ_PerkModifierPistol,
+}
+option ParadiseZ.MinAnglePistol
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.999,
+	page = ParadiseZ, translation = ParadiseZ_MinAnglePistol,
+}
+
+
+
+
+
+
+
+
+
+
 

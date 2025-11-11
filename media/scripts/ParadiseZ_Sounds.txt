@@ -6,7 +6,7 @@ module Base
     {
         category = UI,
         clip {
-            file = media/sound/ParadiseZ_Intro_1.ogg, 
+            file = media/sound/ParadiseZ_Intro_2.ogg, 
             distanceMax = 1500, 
             is3D = true, 
             volume = 0.40, 
@@ -26,6 +26,18 @@ module Base
         } 
     }
 
+    sound  ParadiseZ_Intro_2 
+    { 
+        category = UI, 
+        clip {
+            file = media/sound/ParadiseZ_Intro_2.ogg, 
+            distanceMax = 80, 
+            is3D = true,
+            volume = 0.5,
+            maxGain = 1, 
+            maxInstancesPerEmitter = 1, 
+        } 
+    }
 
 
 

@@ -1,0 +1,14 @@
+
+
+module Base {
+    imports { Base }
+
+	model PiggyBank
+	{
+		mesh = WorldItems/Aluminum,
+		texture = WorldItems/PiggyBank,
+		scale = 1,
+	}
+
+
+}

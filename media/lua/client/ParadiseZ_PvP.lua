@@ -1,25 +1,4 @@
-----------------------------------------------------------------
------  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
------ █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
------ █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
------  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
-----------------------------------------------------------------
---                                                            --
---   Project Zomboid Modding Commissions                      --
---   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
---                                                            --
---   ▫ Discord  ꞉   glytch3r                                  --
---   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
---   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
---   ▫ Github   ꞉   https://github.com/Glytch3r               --
---                                                            --
-----------------------------------------------------------------
------ ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
------ █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
------ ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
------  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
-----------------------------------------------------------------
-
+--[[ 
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.getLastCoord()
@@ -104,7 +83,7 @@ end
 function ParadiseZ.doRebound(pl)
     pl = pl or getPlayer()
     if not pl then return false end
-    if not ParadiseZ.isZoneEnabled(pl) or ParadiseZ.isOutsideZone(pl) then return end
+    if not ParadiseZ.isZoneEnabled(pl) then return end
 
     local x, y, z = ParadiseZ.getReboundXYZ(pl)
     if not (x and y and z) then return false end
@@ -208,76 +187,17 @@ function ParadiseZ.carTp(player, vehicle, vx, vy, vz)
 end
 
 -----------------------            ---------------------------
-function ParadiseZ.initPvP()
-    if getActivatedMods():contains("phunzones") then
-        if not PhunZones then return end
 
-        getServerOptions():getOptionByName("ShowSafety"):setValue(true)
-        getServerOptions():getOptionByName("SafetySystem"):setValue(true)
 
-        getCore():saveOptions();
-        -----------------------            ---------------------------
-        
-        function PhunZones:portPlayer()
-            local pl = getPlayer() 
-            if string.lower(pl:getAccessLevel()) == "admin" then
-                return 
-            end
-            return ParadiseZ.doRebound(pl)
-        end
-
-        function PhunZones:portVehicle(player, vehicle, x, y, z)
-            if string.lower(player:getAccessLevel()) == "admin" then
-                return 
-            end
-            return ParadiseZ.carTp(player, vehicle, x, y, z)
-        end
-
-        -----------------------            ---------------------------
-        
-
-        function PhunZones:ISSafetyPrerender(player)
-            return
-        end
-    
-        function PhunZones:updatePlayerUI(playerObj, info, existing)
-            local zone = info or playerObj:getModData().PhunZones or {}
-            local existing = existing or {}
-            PhunZones.ui.welcome.OnOpenPanel(playerObj, zone)
-            if self.settings.Widget then
-                local panel = PhunZones.ui.widget.OnOpenPanel(playerObj)
-                if panel then
-                    local data = {
-                        zone = {
-                            title = zone.title or nil,
-                            subtitle = zone.subtitle or nil
-                        }
-                    }
-                    panel:setData(data)
-                end
-            end
-        end
-        -----------------------            ---------------------------
-        Events[PhunZones.events.OnPhunZonesPlayerLocationChanged].Add(function(pl, zone, oldZone)
-            if not isIngameState() then return end
-            local isRestrict = ParadiseZ.isPvE(pl)
-            local isKoS = zone.pvp or ParadiseZ.isKos(pl)
-            if getCore():getDebug() then 
-                local str = 'isRestrict '..tostring(isRestrict)..'\n isKoS '..tostring(isKoS)
-                print(str)
-                pl:addLineChatElement(str)
-            end
-            if isKoS and isRestrict then
-                local adm = string.lower(pl:getAccessLevel()) == "admin" 
-                if not adm then
-                    ParadiseZ.doRebound(pl)
-                end
-            end
-        end)
-        
+function ParadiseZ.isNonPvpZone(pl)
+    pl = pl or getPlayer()
+    if not pl then return false end
+    local x, y = pl:getX(), pl:getY()
+    if x and y then
+        return NonPvpZone.getNonPvpZone(x, y)
     end
+    return false
 end
-Events.OnCreatePlayer.Add(ParadiseZ.initPvP)
 
 function ParadiseZ.isKos(pl)
     pl = pl or getPlayer()
@@ -308,46 +228,76 @@ function ParadiseZ.isZoneEnabled(pl)
     return pz.enabled == true
 end
 
-
 function ParadiseZ.pvpMode(pl)
     if not isIngameState() then return end
+    pl = pl or getPlayer()
+    if not pl then return end
+
     local plNum = pl:getPlayerNum()
     local data = getPlayerData(plNum)
     if not data then return end
 
+
+
+
     local safe = pl:getSafety()
+
     local isEnabled = safe:isEnabled()
     local isKos = ParadiseZ.isKos(pl)
     local isPvE = ParadiseZ.isPvE(pl)
     local isVisible = data.safetyUI:getIsVisible()
-    local adm = string.lower(pl:getAccessLevel()) == "admin" 
-                
+
+    local isOutsideZone = ParadiseZ.isOutsideZone()
+
     if isPvE then
         if isVisible then
             data.safetyUI:setVisible(false)
             data.safetyUI:removeFromUIManager()
         end
-        
-        if isEnabled then 
-            safe:toggleSafety()
+        if not isEnabled then
+            safe:setEnabled(true)
         end
-        return
-    end
-    
-    if not isVisible then
-        data.safetyUI:setVisible(true)
-        data.safetyUI:addToUIManager()
-    end
+    else
+        if isVisible then
+            data.safetyUI:setVisible(true)
+            data.safetyUI:addToUIManager()
 
-    if not ParadiseZ.isZoneEnabled(pl) or ParadiseZ.isOutsideZone(pl) then return end
+        end
+    end
     
-    if isKos ~= isEnabled then
-        safe:toggleSafety()
+    
+    if not isOutsideZone then
+        if isKos and isEnabled then
+            safe:setEnabled(false)
+        elseif (not isKos) and not isEnabled then
+            safe:setEnabled(true)
+        end
     end
 end
-
 Events.OnPlayerUpdate.Remove(ParadiseZ.pvpMode)
+
+
+
+function ISSafetyUI:onMouseUp(x, y)
+    local pl = getPlayer() 
+    local safe = pl:getSafety()
+
+    local isEnabled = safe:isEnabled()
+    local isKos = ParadiseZ.isKos(pl)
+    local isPvE = ParadiseZ.isPvE(pl)
+    local isOutsideZone = ParadiseZ.isOutsideZone()
+    if isPvE then
+        if not isEnabled then
+            self:toggleSafety()
+        end
+    end
+    if not isOutsideZone then
+        if isKos and isEnabled then
+            self:toggleSafety()
+        elseif (not isKos) and not isEnabled then
+            self:toggleSafety()
+        end
+    end
+end
 Events.OnPlayerUpdate.Add(ParadiseZ.pvpMode)
-
-
-
+ ]]

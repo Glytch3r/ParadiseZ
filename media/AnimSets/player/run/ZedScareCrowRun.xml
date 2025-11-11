@@ -2,11 +2,14 @@
 <animNode>
 	<m_Name>ZedScareCrowRun</m_Name>
 	<m_AnimName>ZedScareCrowRun</m_AnimName>
+
 	<m_Conditions>
 		<m_Name>isScareCrow</m_Name>
 		<m_Type>BOOL</m_Type>
 		<m_BoolValue>true</m_BoolValue>
 	</m_Conditions>
+	<m_Priority>4</m_Priority>
+
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SpeedScale>1.04</m_SpeedScale>
 	<m_BlendTime>0.35</m_BlendTime>
