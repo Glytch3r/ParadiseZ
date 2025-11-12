@@ -1,4 +1,20 @@
 VERSION = 1,
+
+
+option ParadiseZ.pvpStaggerChance
+{
+	type = double,	 min = 0.00,  max = 100,  default = 34
+	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
+}
+
+
+
+option ParadiseZ.pvpDmgMult
+{
+	type = double,	 min = 0.00,  max = 100,  default = 1.6,
+	page = ParadiseZ, translation = ParadiseZ_pvpDmgMult,
+}
+
 option ParadiseZ.Coords  {
 	type = string, default = 9948;12631;0, 
 	page = ParadiseZ, translation = ParadiseZ_Coords,

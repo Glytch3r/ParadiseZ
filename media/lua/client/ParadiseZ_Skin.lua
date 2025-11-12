@@ -154,14 +154,11 @@ function ParadiseZ.crow(bool)
     bool = bool or true
     local pl = getPlayer() 
     local inv = pl:getInventory() 
-    pl:getModData()['isScareCrow'] = false
     ParadiseZ.clear()
     if bool == true then
         local fType = 'Skin.ScareCrow'
-        pl:getModData()['isScareCrow'] = true
         ParadiseZ.wearFit(pl, fType)
     else
-        pl:getModData()['isScareCrow'] = false
         ParadiseZ.clear()
     end
     triggerEvent("OnClothingUpdated", pl)

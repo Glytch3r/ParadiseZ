@@ -9,7 +9,7 @@ ParadiseZ.ZoneData = {
         y2 = 14999,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Louisville"] = {
@@ -20,7 +20,7 @@ ParadiseZ.ZoneData = {
         y2 = 3899,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["West Point"] = {
@@ -31,7 +31,7 @@ ParadiseZ.ZoneData = {
         y2 = 7499,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["MarchRidge"] = {
@@ -42,7 +42,7 @@ ParadiseZ.ZoneData = {
         y2 = 13199,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Muldraugh"] = {
@@ -53,7 +53,7 @@ ParadiseZ.ZoneData = {
         y2 = 10700,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Rosewood"] = {
@@ -64,7 +64,7 @@ ParadiseZ.ZoneData = {
         y2 = 12299,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Riverside"] = {
@@ -75,7 +75,7 @@ ParadiseZ.ZoneData = {
         y2 = 5699,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Bedford Falls"] = {
@@ -86,7 +86,7 @@ ParadiseZ.ZoneData = {
         y2 = 13200,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Fort Redstone"] = {
@@ -97,7 +97,7 @@ ParadiseZ.ZoneData = {
         y2 = 12299,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Lake Ivy Township"] = {
@@ -108,7 +108,7 @@ ParadiseZ.ZoneData = {
         y2 = 10499,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Greenport"] = {
@@ -119,7 +119,7 @@ ParadiseZ.ZoneData = {
         y2 = 7799,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Shipping Port"] = {
@@ -130,7 +130,7 @@ ParadiseZ.ZoneData = {
         y2 = 5000,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Homepie"] = {
@@ -141,7 +141,7 @@ ParadiseZ.ZoneData = {
         y2 = 8399,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },
     ["Hartburg"] = {
@@ -152,7 +152,7 @@ ParadiseZ.ZoneData = {
         y2 = 11696,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },  
     ["Overlook Hotel"] = {
@@ -163,7 +163,7 @@ ParadiseZ.ZoneData = {
         y2 = 6599,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },  
     ["Monmouth County"] = {
@@ -174,7 +174,7 @@ ParadiseZ.ZoneData = {
         y2 = 8999,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },  
     ["International Airport"] = {
@@ -185,7 +185,7 @@ ParadiseZ.ZoneData = {
         y2 = 4796,
         isPvP = true,
         isPvE = false,
-        isLock = false,
+        isSafe = false,
         isBlocked = false,
     },  
 }
