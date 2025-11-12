@@ -1,4 +1,4 @@
-
+--[[ 
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
@@ -12,9 +12,7 @@ function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
     if instanceof(char, 'IsoZombie') or instanceof(targ, 'IsoZombie') then
         isAvoid = false
     end    
---[[     if zone1 ~= zone2 then 
-        bool = false
-    end    ]]
+
     local dmg= dmg * SandboxVars.ParadiseZ.pvpDmgMult or 1.6
     targ:setAvoidDamage(bool)
     if not isAvoid then
@@ -51,3 +49,4 @@ end
 
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.AvoidDmg)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.AvoidDmg)
+ ]]

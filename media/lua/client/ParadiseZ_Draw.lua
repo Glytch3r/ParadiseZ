@@ -107,9 +107,9 @@ function ParadiseZ.doDrawZone()
     end
 
     local msg = ParadiseZ.getCurrentZoneName(pl)
-    getTextManager():DrawString(UIFont.NewSmall, 68, 87, msg, color.r, color.g, color.b, alpha)
+    getTextManager():DrawString(UIFont.NewSmall, 68, 100, msg, color.r, color.g, color.b, alpha)
     if texture then
-        UIManager.DrawTexture(texture, 68, 50, 32, 32, 0.8)
+        UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
 end
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
