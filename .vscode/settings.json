@@ -27,7 +27,17 @@
         "pickerGroup.foreground": "#2f93e0",
         "list.activeSelectionBackground": "#2286d34d",
         "panelTitle.activeBorder": "#2f93e0",
-        "activityBar.activeBorder": "#2286d3"
+        "activityBar.activeBorder": "#2286d3",
+        "statusBarItem.remoteBackground": "#2f93e0",
+        "statusBarItem.remoteForeground": "#ffffff",
+        "statusBar.background": "#2286d3",
+        "statusBar.foreground": "#ffffff",
+        "statusBar.border": "#2286d3",
+        "statusBar.debuggingBackground": "#2286d3",
+        "statusBar.debuggingForeground": "#ffffff",
+        "statusBar.debuggingBorder": "#2286d3",
+        "activityBarBadge.foreground": "#ffffff",
+        "activityBarBadge.background": "#2286d3"
     },
     "projectColors.mainColor": "#2286d3",
     "window.title": "ParadiseZ",

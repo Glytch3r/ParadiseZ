@@ -62,48 +62,45 @@ end
 function ParadiseZ.isRegularZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
-    local isPvpZone = ParadiseZ.isPvpZone(targ)
+    local isKosZone = ParadiseZ.isKosZone(targ)
     local isPveZone = ParadiseZ.isPveZone(targ)
     local isOutsideZone = ParadiseZ.isOutsideZone(targ)    
 
     if isOutsideZone then
-        return false 
-    end
-    if not ParadiseZ.isZoneEnabled(pl) then
-        return false 
-    end
-    if isPvpZone ~= isPveZone then
+        return false     
+    elseif (isKosZone and isPveZone) or (not isKosZone and not isPveZone) then   
+        return true
+    elseif (isKosZone and not isPveZone) or (isPveZone and not isKosZone) then
         return false
     end
-    if not isPvpZone and not isPveZone then
-        return false
-    end
-  
     return true
 end
 
 function ParadiseZ.isPveZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
-    local x, y = targ:getX(), targ:getY()
-    if x and y and NonPvpZone.getNonPvpZone(x, y) then
-        return true
+    if SandboxVars.ParadiseZ.VanillaNonPvpZone then
+        local x, y = targ:getX(), targ:getY()
+        if x and y and NonPvpZone.getNonPvpZone(x, y) then
+            return true
+        end
     end
+
     local zoneName = ParadiseZ.getCurrentZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
-    return zone.isPvE == true and not zone.isPvP
+    return zone.isPvE == true and not zone.isKos
 end
 
-function ParadiseZ.isPvpZone(pl)
+function ParadiseZ.isKosZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getCurrentZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
-    return zone.isPvP == true and not zone.isPvE 
+    return zone.isKos == true and not zone.isPvE 
 end
 
 
@@ -115,36 +112,39 @@ function ParadiseZ.isOutsideZone(pl)
     return zoneName == "Outside"
 end
 
-function ParadiseZ.isZoneEnabled(pl)
+
+function ParadiseZ.isZoneIsBlocked(pl)
     local targ = ParadiseZ.getPl(pl)
     local zoneName = ParadiseZ.getCurrentZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
-    return zone.isBlocked ~= true
+    return zone.isBlocked == true
 end
 
 
-function ParadiseZ.pvpMode(pl)
+function ParadiseZ.autoToggle(pl)
     if not isIngameState() then return end
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return end
-    local plNum = targ:getPlayerNum()
+    if not pl then return end
+    local plNum = pl:getPlayerNum()
     local data = getPlayerData(plNum)
     if not data then return end
-    local safe = targ:getSafety()
+    local safe = pl:getSafety()
     local isEnabled = safe:isEnabled()
-    local isPvpZone = ParadiseZ.isPvpZone(targ)
-    local isPvE = ParadiseZ.isNonPvP(targ)
-    local isOutsideZone = ParadiseZ.isOutsideZone(targ)
+
+    local isPlayerPvE = ParadiseZ.isPvE(pl)
+    local isPveZone = ParadiseZ.isPveZone(pl)
+    local isKosZone = ParadiseZ.isKosZone(pl)    
+    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+
     local isVisible = data.safetyUI:getIsVisible()
-    if isPvE then
+    if isPlayerPvE then
         if isVisible then
             data.safetyUI:setVisible(false)
             data.safetyUI:removeFromUIManager()
         end
         if not isEnabled then
-            getPlayerSafetyUI(plNum):toggleSafety()
+            ParadiseZ.doToggle(pl, true)
         end
         return
     else
@@ -153,34 +153,44 @@ function ParadiseZ.pvpMode(pl)
             data.safetyUI:addToUIManager()
         end
         if not isOutsideZone then
-            if isPvpZone and isEnabled then
-                getPlayerSafetyUI(plNum):toggleSafety()
-            elseif (not isPvpZone) and not isEnabled then
-                getPlayerSafetyUI(plNum):toggleSafety()
+            if isKosZone and isEnabled then
+                ParadiseZ.doToggle(pl, true)           
+            elseif not isKosZone and not isEnabled then
+                ParadiseZ.doToggle(pl, true)
             end
         end
     end
 end
+Events.OnPlayerUpdate.Remove(ParadiseZ.autoToggle)
+Events.OnPlayerUpdate.Add(ParadiseZ.autoToggle)
 
 function ParadiseZ.isCanToggle(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local isPvpZone = ParadiseZ.isPvpZone(targ)
-    local isNonPvP = ParadiseZ.isNonPvP(targ)
-    local isPvE = ParadiseZ.isPvE(pl)
-    local isOutsideZone = ParadiseZ.isOutsideZone(targ)
-    if not isPvE and (isPvpZone == isNonPvP or isOutsideZone) then
+    pl = pl or getPlayer()
+    
+    local isPlayerPvE = ParadiseZ.isPvE(pl)
+    local isPveZone = ParadiseZ.isPveZone(pl)
+    local isKosZone = ParadiseZ.isKosZone(pl) 
+    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    if not ParadiseZ.isZoneIsBlocked(pl) then return false end
+
+    if isPlayerPvE then return false end
+    if isPveZone then return false end
+    if isKosZone then return false end
+    if isOutsideZone then return true end
+    
+
+    if not isPvE and (isKosZone == isNonPvP or isOutsideZone) then
         return true
     end
     return false
 end
 
-function ParadiseZ.doToggle(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return end
-    local plNum = targ:getPlayerNum()
-    if getPlayerSafetyUI(plNum) and ParadiseZ.isCanToggle(targ) then
-        getPlayerSafetyUI(plNum):toggleSafety()
+function ParadiseZ.doToggle(pl, isForced)
+    pl = pl or getPlayer()
+    local plNum = pl:getPlayerNum()
+    local ui = getPlayerSafetyUI(plNum)
+    if ui and (ParadiseZ.isCanToggle(pl) or isForced) then
+        ui:toggleSafety()
     end
 end
 
@@ -192,12 +202,12 @@ function ParadiseZ.doToggle(pl)
     local plNum = targ:getPlayerNum()
     local safe = targ:getSafety()
     local isEnabled = safe:isEnabled()
-    local isPvpZone = ParadiseZ.isPvpZone(targ)
+    local isKosZone = ParadiseZ.isKosZone(targ)
     local isNonPvP = ParadiseZ.isNonPvP(targ)
     local isPvE = ParadiseZ.isNonPvP(targ)
     local isOutsideZone = ParadiseZ.isOutsideZone(targ)
     local canToggle = false
-    if not isPvE and (isPvpZone == isNonPvP) then
+    if not isPvE and (isKosZone == isNonPvP) then
         canToggle = true
     end
     if getPlayerSafetyUI(plNum) and canToggle then

@@ -64,6 +64,47 @@ end
 Events.OnCreatePlayer.Add(ParadiseZ.initPvP)
 
 
+function ParadiseZ.autoToggle(pl)
+    if not isIngameState() then return end
+    if not pl then return end
+    local plNum = pl:getPlayerNum()
+    local data = getPlayerData(plNum)
+    if not data then return end
+    local safe = pl:getSafety()
+    local isEnabled = safe:isEnabled()
+
+    local isPlayerPvE = ParadiseZ.isPvE(pl)
+    local isPveZone = ParadiseZ.isPveZone(pl)
+    local isKosZone = ParadiseZ.isKosZone(pl)    
+    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+
+    local isVisible = data.safetyUI:getIsVisible()
+    if isPlayerPvE then
+        if isVisible then
+            data.safetyUI:setVisible(false)
+            data.safetyUI:removeFromUIManager()
+        end
+        if not isEnabled then
+            ParadiseZ.doToggle(pl, true)
+        end
+        return
+    else
+        if not isVisible then
+            data.safetyUI:setVisible(true)
+            data.safetyUI:addToUIManager()
+        end
+        if not isOutsideZone then
+            if isKosZone and isEnabled then
+                ParadiseZ.doToggle(pl, true)           
+            elseif not isKosZone and not isEnabled then
+                ParadiseZ.doToggle(pl, true)
+            end
+        end
+    end
+end
+Events.OnPlayerUpdate.Remove(ParadiseZ.autoToggle)
+Events.OnPlayerUpdate.Add(ParadiseZ.autoToggle)
+
 --[[_____________________________________________________________________________________________________________________________
    ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░

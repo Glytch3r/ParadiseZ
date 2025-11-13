@@ -247,13 +247,13 @@ function ParadiseZ.shouldRebound(pl)
     if not user then return end
     local zoneName = ParadiseZ.getCurrentZoneName(user)
     if zoneName == "Outside" then return false end
-    if not ParadiseZ.isZoneEnabled(user) then
+    if not ParadiseZ.isZoneIsBlocked(user) then
         return true
     end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
 
-    if zone.isBlocked or (ParadiseZ.isPvE(pl) and zone.isPvP) then
+    if zone.isBlocked or (ParadiseZ.isPvE(pl) and zone.isKos) then
         return true
     end
     
@@ -261,8 +261,6 @@ function ParadiseZ.shouldRebound(pl)
 end
 
 function ParadiseZ.reboundHandler(pl, prev, cur)
-    print(prev.name)
-    print(cur.name)
     if pl and ParadiseZ.shouldRebound(pl) then
         ParadiseZ.doRebound(pl)
     end

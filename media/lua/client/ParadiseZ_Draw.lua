@@ -13,22 +13,22 @@ ParadiseZ.showZoneInfo = true
     if not user then return end
     local name = ParadiseZ.getCurrentZoneName(user)
     local isOutsideZone = ParadiseZ.isOutsideZone(user)
-    local isPvpZone = ParadiseZ.isPvpZone(user)
+    local isKosZone = ParadiseZ.isKosZone(user)
     local x, y = ParadiseZ.getXY(targ)
 
 
-    if ParadiseZ.isPvE(pl) or (ParadiseZ.isPveZone(pl) and ParadiseZ.isZoneEnabled(pl)) then
+    if ParadiseZ.isPvE(pl) or (ParadiseZ.isPveZone(pl) and ParadiseZ.isZoneIsBlocked(pl)) then
         LifeBarUI.hide()
         return 
     end
 
-    if ParadiseZ.isRegularZone(pl) or ((ParadiseZ.isPvpZone(pl) and ParadiseZ.isZoneEnabled(pl))) or ParadiseZ.isOutsideZone(pl)  then
+    if ParadiseZ.isRegularZone(pl) or ((ParadiseZ.isKosZone(pl) and ParadiseZ.isZoneIsBlocked(pl))) or ParadiseZ.isOutsideZone(pl)  then
         LifeBarUI.show()
     end
 
     if getCore():getDebug() then  
         targ:setHaloNote("zone name: " .. tostring(name) ..
-            "\nisPvpZone: " .. tostring(isPvpZone) ..
+            "\nisKosZone: " .. tostring(isKosZone) ..
             "\nisOutsideZone: " .. tostring(isOutsideZone) ..
             "\nX: " .. tostring(x) ..
             " - Y: " .. tostring(y), 150, 250, 150, 900)
@@ -57,9 +57,9 @@ function ParadiseZ.getDrawStr(char)
         str = "Zone"
     elseif ParadiseZ.isPveZone(pl) then
         str = "NonPvp"
-    elseif ParadiseZ.isPvpZone(pl) then
+    elseif ParadiseZ.isKosZone(pl) then
         str = "PvP"
-    elseif ParadiseZ.isZoneEnabled(pl) then
+    elseif ParadiseZ.isZoneIsBlocked(pl) then
         str = "Zone"
     end
     return str or ""

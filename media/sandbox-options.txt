@@ -8,6 +8,11 @@ option ParadiseZ.pvpStaggerChance
 }
 
 
+option ParadiseZ.VanillaNonPvpZone
+{
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_VanillaNonPvpZone,
+}
 
 option ParadiseZ.pvpDmgMult
 {
