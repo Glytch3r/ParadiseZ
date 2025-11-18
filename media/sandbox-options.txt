@@ -1,12 +1,36 @@
 VERSION = 1,
 
+option ParadiseZ.BlockedList  {
+	type = string, default =  Sample Lock;Sample Lock 2,
+	page = ParadiseZ, translation = ParadiseZ_BlockedList,
+}
+
+
+
+option ParadiseZ.ReboundSystem  {
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_ReboundSystem,
+}
+option ParadiseZ.ReboundExitsCar
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_ReboundExitsCar,
+}
+
+
+
 
 option ParadiseZ.pvpStaggerChance
 {
-	type = double,	 min = 0.00,  max = 100,  default = 34
+	type = double,	 min = 0.00,  max = 100,  default = 34,
 	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
 }
 
+option ParadiseZ.AdminOnlyZoneInfo
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_AdminOnlyZoneInfo,
+}
 
 option ParadiseZ.VanillaNonPvpZone
 {
@@ -20,21 +44,26 @@ option ParadiseZ.pvpDmgMult
 	page = ParadiseZ, translation = ParadiseZ_pvpDmgMult,
 }
 
-option ParadiseZ.Coords  {
-	type = string, default = 9948;12631;0, 
+option ParadiseZ.Coords 
+{
+	type = string, default = 11641;8324;0, 
 	page = ParadiseZ, translation = ParadiseZ_Coords,
 }
+
 option ParadiseZ.ShowPvETag
 {
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ShowPvETag,
 }
+
+
+
+
 option ParadiseZ.GunUpdater
 {
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_GunUpdater,
 }
-
 option ParadiseZ.GunVersionKey
 {
 	type = string, default = adfawfq3,
@@ -45,7 +74,6 @@ option ParadiseZ.GunTooltip
 	type = string, default = Updated Paradise Server Gun,
 	page = ParadiseZ, translation = ParadiseZ_GunTooltip,
 }
-
 option ParadiseZ.PerkModifierShotgun
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.001,
@@ -56,8 +84,6 @@ option ParadiseZ.MinAngleShotgun
 	type = double,	 min = 0.00,  max = 100,  default = 0.99,
 	page = ParadiseZ, translation = ParadiseZ_MinAngleShotgun,
 }
-
-
 option ParadiseZ.PerkModifierRifle
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.0005,
@@ -68,8 +94,6 @@ option ParadiseZ.MinAngleRifle
 	type = double,	 min = 0.00,  max = 100,  default = 0.999,
 	page = ParadiseZ, translation = ParadiseZ_MinAngleRifle,
 }
-
-
 option ParadiseZ.PerkModifierPistol
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.0005,

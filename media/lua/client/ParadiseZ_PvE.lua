@@ -28,7 +28,7 @@ function ParadiseZ.isPvE(pl)
 end
 
 -----------------------            ---------------------------
-
+--[[ 
 function ParadiseZ.hit(char, targ, wpn, dmg)
     local bool = ParadiseZ.isPvE(char) or ParadiseZ.isPvE(targ)
     if instanceof(char, 'IsoZombie') or instanceof(targ, 'IsoZombie') then
@@ -40,39 +40,59 @@ end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.hit)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.hit)
 
+ ]]
 
+-----------------------            ---------------------------
 
-function ParadiseZ.initPvP()
-    timer:Simple(3, function() 
-       
+function ParadiseZ.isCanToggle(pl)
+    pl = pl or getPlayer()
+    
+    local isPlayerPvE = ParadiseZ.isPvE(pl)
+    local isPveZone = ParadiseZ.isPveZone(pl)
+    local isKosZone = ParadiseZ.isKosZone(pl) 
+    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    if ParadiseZ.isZoneIsBlocked(pl) then return false end
+--[[ 
+    if isPlayerPvE then return false end
+    if isPveZone then return false end
+    if isKosZone then return false end
 
-        function ISSafetyUI:onMouseUp(x, y)
-            ParadiseZ.doToggle()
-        end
-
-        Events.OnKeyPressed.Remove(ISSafetyUI.onKeyPressed);
-        function ISSafetyUI.onKeyPressed(key)
-            if key == getCore():getKey("Toggle Safety") then
-                ParadiseZ.doToggle()
-            end
-        end
-        Events.OnKeyPressed.Add(ISSafetyUI.onKeyPressed);
-        
-    end)
+    if isOutsideZone then return true end
+     ]]
+    
+    return (not isPlayerPvE and (isKosZone == isPveZone or isOutsideZone)) or false
 end
 
-Events.OnCreatePlayer.Add(ParadiseZ.initPvP)
+function ParadiseZ.doToggle(pl, isForced)
+    pl = pl or getPlayer()
+    local plNum = pl:getPlayerNum()
+    local ui = getPlayerSafetyUI(plNum)
 
+    if ui and (ParadiseZ.isCanToggle(pl) or isForced) then
+        ui:toggleSafety()
+    end
+
+    if getCore():getDebug() then 
+        local isEnabled = pl:getSafety():isEnabled()
+        local msg = tostring("Safety Toggled: "..tostring(isEnabled))
+        pl:addLineChatElement(msg)	
+        print(msg)
+    end
+
+end
+
+-----------------------            ---------------------------
 
 function ParadiseZ.autoToggle(pl)
     if not isIngameState() then return end
     if not pl then return end
+    if ParadiseZ.isCanToggle(pl) then return end
+    
     local plNum = pl:getPlayerNum()
     local data = getPlayerData(plNum)
     if not data then return end
     local safe = pl:getSafety()
     local isEnabled = safe:isEnabled()
-
     local isPlayerPvE = ParadiseZ.isPvE(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isKosZone = ParadiseZ.isKosZone(pl)    

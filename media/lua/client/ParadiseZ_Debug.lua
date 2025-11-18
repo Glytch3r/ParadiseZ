@@ -1,6 +1,6 @@
 
 ParadiseZ = ParadiseZ or {}
-
+-----------------------            ---------------------------
 
 --[[ 
     ISWorldMap.ShowWorldMap(0)
@@ -10,13 +10,76 @@ ParadiseZ = ParadiseZ or {}
 	SendCommandToServer("/setaccesslevel Glytch3r admin")
 ]]
 
+
+-----------------------            ---------------------------
+function ParadiseZ.echo(var, isClip)
+	var = tostring(var)
+	local pl = getPlayer() 
+	if pl then
+		pl:addLineChatElement(var)
+	end
+	print(var)
+	if isClip then
+		Clipboard.setClipboard(var);
+	end
+end
+
+-----------------------            ---------------------------
+
 function whereami()
 	local pl = getPlayer(); if not pl then return end
-	local whereVar = math.floor(pl:getX()) ..', '.. math.floor(pl:getY()) ..', '.. math.floor(pl:getZ());
-	Clipboard.setClipboard(whereVar);
-	print('Clipboard Saved: ' ..whereVar)
-	pl:Say(tostring(whereVar))
+	local whvarereVar = math.floor(pl:getX()) ..', '.. math.floor(pl:getY()) ..', '.. math.floor(pl:getZ());
+	ParadiseZ.echo(var, true)
 end
+
+-----------------------            ---------------------------
+
+function ParadiseZ.CheckSafetyHook() 
+    local pl = getPlayer() 
+    if getCore():getDebug() then 
+        local msg = 'Safety Hooked:' .. tostring(ParadiseZ.CheckSafetyHook)
+		ParadiseZ.echo(msg, true)   
+    end
+end
+
+
+function ParadiseZ.CheckSafety()
+    local pl = getPlayer() 
+    if getCore():getDebug() then 
+        local isEnabled = pl:getSafety():isEnabled()
+        local msg = tostring("Safety Toggled: "..tostring(isEnabled))
+		ParadiseZ.echo(msg, true)   
+    end
+end
+
+function ParadiseZ.CheckCanToggle()
+    local pl = getPlayer() 
+    if getCore():getDebug() then 
+        local isCanToggle =  ParadiseZ.isCanToggle(pl)
+        local msg = tostring("Can Toggle: "..tostring(isCanToggle))
+		ParadiseZ.echo(msg, true)   
+    end
+end
+
+function ParadiseZ.CheckRebound()
+    local pl = getPlayer() 
+    if getCore():getDebug() then 
+		local rx, ry, rz = round(pl:getX()),  round(pl:getY()),  pl:getZ() or 0
+		local x, y, z = ParadiseZ.getReboundXYZ(pl, rx, ry, rz)
+		local msg = math.floor("REBOUND: "..tostring(x) ..',  '.. tostring(y) ..', '..tostring(z))
+		ParadiseZ.echo(msg, true)   
+    end
+end
+
+function ParadiseZ.CheckLife()
+    local pl = getPlayer() 
+    if getCore():getDebug() then 	
+		local msg = getPlayer():getModData()['LifePoints'] or 100
+		ParadiseZ.echo(msg, true)   
+    end
+end
+
+
 
 -----------------------            ---------------------------
 function ParadiseZ.die()
@@ -38,29 +101,83 @@ function ParadiseZ.setSprCursor(sprName)
 	getCell():setDrag(cursor, pl:getPlayerNum())
 end
 
+
+
 function ParadiseZ.addTempMarker(sq)
-	if sq == nil then sq = getPlayer():getSquare()  end
-	if sq then
-		local mark  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0, 0, true, 0.75);
-		timer:Simple(6, function()
-			mark:remove()
-			mark = nil
-		end)
-		local mark2  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0.5, 0.5, true, 0.75);
-		timer:Simple(4, function()
-			mark2:remove()
-			mark2 = nil
-		end)
-		local mark3  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 1, 1, true, 0.75);
-		timer:Simple(2, function()
-			mark3:remove()
-			mark3 = nil
-		end)
+	local pl = getPlayer() 
+	if not pl then return end
+	sq = sq or pl:getSquare() 
+
+	if sq == nil then 
+		sq = pl:getSquare() 
+	end
+	if sq then	
+		if not ParadiseZ.tempPointer then
+			ParadiseZ.tempPointer = getWorldMarkers():addPlayerHomingPoint(getPlayer(), sq:getX(), sq:getY(), "arrow_triangle", 1, 1, 1, 1, true, 20);
+			timer:Simple(5, function()
+				ParadiseZ.tempPointer:remove()
+				ParadiseZ.tempPointer = nil
+			end)
+		end
+		if not ParadiseZ.tempMark1 then
+			ParadiseZ.tempMark1  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0, 0, true, 0.75);
+			timer:Simple(5, function()
+				ParadiseZ.tempMark1:remove()
+				ParadiseZ.tempMark1 = nil
+			end)
+		end
+
+		if not ParadiseZ.tempMark2 then
+			ParadiseZ.tempMark2 = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0.5, 0.5, true, 0.75);
+			timer:Simple(3, function()
+				ParadiseZ.tempMark2:remove()
+				ParadiseZ.tempMark2 = nil
+			end)
+		end
+
+		if not ParadiseZ.tempMark3 then
+			ParadiseZ.tempMark3 = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 1, 1, true, 0.75);
+			timer:Simple(2, function()
+				ParadiseZ.tempMark3:remove()
+				ParadiseZ.tempMark3 = nil
+			end)
+		end
 	end
 end
 
+function ParadiseZ.testDmg(targ, dmg)
+    dmg = dmg or 15
+    dmg = math.min(100, dmg)
+    targ = targ or getPlayer() 
+    if not targ then return end
+    local md = targ:getModData()
+    md.LifePoints = math.max(0, md.LifePoints - dmg)
+    md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
+
+    local percent = SandboxVars.ParadiseZ.pvpStaggerChance or 34
+    if ParadiseZ.doRoll(percent) then
+        targ:setBumpType("pushedbehind")
+        targ:setVariable("BumpFall", true)
+        targ:setVariable("BumpFallType", "pushedbehind")
+    else
+        targ:setVariable("HitReaction", "Shot")
+    end
+
+    local recoverHP = dmg / 3
+    for i = 2, 6, 2 do
+        timer:Simple(i, function()
+            md.LifePoints = math.min(100, md.LifePoints + recoverHP)
+        end)
+    end
+end
 
 
+function ParadiseZ.isTempMarkerActive()
+	if ParadiseZ.isTempMarkerActive ~= nil or ParadiseZ.tempMark1 ~= nil then
+		return true
+	end
+	return false
+end
 function ParadiseZ.getCar()
 	local car = nil;
 	local pl = getPlayer();

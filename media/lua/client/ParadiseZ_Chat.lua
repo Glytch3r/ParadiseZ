@@ -50,7 +50,9 @@ function ParadiseZ.chatCmd(cmd)
 
     local dbg = getCore():getDebug()
     if cmd == "/stuck" then
-        --ISWorldObjectContextMenu.onTeleport()    
+        ParadiseZ.ReboundCount:start(pl, 10) 
+
+      --[[   --ISWorldObjectContextMenu.onTeleport()    
         local x, y, z =  ParadiseZ.parseCoords()
         if not (x and y and z) then return end
         ParadiseZ.tp(pl, x, y, z)
@@ -61,7 +63,7 @@ function ParadiseZ.chatCmd(cmd)
             pl:setVariable("BumpFallType", "pushedFront")
             pl:setBumpDone(true)
             pl:reportEvent("wasBumped")
-        end)
+        end) ]]
     elseif cmd == "/scare" then
         if dbg then
             getSoundManager():PlayWorldSound("ZombieSurprisedPlayer", pl:getSquare(), 0, 5, 5, false)
@@ -72,3 +74,68 @@ end
 Events.OnChatCmd.Remove(ParadiseZ.chatCmd)
 Events.OnChatCmd.Add(ParadiseZ.chatCmd)
 
+ParadiseZ.ReboundCount = setmetatable({}, {
+    __index = {
+        tick = 0,
+        pl = nil,
+        staggered = false,
+        inTransit = false,
+        countdown = 0,
+
+        reset = function(self)
+            self.tick = 0
+            self.pl = nil
+            self.staggered = false
+            self.inTransit = false
+            self.countdown = 0
+        end,
+
+        start = function(self, player, seconds)
+            if self.inTransit then return end
+            self.inTransit = true
+
+            player = player or getPlayer()
+            self.pl = player
+            self.countdown = seconds or 10
+            self.staggered = false
+            self.tick = 0
+
+            Events.OnTick.Add(self.handler)
+        end,
+
+        handler = function()
+            local rebound = ParadiseZ.Rebound
+            local pl = rebound.pl
+            if not pl then
+                Events.OnTick.Remove(rebound.handler)
+                rebound:reset()
+                return
+            end
+
+            rebound.tick = rebound.tick + 1
+
+            if rebound.tick % 20 == 0 then
+                if rebound.countdown > 0 then
+                    pl:addLineChatElement(tostring(rebound.countdown))
+                    rebound.countdown = rebound.countdown - 1
+                else
+                    Events.OnTick.Remove(rebound.handler)
+                    local x, y, z = ParadiseZ.parseCoords()
+                    if x and y and z then
+                        ParadiseZ.tp(pl, x, y, z)
+
+                        timer:Simple(1.5, function()
+                            pl:setBumpType("stagger")
+                            pl:setBumpFall(true)
+                            pl:setVariable("BumpFallType", "pushedFront")
+                            pl:setBumpDone(true)
+                            pl:reportEvent("wasBumped")
+                        end)
+                    end
+
+                    rebound:reset()
+                end
+            end
+        end
+    }
+})

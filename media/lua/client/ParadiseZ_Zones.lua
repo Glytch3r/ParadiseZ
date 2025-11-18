@@ -1,4 +1,24 @@
+-- client/ParadiseZ_Zones.lua
 ParadiseZ = ParadiseZ or {}
+
+function ParadiseZ.getCurrentZoneName(pl)
+    if not isIngameState() then return "Outside" end
+    local pl = ParadiseZ.getPl(pl)
+    if not pl then return "Outside" end
+    local px, py = ParadiseZ.getXY(pl)
+    if not px then return "Outside" end
+    if not ParadiseZ.ZoneData then return "Outside" end
+
+    for name, zone in pairs(ParadiseZ.ZoneData) do
+        if zone and zone.x1 and zone.y1 and zone.x2 and zone.y2 then
+            if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
+                return name
+            end
+        end
+    end
+
+    return "Outside"
+end
 
 function ParadiseZ.getPl(char)
     if not char then return getPlayer() end
@@ -16,48 +36,33 @@ function ParadiseZ.getXY(pl)
     return round(targ:getX()), round(targ:getY())
 end
 
-function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local px, py = ParadiseZ.getXY(targ)
-    if not px or not py then return false end
-    local minX, maxX = math.min(x1, x2), math.max(x1, x2)
-    local minY, maxY = math.min(y1, y2), math.max(y1, y2)
-    return px >= minX and px <= maxX and py >= minY and py <= maxY
+function ParadiseZ.getSqXY(sq)
+    if not sq then return nil, nil end
+    return round(sq:getX()), round(sq:getY())
 end
 
-function ParadiseZ.getZoneArea(name)
-    local zone = ParadiseZ.ZoneData[tostring(name)]
-    if not zone then return nil, nil, nil, nil end
-    return zone.x1, zone.y1, zone.x2, zone.y2
-end
-
+--[[ 
 function ParadiseZ.isOutSide(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return true end
-    local px, py = ParadiseZ.getXY(targ)
+    local pl = ParadiseZ.getPl(pl)
+    if not pl then return true end
+    local px, py = ParadiseZ.getXY(pl)
     if not px or not py then return true end
+    if not ParadiseZ.ZoneData then return end
     for _, zone in pairs(ParadiseZ.ZoneData) do
-        if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
+        if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then 
             return false
         end
     end
     return true
 end
-
-function ParadiseZ.getCurrentZoneName(pl)
-    if not isIngameState() then return "Outside" end
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return "Outside" end
-    local px, py = ParadiseZ.getXY(targ)
-    if not px then return "Outside" end
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
-            return name
-        end
-    end
-    return "Outside"
+ ]]
+function ParadiseZ.isOutSide(pl)
+    local pl = ParadiseZ.getPl(pl)
+    local zoneName = ParadiseZ.getCurrentZoneName(pl)
+    if zoneName == "Outside" then return true end
+    return false
 end
+
 
 function ParadiseZ.isRegularZone(pl)
     local targ = ParadiseZ.getPl(pl)
@@ -115,6 +120,7 @@ end
 
 function ParadiseZ.isZoneIsBlocked(pl)
     local targ = ParadiseZ.getPl(pl)
+    if not targ then return false end
     local zoneName = ParadiseZ.getCurrentZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
@@ -122,96 +128,3 @@ function ParadiseZ.isZoneIsBlocked(pl)
     return zone.isBlocked == true
 end
 
-
-function ParadiseZ.autoToggle(pl)
-    if not isIngameState() then return end
-    if not pl then return end
-    local plNum = pl:getPlayerNum()
-    local data = getPlayerData(plNum)
-    if not data then return end
-    local safe = pl:getSafety()
-    local isEnabled = safe:isEnabled()
-
-    local isPlayerPvE = ParadiseZ.isPvE(pl)
-    local isPveZone = ParadiseZ.isPveZone(pl)
-    local isKosZone = ParadiseZ.isKosZone(pl)    
-    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
-
-    local isVisible = data.safetyUI:getIsVisible()
-    if isPlayerPvE then
-        if isVisible then
-            data.safetyUI:setVisible(false)
-            data.safetyUI:removeFromUIManager()
-        end
-        if not isEnabled then
-            ParadiseZ.doToggle(pl, true)
-        end
-        return
-    else
-        if not isVisible then
-            data.safetyUI:setVisible(true)
-            data.safetyUI:addToUIManager()
-        end
-        if not isOutsideZone then
-            if isKosZone and isEnabled then
-                ParadiseZ.doToggle(pl, true)           
-            elseif not isKosZone and not isEnabled then
-                ParadiseZ.doToggle(pl, true)
-            end
-        end
-    end
-end
-Events.OnPlayerUpdate.Remove(ParadiseZ.autoToggle)
-Events.OnPlayerUpdate.Add(ParadiseZ.autoToggle)
-
-function ParadiseZ.isCanToggle(pl)
-    pl = pl or getPlayer()
-    
-    local isPlayerPvE = ParadiseZ.isPvE(pl)
-    local isPveZone = ParadiseZ.isPveZone(pl)
-    local isKosZone = ParadiseZ.isKosZone(pl) 
-    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
-    if not ParadiseZ.isZoneIsBlocked(pl) then return false end
-
-    if isPlayerPvE then return false end
-    if isPveZone then return false end
-    if isKosZone then return false end
-    if isOutsideZone then return true end
-    
-
-    if not isPvE and (isKosZone == isNonPvP or isOutsideZone) then
-        return true
-    end
-    return false
-end
-
-function ParadiseZ.doToggle(pl, isForced)
-    pl = pl or getPlayer()
-    local plNum = pl:getPlayerNum()
-    local ui = getPlayerSafetyUI(plNum)
-    if ui and (ParadiseZ.isCanToggle(pl) or isForced) then
-        ui:toggleSafety()
-    end
-end
-
-
---[[ 
-function ParadiseZ.doToggle(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return end
-    local plNum = targ:getPlayerNum()
-    local safe = targ:getSafety()
-    local isEnabled = safe:isEnabled()
-    local isKosZone = ParadiseZ.isKosZone(targ)
-    local isNonPvP = ParadiseZ.isNonPvP(targ)
-    local isPvE = ParadiseZ.isNonPvP(targ)
-    local isOutsideZone = ParadiseZ.isOutsideZone(targ)
-    local canToggle = false
-    if not isPvE and (isKosZone == isNonPvP) then
-        canToggle = true
-    end
-    if getPlayerSafetyUI(plNum) and canToggle then
-        getPlayerSafetyUI(plNum):toggleSafety()
-    end
-end
- ]]

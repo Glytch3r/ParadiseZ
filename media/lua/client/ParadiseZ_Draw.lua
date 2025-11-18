@@ -6,38 +6,67 @@ ParadiseZ.showZoneInfo = true
     ParadiseZ.showZoneInfo = false
  ]]
 
- function ParadiseZ.dbgZoneInfo(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return end
-    local user = targ:getUsername()
-    if not user then return end
-    local name = ParadiseZ.getCurrentZoneName(user)
-    local isOutsideZone = ParadiseZ.isOutsideZone(user)
-    local isKosZone = ParadiseZ.isKosZone(user)
-    local x, y = ParadiseZ.getXY(targ)
+ function ParadiseZ.LifeBarVisibility(pl)
+    pl = pl or getPlayer()
+    if not pl then return end
 
+    local name = ParadiseZ.getCurrentZoneName(pl)
+    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    local isKosZone = ParadiseZ.isKosZone(pl)
+    local isPveZone = ParadiseZ.isPveZone(pl)
+    local x, y = ParadiseZ.getXY(pl)
+    local isZoneIsBlocked = ParadiseZ.isZoneIsBlocked(pl)
+    local isPvpPlayer = ParadiseZ.isPvE(pl)
 
-    if ParadiseZ.isPvE(pl) or (ParadiseZ.isPveZone(pl) and ParadiseZ.isZoneIsBlocked(pl)) then
-        LifeBarUI.hide()
-        return 
+    if isPvpPlayer or (isPveZone and not isKosZone) then
+        LifeBarUI.hide()   
     end
-
-    if ParadiseZ.isRegularZone(pl) or ((ParadiseZ.isKosZone(pl) and ParadiseZ.isZoneIsBlocked(pl))) or ParadiseZ.isOutsideZone(pl)  then
+    if not isPvpPlayer and (isKosZone and not isPveZone)or isOutsideZone then
         LifeBarUI.show()
-    end
-
-    if getCore():getDebug() then  
-        targ:setHaloNote("zone name: " .. tostring(name) ..
-            "\nisKosZone: " .. tostring(isKosZone) ..
-            "\nisOutsideZone: " .. tostring(isOutsideZone) ..
-            "\nX: " .. tostring(x) ..
-            " - Y: " .. tostring(y), 150, 250, 150, 900)
     end
     
 end
+Events.OnPlayerUpdate.Remove(ParadiseZ.LifeBarVisibility)
+Events.OnPlayerUpdate.Add(ParadiseZ.LifeBarVisibility)
 
-Events.OnPlayerUpdate.Remove(ParadiseZ.dbgZoneInfo)
-Events.OnPlayerUpdate.Add(ParadiseZ.dbgZoneInfo)
+
+
+
+
+
+
+
+
+function ParadiseZ.getZoneInfo(pl)
+    pl = pl or getPlayer()
+    if not pl then return end
+
+    local name = ParadiseZ.getCurrentZoneName(pl)
+    local x, y = ParadiseZ.getXY(pl)
+    local zoneName = name
+
+    if name ~= "Outside" and ParadiseZ.isXYInZoneMargin(x, y, name) then
+        zoneName = zoneName .. " (Border)"
+    end
+
+    local info = {zoneName}
+
+    if ParadiseZ.isKosZone(pl) then
+        table.insert(info, "KosZone")
+    end
+    if ParadiseZ.isPveZone(pl) then
+        table.insert(info, "PvE")
+    end
+    if ParadiseZ.isZoneIsBlocked(pl) then
+        table.insert(info, "Blocked")
+    end
+
+    table.insert(info, "X:" .. round(x) .. "    Y:" .. round(y))
+
+    return table.concat(info, "\n")
+end
+
+
 
 
 function ParadiseZ.getDrawStr(char)
@@ -88,16 +117,16 @@ function ParadiseZ.doDrawZone()
         ['HQ'] = {r=0,g=0,b=1},
         ['NonPvp'] = {r=0,g=1,b=0},
         ['Outside'] = {r=1,g=0.4,b=0},
-        ['PvP'] = {r=1,g=0,b=0},
+        ['PvP'] = {r=0.9,g=0.2,b=0.2},
         ['Zone'] = {r=1,g=1,b=1},
     }
     
     local texture = textures[str]
     local color = colors[str] or {r=1,g=1,b=1}
-
+    local isAdm = string.lower(pl:getAccessLevel()) == "admin"
     local alpha
     if str == nil or str == "" then
-        if not isAdmin(pl) then
+        if not isAdm then
             alpha = 0
         else
             alpha = 0.1
@@ -105,9 +134,12 @@ function ParadiseZ.doDrawZone()
     else
         alpha = 0.8
     end
-
+    local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo  
     local msg = ParadiseZ.getCurrentZoneName(pl)
-    getTextManager():DrawString(UIFont.NewSmall, 68, 100, msg, color.r, color.g, color.b, alpha)
+    if isAdm or isShowInfo then
+        msg = ParadiseZ.getZoneInfo(pl)
+    end
+    getTextManager():DrawString(UIFont.Medium, 68, 100, msg, color.r, color.g, color.b, alpha)
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
