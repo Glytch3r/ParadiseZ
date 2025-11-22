@@ -12,7 +12,7 @@ function ParadiseZ.getCurrentZoneName(pl)
     for name, zone in pairs(ParadiseZ.ZoneData) do
         if zone and zone.x1 and zone.y1 and zone.x2 and zone.y2 then
             if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
-                return name
+                return tostring(name)
             end
         end
     end

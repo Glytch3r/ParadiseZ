@@ -1,8 +1,9 @@
 --ParadiseZ_Rebound.lua
 ParadiseZ = ParadiseZ or {}
-LuaEventManager.AddEvent("OnZoneCrossed")
 
 function ParadiseZ.forceExitCar()
+    if not SandboxVars.ParadiseZ.ReboundExitsCar then return end
+
     local pl = getPlayer()
     if not pl then return end
     local car = pl:getVehicle()
@@ -33,9 +34,8 @@ function ParadiseZ.tp(pl, x, y, z)
     end
 	
     if SandboxVars.ParadiseZ.ReboundSystem then
-        if SandboxVars.ParadiseZ.ReboundExitsCar then
             ParadiseZ.forceExitCar()
-        end
+        
         if luautils.stringStarts(getCore():getVersion(), "42") then
             pl:teleportTo(tonumber(x), tonumber(y), tonumber(z))
         else
@@ -54,7 +54,7 @@ end
 
 function ParadiseZ.carTp(pl, vehicle)
     if not vehicle or not player then return end
-    if SandboxVars.ParadiseZ.ReboundExitsCar then return end
+    --if SandboxVars.ParadiseZ.ReboundExitsCar then return end
 
 
     local lx, ly, lz = ParadiseZ.getZoneEdge(pl)
@@ -176,6 +176,13 @@ end
 -----------------------            ---------------------------
 
 -----------------------            ---------------------------
+function ParadiseZ.getZoneArea(name)
+    if not name then return nil end
+    local zones = ParadiseZ.Zones or {}
+    local zone = zones[name]
+    if not zone then return nil end
+    return zone.x1, zone.y1, zone.x2, zone.y2
+end
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local targ = ParadiseZ.getPl(pl)
@@ -296,12 +303,6 @@ function ParadiseZ.getClosestSafeEdge(pl)
 end
 
 -----------------------            ---------------------------
-
-function ParadiseZ.getZoneArea(name)
-    local zone = ParadiseZ.ZoneData[tostring(name)]
-    if not zone then return nil, nil, nil, nil end
-    return zone.x1, zone.y1, zone.x2, zone.y2
-end
 
 function ParadiseZ.isRestricted(sq, pl)
     pl = pl or getPlayer()

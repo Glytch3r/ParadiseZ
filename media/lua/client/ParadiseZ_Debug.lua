@@ -102,7 +102,6 @@ function ParadiseZ.setSprCursor(sprName)
 end
 
 
-
 function ParadiseZ.addTempMarker(sq)
 	local pl = getPlayer() 
 	if not pl then return end
@@ -120,7 +119,7 @@ function ParadiseZ.addTempMarker(sq)
 			end)
 		end
 		if not ParadiseZ.tempMark1 then
-			ParadiseZ.tempMark1  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0, 0, true, 0.75);
+			ParadiseZ.tempMark1  = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 1, 1, true, 0.75);
 			timer:Simple(5, function()
 				ParadiseZ.tempMark1:remove()
 				ParadiseZ.tempMark1 = nil
@@ -128,7 +127,7 @@ function ParadiseZ.addTempMarker(sq)
 		end
 
 		if not ParadiseZ.tempMark2 then
-			ParadiseZ.tempMark2 = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 0.5, 0.5, true, 0.75);
+			ParadiseZ.tempMark2 = getWorldMarkers():addGridSquareMarker("circle_center", "circle_only_highlight", sq, 1, 1 , 1, true, 0.75);
 			timer:Simple(3, function()
 				ParadiseZ.tempMark2:remove()
 				ParadiseZ.tempMark2 = nil

@@ -15,6 +15,20 @@ function ParadiseZ.getZoneNameFromSquare(sq)
     return "Outside"
 end
 
+function ParadiseZ.getZoneNameFromXY(x, y)
+    if not x or not y then return "Outside" end
+    if not ParadiseZ.ZoneData then return "Outside" end
+    for name, zone in pairs(ParadiseZ.ZoneData) do
+        if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
+            return name
+        end
+    end
+    return "Outside"
+end
+
+
+
+-----------------------            ---------------------------
 function ParadiseZ.isSameZone(pl, sq)
     pl = pl or getPlayer()
     if not sq then return false end

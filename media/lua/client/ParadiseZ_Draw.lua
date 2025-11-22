@@ -31,12 +31,6 @@ Events.OnPlayerUpdate.Add(ParadiseZ.LifeBarVisibility)
 
 
 
-
-
-
-
-
-
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
@@ -95,12 +89,24 @@ function ParadiseZ.getDrawStr(char)
    
 end
 
+function ParadiseZ.getReboundData()
+   local data = getPlayer():getModData()
+
+    local name =  data['Rebound'].name
+    if not name then return end
+
+    local X =  data['Rebound'].X
+    local Y =  data['Rebound'].y
+    local z =  data['Rebound'].z
+    if not (x and y and z) then return end
+    return "Rebound:".. tostring(name).."\nCoord:   X " ..tostring( round(x) ).. "   ,   Y " .. tostring(round(y))
+end
+
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
 
-    
 
     local str = ParadiseZ.getDrawStr(pl)
 

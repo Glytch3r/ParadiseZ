@@ -28,7 +28,7 @@ function ParadiseZ.ZedReactToScareCrow(zed)
         end
     end
 end
-Events.OnZombieUpdate.Remove(ParadiseZ.ZedReactToScareCrow)
+--Events.OnZombieUpdate.Remove(ParadiseZ.ZedReactToScareCrow)
 Events.OnZombieUpdate.Add(ParadiseZ.ZedReactToScareCrow)
 
 function ParadiseZ.moveToXYZ(zed, x, y, z)
