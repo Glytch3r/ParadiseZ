@@ -1,3 +1,4 @@
+
 require "ISUI/ISCollapsableWindow"
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneEditorWindow = ISCollapsableWindow:derive("ParadiseZ.ZoneEditorWindow")
@@ -6,6 +7,9 @@ local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local FONT_HGT_LARGE = getTextManager():getFontHeight(UIFont.Large)
 local HEADER_HGT = FONT_HGT_MEDIUM + 2 * 2
 local MARGIN = 15
+
+local TEX_ON = getTexture("media/ui/safetyOnLocked.png")
+local TEX_OFF = getTexture("media/ui/safetyOffLocked.png")
 
 function ParadiseZ.ZoneEditorWindow:initialise()
     ISCollapsableWindow.initialise(self)
@@ -19,10 +23,9 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o.resizable = true
     o.minimumWidth = 650
     o.minimumHeight = 400
-
     o.listHeaderColor = { r = 0.23, g = 0.83, b = 0.89, a = 0.3}
     o.borderColor =     { r = 0.81, g = 0.92, b = 0.84, a = 0.75}
-    o.backgroundColor = { r = 0.18, g = 0.02, b = 0.22 , a = 0.8}  --{r = 0, g = 0, b = 0.15, a = 0.8}
+    o.backgroundColor = { r = 0.18, g = 0.02, b = 0.22 , a = 0.8}
     o.buttonBorderColor = {r = 0.7, g = 0.7, b = 0.7, a = 0.5}
     o.totalResult = 0
     o.filterWidgets = {}
@@ -44,7 +47,6 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     local contentY = titleBarHgt + MARGIN
     local contentX = MARGIN
     local contentW = self.width - MARGIN * 2
-
     self.totalLabel = ISLabel:new(contentX , contentY-12, FONT_HGT_SMALL, "Total Zones: 0", 1, 1, 1, 0.8, UIFont.Small, true)
     self.totalLabel:initialise()
     self.totalLabel:instantiate()
@@ -85,6 +87,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnPoint1.internal = "POINT1"
     self.btnPoint1:initialise()
     self.btnPoint1:instantiate()
+    self.btnPoint1:setImage(TEX_OFF)
     self.btnPoint1.enable = false
     self.btnPoint1.borderColor = self.buttonBorderColor
     self:addChild(self.btnPoint1)
@@ -93,6 +96,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnToggleKos.internal = "TOGGLE_KOS"
     self.btnToggleKos:initialise()
     self.btnToggleKos:instantiate()
+    self.btnToggleKos:setImage(TEX_OFF)
     self.btnToggleKos.enable = false
     self.btnToggleKos.borderColor = self.buttonBorderColor
     self:addChild(self.btnToggleKos)
@@ -101,6 +105,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnToggleSafe.internal = "TOGGLE_SAFE"
     self.btnToggleSafe:initialise()
     self.btnToggleSafe:instantiate()
+    self.btnToggleSafe:setImage(TEX_OFF)
     self.btnToggleSafe.enable = false
     self.btnToggleSafe.borderColor = self.buttonBorderColor
     self:addChild(self.btnToggleSafe)
@@ -109,6 +114,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnReset.internal = "RESET"
     self.btnReset:initialise()
     self.btnReset:instantiate()
+    self.btnReset:setImage(TEX_OFF)
     self.btnReset.enable = false
     self.btnReset.borderColor = self.buttonBorderColor
     self:addChild(self.btnReset)
@@ -119,6 +125,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnPoint2.internal = "POINT2"
     self.btnPoint2:initialise()
     self.btnPoint2:instantiate()
+    self.btnPoint2:setImage(TEX_OFF)
     self.btnPoint2.enable = false
     self.btnPoint2.borderColor = self.buttonBorderColor
     self:addChild(self.btnPoint2)
@@ -127,6 +134,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnTogglePvE.internal = "TOGGLE_PVE"
     self.btnTogglePvE:initialise()
     self.btnTogglePvE:instantiate()
+    self.btnTogglePvE:setImage(TEX_OFF)
     self.btnTogglePvE.enable = false
     self.btnTogglePvE.borderColor = self.buttonBorderColor
     self:addChild(self.btnTogglePvE)
@@ -135,18 +143,29 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnToggleBlocked.internal = "TOGGLE_BLOCKED"
     self.btnToggleBlocked:initialise()
     self.btnToggleBlocked:instantiate()
+    self.btnToggleBlocked:setImage(TEX_OFF)
     self.btnToggleBlocked.enable = false
     self.btnToggleBlocked.borderColor = self.buttonBorderColor
     self:addChild(self.btnToggleBlocked)
-        
-    self.btnTp = ISButton:new(self.btnTogglePvE:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Teleport", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
+    
+    self.btnTp = ISButton:new(self.btnToggleBlocked:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Teleport", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
     self.btnTp.internal = "TP"
     self.btnTp:initialise()
     self.btnTp:instantiate()
+    self.btnTp:setImage(TEX_ON)
     self.btnTp.enable = false
     self.btnTp.borderColor = self.buttonBorderColor
-    self:addChild(self.btnToggleBlocked)
-
+    self:addChild(self.btnTp)
+    
+    self.btnSave = ISButton:new(self.btnTp:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Save", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
+    self.btnSave.internal = "SAVE"
+    self.btnSave:initialise()
+    self.btnSave:instantiate()
+    self.btnSave:setImage(TEX_ON)
+    self.btnSave.enable = true
+    self.btnSave.borderColor = {r = 0.3, g = 0.8, b = 0.3, a = 0.8}
+    self:addChild(self.btnSave)
+    
     local filterY = btnY2 + btnHgt + MARGIN
     
     self.filtersLabel = ISLabel:new(contentX, filterY, FONT_HGT_LARGE, "Filters", 1, 1, 1, 1, UIFont.Large, true)
@@ -201,10 +220,16 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
 end
 
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
+    if button.internal == "SAVE" then
+        ParadiseZ.saveZoneData()
+        return
+    end
+    
     local selected = self.datas.items[self.datas.selected]
     if not selected then return end
     local zone = selected.item
     local pl = getPlayer()
+    
     if button.internal == "POINT1" then
         zone.x1 = round(pl:getX())
         zone.y1 = round(pl:getY())
@@ -231,14 +256,16 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             zone.isSafe = backup.isSafe
             zone.isBlocked = backup.isBlocked
         end
+    elseif button.internal == "TOGGLE_BLOCKED" then
+        zone.isBlocked = not zone.isBlocked
     elseif button.internal == "TP" then
-       local sq =  ParadiseZ.getMidPoint(zone.x1, zone.y1, zone.x2, zone.y2)
-        if sq then
-            local sq = getCell():getOrCreateGridSquare(x, y, z) 
-            if sq then
-                ParadiseZ.tp(pl, sq:getX(), sq:getY(), 0)         
-            end   
+        local midX = math.floor((zone.x1 + zone.x2) / 2)
+        local midY = math.floor((zone.y1 + zone.y2) / 2)
+        local sq = getCell():getOrCreateGridSquare(midX, midY, 0)
+        if sq then       
+            ParadiseZ.tp(pl, midX, midY, z)
         end
+        return
     end
     self:refreshList()
 end
@@ -281,7 +308,16 @@ function ParadiseZ.ZoneEditorWindow:update()
     self.btnToggleSafe.enable = hasSelection
     self.btnToggleBlocked.enable = hasSelection
     self.btnReset.enable = hasSelection
+    self.btnTp.enable = hasSelection
     self.datas.doDrawItem = self.drawDatas
+    
+    if hasSelection then
+        local zone = self.datas.items[self.datas.selected].item
+        self.btnToggleKos:setImage(zone.isKos and TEX_ON or TEX_OFF)
+        self.btnTogglePvE:setImage(zone.isPvE and TEX_ON or TEX_OFF)
+        self.btnToggleSafe:setImage(zone.isSafe and TEX_ON or TEX_OFF)
+        self.btnToggleBlocked:setImage(zone.isBlocked and TEX_ON or TEX_OFF)
+    end
 end
 
 function ParadiseZ.ZoneEditorWindow:filterName(widget, zone)
@@ -398,9 +434,11 @@ end
 
 function ParadiseZ.ZoneEditorWindow:onEditZone(item)
     local zone = item
-    local x = (getCore():getScreenWidth() - width) / 3
-    local y = (getCore():getScreenHeight() - height) / 2
-    local modal = ISTextBox:new(x, y, 350, 400, "Edit Zone: " .. zone.name .. "\nFormat: x1,y1,x2,y2", zone.x1 .. "," .. zone.y1 .. "," .. zone.x2 .. "," .. zone.y2, self, ParadiseZ.ZoneEditorWindow.onEditConfirm, nil, zone)
+    local modalW = 350
+    local modalH = 400
+    local mx = (getCore():getScreenWidth() - modalW) / 3
+    local my = (getCore():getScreenHeight() - modalH) / 2
+    local modal = ISTextBox:new(mx, my, modalW, modalH, "Edit Zone: " .. zone.name .. "\nFormat: x1,y1,x2,y2", zone.x1 .. "," .. zone.y1 .. "," .. zone.x2 .. "," .. zone.y2, self, ParadiseZ.ZoneEditorWindow.onEditConfirm, nil, zone)
     modal:initialise()
     modal:addToUIManager()
 end
@@ -438,6 +476,3 @@ function ParadiseZ.editor(activate)
     end
 end
 
---[[ 
-ParadiseZ.editor(true)
- ]]

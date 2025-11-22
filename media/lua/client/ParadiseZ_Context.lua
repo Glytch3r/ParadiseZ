@@ -27,6 +27,12 @@ function ParadiseZ.context(plNum, context, worldobjects, test)
     if not pl or not pl:isAlive() then return end
     if string.lower(pl:getAccessLevel()) ~= "admin" then return end
 
+    local optTip = context:addOptionOnTop("Zone Editor Panel", worldobjects, function()
+        ParadiseZ.editor(true)
+        getSoundManager():playUISound("UIActivateMainMenuItem")
+        context:hideAndChildren()
+    end)
+--[[ 
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
     if not sq then return end
 
@@ -35,13 +41,9 @@ function ParadiseZ.context(plNum, context, worldobjects, test)
         local dx = math.abs(csq:getX() - sq:getX())
         local dy = math.abs(csq:getY() - sq:getY())
         if dx <= 1 and dy <= 1 then
-            local optTip = context:addOption("Zone Editor Panel", worldobjects, function()
-                ParadiseZ.editor(true)
-                getSoundManager():playUISound("UIActivateMainMenuItem")
-                context:hideAndChildren()
-            end)
+
         end
-    end
+    end ]]
 end
 
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
