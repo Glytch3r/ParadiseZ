@@ -304,6 +304,8 @@ end
 
 -----------------------            ---------------------------
 
+
+
 function ParadiseZ.isRestricted(sq, pl)
     pl = pl or getPlayer()
     if not pl then return false end

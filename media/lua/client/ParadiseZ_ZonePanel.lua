@@ -1,52 +1,6 @@
 require "ISUI/ISCollapsableWindow"
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneEditorWindow = ISCollapsableWindow:derive("ParadiseZ.ZoneEditorWindow")
-
-function ParadiseZ.saveZoneData()
-    if isClient() then
-        ModData.transmit("ParadiseZ_ZoneData")
-    else
-        local md = ModData.getOrCreate("ParadiseZ_ZoneData")
-        for k in pairs(md) do md[k] = nil end
-        for k, v in pairs(ParadiseZ.ZoneData) do
-            md[k] = v
-        end
-    end
-end
-
-function ParadiseZ.loadZoneData()
-    local gameModData = ModData.getOrCreate("ParadiseZ_ZoneData")
-    if next(gameModData) == nil then
-        for k, v in pairs(ParadiseZ.ZoneDataBackup) do
-            local zone = {}
-            for key, val in pairs(v) do
-                zone[key] = val
-            end
-            gameModData[k] = zone
-        end
-    end
-    ParadiseZ.ZoneData = gameModData
-end
-
-function ParadiseZ.recieveData(key, modData)
-    if key == "ParadiseZ_ZoneData" then
-        ParadiseZ.ZoneData = modData
-        if ParadiseZ.ZoneEditorWindow.instance then
-            ParadiseZ.ZoneEditorWindow.instance:refreshList()
-        end
-    end
-end
-
-function ParadiseZ.onGameStart()
-    ParadiseZ.loadZoneData()
-    if isClient() then
-        ModData.request("ParadiseZ_ZoneData")
-    end
-end
-Events.OnGameStart.Add(ParadiseZ.onGameStart)
-Events.OnReceiveGlobalModData.Add(ParadiseZ.recieveData)
-
-
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local FONT_HGT_LARGE = getTextManager():getFontHeight(UIFont.Large)
@@ -65,9 +19,10 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o.resizable = true
     o.minimumWidth = 650
     o.minimumHeight = 400
-    o.listHeaderColor = {r = 0.4, g = 0.4, b = 0.4, a = 0.3}
-    o.borderColor =     { r = 0.81, g = 0.92, b = 0.84, a = 1}
-    o.backgroundColor = { r = 0.18, g = 0.02, b = 0.22 , a = 0.7} 
+
+    o.listHeaderColor = { r = 0.23, g = 0.83, b = 0.89, a = 0.3}
+    o.borderColor =     { r = 0.81, g = 0.92, b = 0.84, a = 0.75}
+    o.backgroundColor = { r = 0.18, g = 0.02, b = 0.22 , a = 0.8}  --{r = 0, g = 0, b = 0.15, a = 0.8}
     o.buttonBorderColor = {r = 0.7, g = 0.7, b = 0.7, a = 0.5}
     o.totalResult = 0
     o.filterWidgets = {}
@@ -89,7 +44,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     local contentY = titleBarHgt + MARGIN
     local contentX = MARGIN
     local contentW = self.width - MARGIN * 2
-    
+
     self.totalLabel = ISLabel:new(contentX , contentY-12, FONT_HGT_SMALL, "Total Zones: 0", 1, 1, 1, 0.8, UIFont.Small, true)
     self.totalLabel:initialise()
     self.totalLabel:instantiate()
@@ -121,7 +76,6 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.datas:addColumn("isPvE", 390)
     self.datas:addColumn("isSafe", 460)
     self.datas:addColumn("isBlocked", 530)
-
     self.datas:setOnMouseDoubleClick(self, ParadiseZ.ZoneEditorWindow.onEditZone)
     self:addChild(self.datas)
     
@@ -132,9 +86,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnPoint1:initialise()
     self.btnPoint1:instantiate()
     self.btnPoint1.enable = false
---    self.btnPoint1.borderColor = self.buttonBorderColor
-    self.btnPoint1.borderColor = {r = 0.3, g = 0.7, b = 0.3, a = 0.8}
-
+    self.btnPoint1.borderColor = self.buttonBorderColor
     self:addChild(self.btnPoint1)
     
     self.btnToggleKos = ISButton:new(self.btnPoint1:getRight() + MARGIN, btnY, btnWid, btnHgt, "Toggle KOS", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
@@ -158,8 +110,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnReset:initialise()
     self.btnReset:instantiate()
     self.btnReset.enable = false
-    self.btnReset.borderColor = {r = 1, g = 0.7, b = 0.3, a = 0.8}
-    --self.btnReset.borderColor = self.buttonBorderColor
+    self.btnReset.borderColor = self.buttonBorderColor
     self:addChild(self.btnReset)
     
     local btnY2 = btnY + btnHgt + MARGIN
@@ -169,9 +120,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnPoint2:initialise()
     self.btnPoint2:instantiate()
     self.btnPoint2.enable = false
-    self.btnPoint2.borderColor = {r = 0.3, g = 0.7, b = 0.3, a = 0.8}
---    self.btnPoint2.borderColor = self.buttonBorderColor
-
+    self.btnPoint2.borderColor = self.buttonBorderColor
     self:addChild(self.btnPoint2)
     
     self.btnTogglePvE = ISButton:new(self.btnPoint2:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Toggle PvE", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
@@ -189,15 +138,15 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnToggleBlocked.enable = false
     self.btnToggleBlocked.borderColor = self.buttonBorderColor
     self:addChild(self.btnToggleBlocked)
-    
-    self.btnSave = ISButton:new(self.btnToggleBlocked:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Save to Server", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
-    self.btnSave.internal = "SAVE"
-    self.btnSave:initialise()
-    self.btnSave:instantiate()
-    self.btnSave.enable = true
-    self.btnSave.borderColor = {r = 0.3, g = 0.7, b = 1, a = 0.8}
-    self:addChild(self.btnSave)
-    
+        
+    self.btnTp = ISButton:new(self.btnTogglePvE:getRight() + MARGIN, btnY2, btnWid, btnHgt, "Teleport", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
+    self.btnTp.internal = "TP"
+    self.btnTp:initialise()
+    self.btnTp:instantiate()
+    self.btnTp.enable = false
+    self.btnTp.borderColor = self.buttonBorderColor
+    self:addChild(self.btnToggleBlocked)
+
     local filterY = btnY2 + btnHgt + MARGIN
     
     self.filtersLabel = ISLabel:new(contentX, filterY, FONT_HGT_LARGE, "Filters", 1, 1, 1, 1, UIFont.Large, true)
@@ -251,32 +200,6 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self:initList()
 end
 
-function ParadiseZ.ZoneEditorWindow:onEditZone(item)
-    local zone = item
-    local x = (getCore():getScreenWidth() - width) / 2 + 160
-    local y = (getCore():getScreenHeight() - height) / 2
-    local modal = ISTextBox:new(x, y, 350, 200, "Edit Zone: " .. zone.name .. "\nFormat: x1,y1,x2,y2", zone.x1 .. "," .. zone.y1 .. "," .. zone.x2 .. "," .. zone.y2, self, ParadiseZ.ZoneEditorWindow.onEditConfirm, nil, zone)
-    modal:initialise()
-    modal:addToUIManager()
-end
-
-function ParadiseZ.ZoneEditorWindow:onEditConfirm(button, zone)
-    if button.internal == "OK" then
-        local text = button.parent.entry:getText()
-        local coords = {}
-        for num in string.gmatch(text, "[^,]+") do
-            table.insert(coords, tonumber(num:match("^%s*(.-)%s*$")))
-        end
-        if #coords == 4 and coords[1] and coords[2] and coords[3] and coords[4] then
-            zone.x1 = coords[1]
-            zone.y1 = coords[2]
-            zone.x2 = coords[3]
-            zone.y2 = coords[4]
-            self:refreshList()
-        end
-    end
-end
-
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     if not selected then return end
@@ -308,9 +231,14 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             zone.isSafe = backup.isSafe
             zone.isBlocked = backup.isBlocked
         end
-    elseif button.internal == "SAVE" then
-        ParadiseZ.saveZoneData()
-        return
+    elseif button.internal == "TP" then
+       local sq =  ParadiseZ.getMidPoint(zone.x1, zone.y1, zone.x2, zone.y2)
+        if sq then
+            local sq = getCell():getOrCreateGridSquare(x, y, z) 
+            if sq then
+                ParadiseZ.tp(pl, sq:getX(), sq:getY(), 0)         
+            end   
+        end
     end
     self:refreshList()
 end
@@ -447,10 +375,10 @@ function ParadiseZ.ZoneEditorWindow:drawDatas(y, item, alt)
     local point2Str = zone.x2 .. "," .. zone.y2
     self:drawText(point2Str, self.columns[3].size + xoffset, y + 4, 0.8, 0.8, 0.8, a, self.font)
     
-    local kosColor = zone.isKos and {1, 0.3, 0.3} or {0.2, 0.2, 0.2}
+    local kosColor = zone.isKos and {1, 0.2, 0.1} or {0.3, 1, 0.3}
     self:drawText(tostring(zone.isKos), self.columns[4].size + xoffset, y + 4, kosColor[1], kosColor[2], kosColor[3], a, self.font)
     
-    local pveColor = zone.isPvE and {0.3, 0, 1} or {0.2, 0.2, 0.2}
+    local pveColor = zone.isPvE and {0.3, 1, 0.3} or {0.8, 0.8, 0.4}
     self:drawText(tostring(zone.isPvE), self.columns[5].size + xoffset, y + 4, pveColor[1], pveColor[2], pveColor[3], a, self.font)
     
     local safeColor = zone.isSafe and {0.3, 0.8, 1} or {0.8, 0.8, 0.8}
@@ -468,13 +396,39 @@ function ParadiseZ.ZoneEditorWindow:close()
     ParadiseZ.ZoneEditorWindow.instance = nil
 end
 
+function ParadiseZ.ZoneEditorWindow:onEditZone(item)
+    local zone = item
+    local x = (getCore():getScreenWidth() - width) / 3
+    local y = (getCore():getScreenHeight() - height) / 2
+    local modal = ISTextBox:new(x, y, 350, 400, "Edit Zone: " .. zone.name .. "\nFormat: x1,y1,x2,y2", zone.x1 .. "," .. zone.y1 .. "," .. zone.x2 .. "," .. zone.y2, self, ParadiseZ.ZoneEditorWindow.onEditConfirm, nil, zone)
+    modal:initialise()
+    modal:addToUIManager()
+end
+
+function ParadiseZ.ZoneEditorWindow:onEditConfirm(button, zone)
+    if button.internal == "OK" then
+        local text = button.parent.entry:getText()
+        local coords = {}
+        for num in string.gmatch(text, "[^,]+") do
+            table.insert(coords, tonumber(num:match("^%s*(.-)%s*$")))
+        end
+        if #coords == 4 and coords[1] and coords[2] and coords[3] and coords[4] then
+            zone.x1 = coords[1]
+            zone.y1 = coords[2]
+            zone.x2 = coords[3]
+            zone.y2 = coords[4]
+            self:refreshList()
+        end
+    end
+end
+
 function ParadiseZ.editor(activate)
     if ParadiseZ.ZoneEditorWindow.instance then
         ParadiseZ.ZoneEditorWindow.instance:removeFromUIManager()
         ParadiseZ.ZoneEditorWindow.instance = nil
     end
     if activate then
-        local width = 760
+        local width = 800
         local height = 600
         local x = (getCore():getScreenWidth() - width) / 2
         local y = (getCore():getScreenHeight() - height) / 2
@@ -483,3 +437,7 @@ function ParadiseZ.editor(activate)
         editor:addToUIManager()
     end
 end
+
+--[[ 
+ParadiseZ.editor(true)
+ ]]

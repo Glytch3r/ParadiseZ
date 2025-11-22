@@ -25,6 +25,8 @@ Commands.ParadiseZ.SyncBlockedZones = function(player, args)
 end
 
 
+
+
 Events.OnClientCommand.Add(function(module, command, player, args)
 	if Commands[module] and Commands[module][command] then
 	    Commands[module][command](player, args)
