@@ -204,7 +204,7 @@ ParadiseZ.ZoneDataBackup = {
 
 }
 
-ParadiseZ.ZoneData = ParadiseZ.ZoneData or ParadiseZ.ZoneDataBackup
+--ParadiseZ.ZoneData = ParadiseZ.ZoneData or ParadiseZ.ZoneDataBackup
 
 function ParadiseZ.parseZone(strList)
     strList = strList or SandboxVars.ParadiseZ.BlockedList
@@ -227,4 +227,4 @@ function ParadiseZ.init()
     ParadiseZ.parseZone()
 end
 Events.OnCreatePlayer.Remove(ParadiseZ.init)
-Events.OnCreatePlayer.Add(ParadiseZ.init)
+--Events.OnCreatePlayer.Add(ParadiseZ.init)
