@@ -432,18 +432,10 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.btnDelete:setImage(delete_TEX_OFF)
         end)
     elseif button.internal == "RESET" then
-        local backup = ParadiseZ.ZoneDataBackup[zone.name]
-        if backup then
-            zone.x1 = backup.x1
-            zone.y1 = backup.y1
-            zone.x2 = backup.x2
-            zone.y2 = backup.y2
-            zone.isKos = backup.isKos
-            zone.isPvE = backup.isPvE
-            zone.isSafe = backup.isSafe
-            zone.isBlocked = backup.isBlocked
-            self.shouldSync = true
-        end
+
+        ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
+        self.shouldSync = true
+
     end
     self:refreshList()
 end
