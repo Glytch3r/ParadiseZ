@@ -27,6 +27,7 @@ function ParadiseZ.context(plNum, context, worldobjects, test)
     if not pl or not pl:isAlive() then return end
 
     if string.lower(pl:getAccessLevel()) ~= "admin" then return end
+    
 
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
     if not sq then return end
@@ -35,7 +36,7 @@ function ParadiseZ.context(plNum, context, worldobjects, test)
     if not csq then return end
 
     local dist = csq:DistTo(sq:getX(), sq:getY())
-    if dist and dist <= 3 then
+    if (dist and dist <= 3) or getCore():getDebug() then
         local optTip = context:addOptionOnTop("Zone Editor Panel", worldobjects, function()
             ParadiseZ.editor(true)
             getSoundManager():playUISound("UIActivateMainMenuItem")

@@ -1,14 +1,21 @@
 --client/ParadiseZ_ClientData.lua
-
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.removeZone(key, isTransmit)
-    ParadiseZ.ZoneData[key] = nil
-    if isTransmit then
-        sendClientCommand("ParadiseZ", "removeZone", {key=key})        
+    if ParadiseZ.ZoneData and ParadiseZ.ZoneData[key] then
+        ParadiseZ.ZoneData[key] = nil
+        
+        if isTransmit then
+            ModData.transmit('ParadiseZ_ZoneData')
+        end
     end
 end
 
+function ParadiseZ.saveZoneData()
+    if ParadiseZ.ZoneData then
+        ModData.transmit('ParadiseZ_ZoneData')
+    end
+end
 
 function ParadiseZ.loadZoneData()
     local modData = ModData.getOrCreate("ParadiseZ_ZoneData")
@@ -37,28 +44,21 @@ Events.OnInitGlobalModData.Add(ParadiseZ.loadZoneData)
 function ParadiseZ.onServerCommand(module, command, args)
     if module ~= "ParadiseZ" then return end
     
-    if command == "syncZoneData" then
-        ParadiseZ.ZoneData = args.zoneData        
-   
-    elseif command == "removeZone" and args.key then
-        ParadiseZ.removeZone(args.key, false)
+    if command == "fetch" and args.zoneData then        
+        cliptab(args.zoneData)
+        "fetch"
     end
-
-
 end
+
 Events.OnServerCommand.Add(ParadiseZ.onServerCommand)
-
-function ParadiseZ.saveZoneData()
-	ModData.transmit('ParadiseZ_ZoneData')
-end
-
-
  
 function ParadiseZ.clientSync(key, data)
     if key ~= 'ParadiseZ_ZoneData' then return end
-    ParadiseZ.ZoneData = ModData.add(key, data)
-     if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
-        ParadiseZ.ZoneEditorWindow.instance:refreshList()
+    print('ParadiseZ_ZoneData recieved')
+    ParadiseZ.ZoneData = data
+    if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
+        ParadiseZ.updated = true
     end
 end
+
 Events.OnReceiveGlobalModData.Add(ParadiseZ.clientSync)

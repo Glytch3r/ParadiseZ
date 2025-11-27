@@ -19,6 +19,7 @@ Commands.ParadiseZ.speedUp = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'speedUp', {id = playerId, zedID = args.zedID})
 end
+
 Commands.ParadiseZ.SyncBlockedZones = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'SyncBlockedZones', {id = playerId, strList = args.strList })
