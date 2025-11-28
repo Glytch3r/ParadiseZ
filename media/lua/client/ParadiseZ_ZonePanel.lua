@@ -10,8 +10,8 @@ local MARGIN = 13
 
 local Blocked_TEX_OFF = getTexture("media/ui/Paradise/Blocked_off.png")
 local Blocked_TEX_ON = getTexture("media/ui/Paradise/Blocked.png")
-local isKoS_TEX_OFF = getTexture("media/ui/Paradise/isKoS_off.png")
-local isKoS_TEX_ON = getTexture("media/ui/Paradise/isKoS.png")
+local isKos_TEX_OFF = getTexture("media/ui/Paradise/isKos_off.png")
+local isKos_TEX_ON = getTexture("media/ui/Paradise/isKos.png")
 local isPvE_TEX_OFF = getTexture("media/ui/Paradise/isPvE_off.png")
 local isPvE_TEX_ON = getTexture("media/ui/Paradise/isPvE.png")
 local isSafe_TEX_OFF = getTexture("media/ui/Paradise/isSafe_off.png")
@@ -81,13 +81,13 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.datas.altBgColor = {r = 0.1, g = 0.1, b = 0.7, a = 0.3}
     self.datas.listHeaderColor = {r=0.0, g=0.0, b=0.4, a=0.1}
 
-    self.datas:addColumn("Name", 0)
-    self.datas:addColumn("Point1", 170)
-    self.datas:addColumn("Point2", 320)
-    self.datas:addColumn("isKos", 500)
-    self.datas:addColumn("isPvE", 590)
-    self.datas:addColumn("isSafe", 680)
-    self.datas:addColumn("isBlocked", 760)
+    self.datas:addColumn("Name", 4)
+    self.datas:addColumn("Point1", 185)
+    self.datas:addColumn("Point2", 355)
+    self.datas:addColumn("isKos", 510)
+    self.datas:addColumn("isPvE", 605)
+    self.datas:addColumn("isSafe", 695)
+    self.datas:addColumn("isBlocked", 790)
     self.datas:setOnMouseDoubleClick(self, ParadiseZ.ZoneEditorWindow.onEditZone)
     self:addChild(self.datas)
 
@@ -106,7 +106,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnToggleKos.internal = "TOGGLE_KOS"
     self.btnToggleKos:initialise()
     self.btnToggleKos:instantiate()
-    self.btnToggleKos:setImage(isKoS_TEX_OFF)
+    self.btnToggleKos:setImage(isKos_TEX_OFF)
     self.btnToggleKos.enable = false
     self.btnToggleKos.borderColor = self.buttonBorderColor
     self:addChild(self.btnToggleKos)
@@ -185,7 +185,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
 
 
 
-    local entryY = filterY + FONT_HGT_LARGE + 5
+    local entryY = filterY + FONT_HGT_LARGE 
     local x = contentX
     local newZoneEntryWid
     for i, column in ipairs(self.datas.columns) do
@@ -227,7 +227,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
         x = x + size
     end
 
-    local newZoneEntryWid = btnWid +42
+    local newZoneEntryWid = btnWid + 48
     local newZoneEntryWid2 = btnWid - 20
     local newZoneEntryHgt = math.max(25, FONT_HGT_SMALL + 6)
     local newZoneRowX = contentX
@@ -300,12 +300,30 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
 
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
 
-    self.btnSave = ISButton:new(self.btnDelete:getRight() + MARGIN-2, btnY2, btnWid, btnHgt, "", self, function()
-        print('ParadiseZ.saveZoneData')
-    
-        ParadiseZ.saveZoneData()
+    self.btnSave = ISButton:new(self.btnDelete:getRight() + MARGIN - 2, btnY2, btnWid, btnHgt, "", self, function()
+        print('ParadiseZ.saveZoneData')    
+        local zones = {}
+        for i = 1, #self.datas.items do
+            local entry = self.datas.items[i]
+            local z = entry.item
+            zones[entry.text] = {
+                name = entry.text,
+                x1 = z.x1,
+                y1 = z.y1,
+                x2 = z.x2,
+                y2 = z.y2,
+                isKos = z.isKos,
+                isPvE = z.isPvE,
+                isSafe = z.isSafe,
+                isBlocked = z.isBlocked,
+            }
+        end
+
+        ParadiseZ.saveZoneData(zones)
+
         self.shouldSync = false
     end)
+
     self.btnSave.internal = "SAVE"
     self.btnSave:initialise()
     self.btnSave:instantiate()
@@ -356,8 +374,8 @@ function ParadiseZ.ZoneEditorWindow:prerender()
     self.bgTexture = bg_TEX
     if self.bgTexture then
         self.bgX = (self.width / 2) - (self.bgTexture:getWidth() / 2)
-        self.bgY = 24
-        self:drawTexture(self.bgTexture, self.bgX, self.bgY, 1, 1, 1, 1, 0.3)
+        self.bgY = 25
+        self:drawTexture(self.bgTexture, self.bgX, self.bgY+20, 1, 1, 1, 1, 0.3)
     end
 end
 
@@ -498,7 +516,7 @@ function ParadiseZ.ZoneEditorWindow:update()
     if hasSelection and self.datas.items[self.datas.selected] then
         local zone = self.datas.items[self.datas.selected].item
         if zone then
-            self.btnToggleKos:setImage(zone.isKos and isKoS_TEX_ON or isKoS_TEX_OFF)
+            self.btnToggleKos:setImage(zone.isKos and isKos_TEX_ON or isKos_TEX_OFF)
             self.btnTogglePvE:setImage(zone.isPvE and isPvE_TEX_ON or isPvE_TEX_OFF)
             self.btnToggleSafe:setImage(zone.isSafe and isSafe_TEX_ON or isSafe_TEX_OFF)
             self.btnToggleBlocked:setImage(zone.isBlocked and Blocked_TEX_ON or Blocked_TEX_OFF)
@@ -778,7 +796,7 @@ function ParadiseZ.ZoneEditorWindow:onEditZone(item)
         local zone = (item and item.item) and item.item or item
         if not zone then return end
         local w = 650
-        local h = 245
+        local h = 258
         local x = (getCore():getScreenWidth() - w) / 2 + 330
         local y = (getCore():getScreenHeight() - h) / 2 - 60
         ParadiseZ.PopupPanel = ParadiseZ.ZoneEditorPopupPanel:new(x, y, w, h, zone, self)    
@@ -805,7 +823,7 @@ function ParadiseZ.editor(activate)
     end
     if activate then
         local width = 914 --1244 --800 
-        local height = 514 --700 --620
+        local height = 568 --620
         local x = (getCore():getScreenWidth() - width) / 2 -622
         local y = (getCore():getScreenHeight() - height) / 2
         local editor = ParadiseZ.ZoneEditorWindow:new(x, y, width, height)

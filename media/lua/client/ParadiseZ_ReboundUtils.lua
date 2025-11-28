@@ -104,7 +104,7 @@ function ParadiseZ.getClosestReboundPoint(origin, margin)
     if not pl then return nil, nil, nil end
     local cell = pl:getCell()
     local ox, oy, oz = origin and origin:getX() or pl:getX(), origin and origin:getY() or pl:getY(), origin and origin:getZ() or pl:getZ()
-    local originZone = ParadiseZ.getZoneNameFromSquare(origin)
+    local originZone = ParadiseZ.getZoneName(origin)
     local rad = 30
     local maxRad = 6000000
     
@@ -117,7 +117,7 @@ function ParadiseZ.getClosestReboundPoint(origin, margin)
                     if not ParadiseZ.isSameZone(pl, testSq) then                             
                         local dx, dy = testSq:getX() - ox, testSq:getY() - oy
                         local dist = math.sqrt(dx*dx + dy*dy)
-                        local zoneName = ParadiseZ.getZoneNameFromSquare(testSq)
+                        local zoneName = ParadiseZ.getZoneName(testSq)
                         if zoneName and dist >= margin and (ParadiseZ.isOutsideSq(testSq) or (not ParadiseZ.ZoneData[zoneName] or not ParadiseZ.ZoneData[zoneName].isBlocked)) then
                             return testSq:getX(), testSq:getY(), testSq:getZ()
                         end
@@ -153,7 +153,7 @@ function ParadiseZ.findReboundPoint(pl, originSq, outward)
     local px, py = ParadiseZ.getSqXY(originSq)
     if not px then return nil end
     local pz = originSq:getZ()
-    local zoneName = ParadiseZ.getCurrentZoneName(pl)
+    local zoneName = ParadiseZ.getZoneName(pl)
     if not zoneName or zoneName == "Outside" then return nil end
 
     local edgeX, edgeY, edgeZ = ParadiseZ.getZoneEdge(pl, zoneName)
@@ -175,62 +175,6 @@ end
 
 -----------------------            ---------------------------
 
------------------------            ---------------------------
-function ParadiseZ.getZoneArea(name)
-    if not name then return nil end
-    local zones = ParadiseZ.Zones or {}
-    local zone = zones[name]
-    if not zone then return nil end
-    return zone.x1, zone.y1, zone.x2, zone.y2
-end
-
-function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local px, py = ParadiseZ.getXY(targ)
-    if not px or not py then return false end
-    local minX, maxX = math.min(x1, x2), math.max(x1, x2)
-    local minY, maxY = math.min(y1, y2), math.max(y1, y2)
-    return px >= minX and px <= maxX and py >= minY and py <= maxY
-end
------------------------    margin*        ---------------------------
-
-function ParadiseZ.isXYInsideZone(x, y, name)
-    local pl = getPlayer() 
-    name = name or ParadiseZ.getCurrentZoneName(pl)
-    if not x or not y then 
-        x , y = ParadiseZ.getXY(pl)
-    end
-    local zone = ParadiseZ.ZoneData[name]
-    if not zone then return false end
-    return x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2
-end
-function ParadiseZ.isXYInZoneMargin(x, y, name)
-    name = name or ParadiseZ.getCurrentZoneName(getPlayer())
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    if x < z.x1 or x > z.x2 or y < z.y1 or y > z.y2 then
-        return false
-    end
-    if x <= z.x1 + 2 then return true end
-    if x >= z.x2 - 2 then return true end
-    if y <= z.y1 + 2 then return true end
-    if y >= z.y2 - 2 then return true end
-    return false
-end
-function ParadiseZ.isXYInZoneArea(x, y, name)
-    name = name or ParadiseZ.getCurrentZoneName(getPlayer())
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    if x < z.x1 or x > z.x2 or y < z.y1 or y > z.y2 then
-        return false
-    end
-    if x <= z.x1 + 2 then return false end
-    if x >= z.x2 - 2 then return false end
-    if y <= z.y1 + 2 then return false end
-    if y >= z.y2 - 2 then return false end
-    return true
-end
 -----------------------            ---------------------------
 function ParadiseZ.getClosestSafeZone(pl)
     pl = pl or getPlayer()
@@ -304,28 +248,45 @@ end
 
 -----------------------            ---------------------------
 
-
-
-function ParadiseZ.isRestricted(sq, pl)
-    pl = pl or getPlayer()
-    if not pl then return false end
-    sq = sq or pl:getCurrentSquare()
-    if not sq then return false end
-    if ParadiseZ.isOutsideSq(sq) then return false end
-
-    local x, y = sq:getX(), sq:getY()
-    local name = ParadiseZ.getZoneNameFromSquare(sq)
-
-    if ParadiseZ.isXYInZoneArea(x, y, name) and not ParadiseZ.isXYInZoneMargin(x, y, name) then
-        if (ParadiseZ.isKosZoneFromSquare(sq) and ParadiseZ.isPvE(pl)) 
-           or ParadiseZ.isZoneIsBlocked(pl) then
-            return true
-        end
-    end
-
-    return false
+-----------------------            ---------------------------
+function ParadiseZ.isKosZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isKos == true
+end
+function ParadiseZ.isPvEZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isPvE == true
+end
+function ParadiseZ.isSafeZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isSafe == true
+end
+function ParadiseZ.isBlockedZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isBlocked == true
 end
 
+-----------------------            ---------------------------
+function ParadiseZ.localData(pl, str, default, val)
+    local md = pl:getModData()
+    local key = tostring(str)
+
+    if val ~= nil then
+        md[key] = val
+        return val
+    end
+
+    local v = md[key]
+    if v == nil then
+        md[key] = default
+        v = default
+    end
+    return v
+end
 
 -----------------------            ---------------------------
 

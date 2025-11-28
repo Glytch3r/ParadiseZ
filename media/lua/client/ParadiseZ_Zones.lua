@@ -1,24 +1,6 @@
 -- client/ParadiseZ_Zones.lua
 ParadiseZ = ParadiseZ or {}
 
-function ParadiseZ.getCurrentZoneName(pl)
-    if not isIngameState() then return "Outside" end
-    local pl = ParadiseZ.getPl(pl)
-    if not pl then return "Outside" end
-    local px, py = ParadiseZ.getXY(pl)
-    if not px then return "Outside" end
-    if not ParadiseZ.ZoneData then return "Outside" end
-
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        if zone and zone.x1 and zone.y1 and zone.x2 and zone.y2 then
-            if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
-                return tostring(name)
-            end
-        end
-    end
-
-    return "Outside"
-end
 
 function ParadiseZ.getPl(char)
     if not char then return getPlayer() end
@@ -31,14 +13,13 @@ function ParadiseZ.getPl(char)
 end
 
 function ParadiseZ.getXY(pl)
+    pl = pl or getPlayer()
+
+    if not pl then return end
+
     local targ = ParadiseZ.getPl(pl)
     if not targ then return nil end
     return round(targ:getX()), round(targ:getY())
-end
-
-function ParadiseZ.getSqXY(sq)
-    if not sq then return nil, nil end
-    return round(sq:getX()), round(sq:getY())
 end
 
 --[[ 
@@ -58,7 +39,7 @@ end
  ]]
 function ParadiseZ.isOutSide(pl)
     local pl = ParadiseZ.getPl(pl)
-    local zoneName = ParadiseZ.getCurrentZoneName(pl)
+    local zoneName = ParadiseZ.getZoneName(pl)
     if zoneName == "Outside" then return true end
     return false
 end
@@ -91,7 +72,7 @@ function ParadiseZ.isPveZone(pl)
         end
     end
 
-    local zoneName = ParadiseZ.getCurrentZoneName(targ)
+    local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
@@ -101,7 +82,7 @@ end
 function ParadiseZ.isKosZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
-    local zoneName = ParadiseZ.getCurrentZoneName(targ)
+    local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
@@ -113,15 +94,15 @@ end
 
 function ParadiseZ.isOutsideZone(pl)
     local targ = ParadiseZ.getPl(pl)
-    local zoneName = ParadiseZ.getCurrentZoneName(targ)
+    local zoneName = ParadiseZ.getZoneName(targ)
     return zoneName == "Outside"
 end
 
 
-function ParadiseZ.isZoneIsBlocked(pl)
+function ParadiseZ.isBlockedZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
-    local zoneName = ParadiseZ.getCurrentZoneName(targ)
+    local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end

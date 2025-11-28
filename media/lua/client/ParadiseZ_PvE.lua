@@ -51,7 +51,7 @@ function ParadiseZ.isCanToggle(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isKosZone = ParadiseZ.isKosZone(pl) 
     local isOutsideZone = ParadiseZ.isOutsideZone(pl)
-    if ParadiseZ.isZoneIsBlocked(pl) then return false end
+    if ParadiseZ.isBlockedZone(pl) then return false end
 --[[ 
     if isPlayerPvE then return false end
     if isPveZone then return false end
@@ -71,9 +71,9 @@ function ParadiseZ.doToggle(pl, isForced)
     if ui and (ParadiseZ.isCanToggle(pl) or isForced) then
         ui:toggleSafety()
     end
-
+    
     if getCore():getDebug() then 
-        local isEnabled = pl:getSafety():isEnabled()
+        local isEnabled = ParadiseZ.isOnOrOff(pl:getSafety():isEnabled())
         local msg = tostring("Safety Toggled: "..tostring(isEnabled))
         pl:addLineChatElement(msg)	
         print(msg)

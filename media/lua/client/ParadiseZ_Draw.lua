@@ -10,12 +10,12 @@ ParadiseZ.showZoneInfo = true
     pl = pl or getPlayer()
     if not pl then return end
 
-    local name = ParadiseZ.getCurrentZoneName(pl)
+    local name = ParadiseZ.getZoneName(pl)
     local isOutsideZone = ParadiseZ.isOutsideZone(pl)
     local isKosZone = ParadiseZ.isKosZone(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local x, y = ParadiseZ.getXY(pl)
-    local isZoneIsBlocked = ParadiseZ.isZoneIsBlocked(pl)
+    local isBlockedZone = ParadiseZ.isBlockedZone(pl)
     local isPvpPlayer = ParadiseZ.isPvE(pl)
 
     if isPvpPlayer or (isPveZone and not isKosZone) then
@@ -35,11 +35,11 @@ function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
 
-    local name = ParadiseZ.getCurrentZoneName(pl)
+    local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
     local zoneName = name
 
-    if name ~= "Outside" and ParadiseZ.isXYInZoneMargin(x, y, name) then
+    if name ~= "Outside" and ParadiseZ.isXYOnZoneEdge(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
 
@@ -51,7 +51,7 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isPveZone(pl) then
         table.insert(info, "PvE")
     end
-    if ParadiseZ.isZoneIsBlocked(pl) then
+    if ParadiseZ.isBlockedZone(pl) then
         table.insert(info, "Blocked")
     end
 
@@ -82,8 +82,10 @@ function ParadiseZ.getDrawStr(char)
         str = "NonPvp"
     elseif ParadiseZ.isKosZone(pl) then
         str = "PvP"
-    elseif ParadiseZ.isZoneIsBlocked(pl) then
-        str = "Zone"
+    elseif ParadiseZ.isBlockedZone(pl) then
+        str = "Blocked"
+    elseif ParadiseZ.isSafeZone(pl) then
+        str = "Protected"
     end
     return str or ""
    
@@ -113,18 +115,23 @@ function ParadiseZ.doDrawZone()
 
     local textures = {
         ['HQ'] = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
-        ['NonPvp'] = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"),
         ['Outside'] = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
-        ['PvP'] = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), 
         ['Zone'] = getTexture("media/textures/zone/ParadiseZ_Zone_Inside.png"),
+        ['NonPvp'] = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"),
+        ['PvP'] = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), 
+        ['Blocked']  = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
+        ['Protected']  = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
+        
     }
 
     local colors = {
         ['HQ'] = {r=0,g=0,b=1},
-        ['NonPvp'] = {r=0,g=1,b=0},
         ['Outside'] = {r=1,g=0.4,b=0},
-        ['PvP'] = {r=0.9,g=0.2,b=0.2},
         ['Zone'] = {r=1,g=1,b=1},
+        ['NonPvp'] = {r=0,g=1,b=0},
+        ['PvP'] = {r=0.9,g=0.2,b=0.2},
+        ['Blocked'] = { r = 0.13, g = 0.13, b = 0.13 },
+        ['Protected'] = { r = 0.84, g = 0.76, b = 0.67 },
     }
     
     local texture = textures[str]
@@ -141,7 +148,7 @@ function ParadiseZ.doDrawZone()
         alpha = 0.8
     end
     local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo  
-    local msg = ParadiseZ.getCurrentZoneName(pl)
+    local msg = ParadiseZ.getZoneName(pl)
     if isAdm or isShowInfo then
         msg = ParadiseZ.getZoneInfo(pl)
     end
