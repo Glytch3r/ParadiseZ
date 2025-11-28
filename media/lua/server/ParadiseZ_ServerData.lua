@@ -42,6 +42,8 @@ function ParadiseZ.onReceiveData(key, data)
 end
 Events.OnReceiveGlobalModData.Add(ParadiseZ.onReceiveData)
 -----------------------            ---------------------------
+print(round(getPlayer():getX(),2))
+print(round(getPlayer():getX()))
 
 function ParadiseZ.loadZoneData()
     local modData = ModData.getOrCreate("ParadiseZ_ZoneData")

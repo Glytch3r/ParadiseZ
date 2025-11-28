@@ -94,67 +94,96 @@ function ParadiseZ.isSafeZoneFromSquare(sq)
     if not zone then return false end
     return zone.isSafe == true
 end
------------------------            ---------------------------
+-----------------------     name*       ---------------------------
 
-function ParadiseZ.getZoneName(var, var2)
-    if type(var) == 'string' then
-        var = getPlayerFromUsername(var)
-        if var then
-            return ParadiseZ.getPlZoneName(var)
+--[[ 
+ParadiseZ.getZoneName()             -- defaults to pl
+ParadiseZ.getZoneName(pl)           -- pl
+ParadiseZ.getZoneName("username")   -- player by name
+ParadiseZ.getZoneName(sq)           -- IsoGridSquare
+ParadiseZ.getZoneName(10, 20)       -- x, y
+ ]]
+
+function ParadiseZ.getZoneName(var, var2)    
+    local pl = getPlayer()
+    if type(var) == "string" then
+        pl = getPlayerFromUsername(var)
+        if pl then
+            return ParadiseZ.getPlZoneName(pl)
         end
     elseif instanceof(var, "IsoPlayer") then
         return ParadiseZ.getPlZoneName(var)
-    elseif type(var) == 'number' and var2 then
+    elseif type(var) == "number" and type(var2) == "number" then
         return ParadiseZ.getXYZoneName(var, var2)
     elseif instanceof(var, "IsoGridSquare") then
         return ParadiseZ.getSqZoneName(var)
     end
+    if pl then
+        return ParadiseZ.getPlZoneName(pl)
+    end
     return "Outside"
 end
-
-
-
------------------------            ---------------------------
-
-
-function ParadiseZ.getPlZoneName(pl)
-    if not isIngameState() then return "Outside" end
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return "Outside" end
-    local px, py = ParadiseZ.getXY(targ)
-    if not px then return "Outside" end
-    if not ParadiseZ.ZoneData then return "Outside" end
+--[[ 
+function ParadiseZ.getXYZoneName(x, y)
     for name, zone in pairs(ParadiseZ.ZoneData) do
-        if zone and zone.x1 and zone.y1 and zone.x2 and zone.y2 then
-            if ParadiseZ.isPlayerInArea(zone.x1, zone.y1, zone.x2, zone.y2, targ) then
-                return tostring(name)
+        if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
+            return name
+        end
+    end
+    return "Outside"
+end ]]
+function ParadiseZ.getXYZoneName(x, y)
+    if type(ParadiseZ.ZoneData) ~= "table" then return "Outside" end
+    for name, zone in pairs(ParadiseZ.ZoneData) do
+        if zone and zone.x1 and zone.x2 and zone.y1 and zone.y2 then
+            if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
+                return name
             end
         end
     end
     return "Outside"
 end
 
-function ParadiseZ.getSqZoneName(sq)
+function ParadiseZ.getPlZoneName(pl)
+    if not pl then return "Outside" end
+    local sq = pl:getCurrentSquare()
     if not sq then return "Outside" end
-    local x = sq:getX()
-    local y = sq:getY()
-    if not x or not y then return "Outside" end
-    if not ParadiseZ.ZoneData then return "Outside" end
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
-            return name
-        end
-    end
-    return "Outside"
+    return ParadiseZ.getXYZoneName(sq:getX(), sq:getY())
 end
 
-function ParadiseZ.getXYZoneName(x, y)
-    if not x or not y then return "Outside" end
-    if not ParadiseZ.ZoneData then return "Outside" end
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
-            return name
+function ParadiseZ.getSqZoneName(sq)
+    if not sq then return "Outside" end
+    return ParadiseZ.getXYZoneName(sq:getX(), sq:getY())
+end
+
+-----------------------    zone*        ---------------------------
+function ParadiseZ.getZone(var, var2)
+    local name
+
+    if type(var) == "string" then
+        local pl = getPlayerFromUsername(var)
+        if pl then
+            name = ParadiseZ.getPlZoneName(pl)
+        end
+
+    elseif instanceof(var, "IsoPlayer") then
+        name = ParadiseZ.getPlZoneName(var)
+
+    elseif type(var) == "number" and type(var2) == "number" then
+        name = ParadiseZ.getXYZoneName(var, var2)
+
+    elseif instanceof(var, "IsoGridSquare") then
+        name = ParadiseZ.getSqZoneName(var)
+    end
+
+    if not name then
+        local pl = getPlayer()
+        if pl then
+            name = ParadiseZ.getPlZoneName(pl)
+        else
+            return nil
         end
     end
-    return "Outside"
+
+    return ParadiseZ.ZoneData[name]
 end

@@ -397,4 +397,14 @@ end
 function ParadiseZ.ClearMap()
     WorldMapVisited.getInstance():forget()
     getPlayer():addLineChatElement("Map Records Deleted")    
-end
+end      
+
+function ParadiseZ.ClearModData()
+    local pl = getPlayer() 
+    if pl then
+        local modData = pl:getModData()
+        for k in pairs(modData) do
+            modData[k] = nil
+        end
+    end
+end      

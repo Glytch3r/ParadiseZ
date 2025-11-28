@@ -38,8 +38,9 @@ function ParadiseZ.getZoneInfo(pl)
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
     local zoneName = name
+    if not (x and y) then return end
 
-    if name ~= "Outside" and ParadiseZ.isXYOnZoneEdge(x, y, name) then
+    if name ~= "Outside" and ParadiseZ.isXYZoneInner(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
 
@@ -55,7 +56,7 @@ function ParadiseZ.getZoneInfo(pl)
         table.insert(info, "Blocked")
     end
 
-    table.insert(info, "X:" .. round(x) .. "    Y:" .. round(y))
+    table.insert(info, "X:" .. tostring(round(x)) .. "    Y:" .. tostring(round(y)))
 
     return table.concat(info, "\n")
 end
@@ -90,28 +91,61 @@ function ParadiseZ.getDrawStr(char)
     return str or ""
    
 end
-
+-----------------------            ---------------------------
 function ParadiseZ.getReboundData()
-   local data = getPlayer():getModData()
-
-    local name =  data['Rebound'].name
-    if not name then return end
-
-    local X =  data['Rebound'].X
-    local Y =  data['Rebound'].y
-    local z =  data['Rebound'].z
-    if not (x and y and z) then return end
-    return "Rebound:".. tostring(name).."\nCoord:   X " ..tostring( round(x) ).. "   ,   Y " .. tostring(round(y))
+    local data = getPlayer():getModData()
+    local rebound = data['Rebound']
+    if not rebound or not rebound.name then return "" end
+    local x, y, z = rebound.x, rebound.y, rebound.z
+    if not (x and y and z) then return "" end
+    return "Rebound:".. tostring(rebound.name).."\nCoord:   X " .. tostring(round(x)) .. "   ,   Y " .. tostring(round(y))
 end
+
+function ParadiseZ.getReboundInfo()
+    local pl = getPlayer()
+    if not pl then return "" end
+
+    local modData = pl:getModData()
+    local rebound = modData['Rebound']
+
+    if type(rebound) ~= "table" or not (rebound.x and rebound.y and rebound.z) then
+        local x, y, z = ParadiseZ.getFallbackCoord()
+        if x and y and z then
+            modData['Rebound'] = {x = x, y = y, z = z, name = "Fallback"}
+            rebound = modData['Rebound']
+        else
+            return ""
+        end
+    end
+
+    if getCore():getDebug() then
+        return "\nREBOUND: \n"..tostring(round(rebound.x))..", "..tostring(round(rebound.y))..", "..tostring(rebound.z)
+    end
+
+    return ""
+end
+
+function ParadiseZ.getReboundInfo()
+    local pl = getPlayer() 
+    if getCore():getDebug() and not pl:isTeleporting() then 
+		local rebound = ParadiseZ.getReboundXYZ(pl)
+		local x = rebound.x
+		local z = rebound.z
+		local y = rebound.y
+        
+		local msg = "\nREBOUND: \n"..tostring(round(x)) ..',  '.. tostring(round(y)) ..', '..tostring(z)
+		return msg
+		--ParadiseZ.echo(msg, true)   
+    end
+end
+
 
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
 
-
     local str = ParadiseZ.getDrawStr(pl)
-
 
     local textures = {
         ['HQ'] = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
@@ -121,7 +155,6 @@ function ParadiseZ.doDrawZone()
         ['PvP'] = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), 
         ['Blocked']  = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
         ['Protected']  = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
-        
     }
 
     local colors = {
@@ -133,49 +166,23 @@ function ParadiseZ.doDrawZone()
         ['Blocked'] = { r = 0.13, g = 0.13, b = 0.13 },
         ['Protected'] = { r = 0.84, g = 0.76, b = 0.67 },
     }
-    
+
     local texture = textures[str]
     local color = colors[str] or {r=1,g=1,b=1}
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-    local alpha
-    if str == nil or str == "" then
-        if not isAdm then
-            alpha = 0
-        else
-            alpha = 0.1
-        end
-    else
-        alpha = 0.8
-    end
+    local alpha = (str == nil or str == "") and (isAdm and 0.1 or 0) or 0.8
     local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo  
-    local msg = ParadiseZ.getZoneName(pl)
-    if isAdm or not isShowInfo then
---[[  ]]
-      --[[   local x, y = ParadiseZ.getXY(pl)
-        local name = ParadiseZ.getXYZoneName(x, y)
-        local Inside = ParadiseZ.isXYInsideZone(x, y, name)
-        local Border = ParadiseZ.isXYOnZoneEdge(x, y, name)
- ]]
-        msg = tostring(ParadiseZ.getZoneInfo(pl))..'\n'..tostring(ParadiseZ.getReboundInfo())
+    local msg = ParadiseZ.getZoneName(pl) or ''
+    local zoneInfo = ParadiseZ.getZoneInfo(pl) or ''
+    local reboundInfo
+    if isAdm or not isShowInfo then 
+         reboundInfo = ParadiseZ.getReboundInfo(pl) or ''
     end
-    getTextManager():DrawString(UIFont.Medium, 68, 100, msg, color.r, color.g, color.b, alpha)
+
+    getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
+    getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
+
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
-    end
-end
-Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
-Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)
-
-function ParadiseZ.getReboundInfo()
-    local pl = getPlayer() 
-    if getCore():getDebug() then 
-		local rebound = ParadiseZ.getReboundXYZ(pl)
-		local x = rebound.x
-		local y = rebound.y
-		local z = rebound.z
-
-		local msg = "\nREBOUND: \n"..tostring(round(x)) ..',  '.. tostring(round(y)) ..', '..tostring(z)
-		return msg
-		--ParadiseZ.echo(msg, true)   
     end
 end

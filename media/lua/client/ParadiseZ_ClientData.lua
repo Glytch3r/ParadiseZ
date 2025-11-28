@@ -19,13 +19,13 @@ function ParadiseZ.saveZoneData(newData)
 end
 
 function ParadiseZ.loadZoneData()
-    ModData.request("ParadiseZ_ZoneData")
+    ParadiseZ.ZoneData = ModData.getOrCreate('ParadiseZ_ZoneData')
 end
 Events.OnInitGlobalModData.Add(ParadiseZ.loadZoneData)
 
 function ParadiseZ.onReceiveData(key, data)
     if key ~= "ParadiseZ_ZoneData" then return end
-    ModData.add(key, data)
+    ModData.add('ParadiseZ_ZoneData', data)
     print('ParadiseZ_ZoneData synced')
     if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
         ParadiseZ.ZoneEditorWindow.instance:refreshList()
