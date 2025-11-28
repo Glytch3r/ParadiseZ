@@ -131,21 +131,6 @@ function ParadiseZ.getClosestReboundPoint(origin, margin)
     return ox, oy, oz
 end
 
-
-
-function ParadiseZ.getReboundXYZ(pl, vx, vy, vz)
-    pl = pl or getPlayer()
-    local originSq = pl:getCurrentSquare()
-    if vx and vy then
-        local cell = getWorld():getCell()
-        originSq = cell:getGridSquare(math.floor(vx + 0.5), math.floor(vy + 0.5), vz)
-    end
-
-    local x, y, z = ParadiseZ.getClosestReboundPoint(originSq, 4)
-    return x, y, z
-end
-
-
 function ParadiseZ.findReboundPoint(pl, originSq, outward)
     outward = outward or 4
     if not pl or not originSq then return nil end

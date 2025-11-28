@@ -66,16 +66,6 @@ function ParadiseZ.CheckCanToggle()
     end
 end
 
-function ParadiseZ.CheckRebound()
-    local pl = getPlayer() 
-    if getCore():getDebug() then 
-		local rx, ry, rz = round(pl:getX()),  round(pl:getY()),  pl:getZ() or 0
-		local x, y, z = ParadiseZ.getReboundXYZ(pl, rx, ry, rz)
-		local msg = math.floor("REBOUND: "..tostring(x) ..',  '.. tostring(y) ..', '..tostring(z))
-		ParadiseZ.echo(msg, true)   
-    end
-end
-
 function ParadiseZ.CheckLife()
     local pl = getPlayer() 
     if getCore():getDebug() then 	

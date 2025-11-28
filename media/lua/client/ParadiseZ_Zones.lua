@@ -13,13 +13,10 @@ function ParadiseZ.getPl(char)
 end
 
 function ParadiseZ.getXY(pl)
-    pl = pl or getPlayer()
-
-    if not pl then return end
-
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return nil end
-    return round(targ:getX()), round(targ:getY())
+    if not pl then return nil, nil end
+    local sq = pl:getCurrentSquare()
+    if not sq then return nil, nil end
+    return sq:getX(), sq:getY()
 end
 
 --[[ 

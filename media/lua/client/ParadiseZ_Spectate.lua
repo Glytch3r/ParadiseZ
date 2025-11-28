@@ -180,6 +180,26 @@ function ParadiseZ.setSpectateOffset(key)
         off.x = off.x + 1
     elseif key == getCore():getKey("CancelAction") or key == getCore():getKey("Map") then
         pl:getModData().Spectating = nil
+    elseif key == 200 then --up
+        off.z = math.min(7, math.max(0, off.z + 1))
+    elseif key == 208 then --down
+        off.z = math.min(7, math.max(0, off.z - 1))
+    elseif key == 203 then --left
+        local currentTarget = ParadiseZ.getSpectateTarget(pl)
+        if currentTarget then
+            local nextPl = ParadiseZ.getNextPlayer(currentTarget, false)
+            if nextPl then
+                pl:getModData().Spectating = nextPl:getUsername()
+            end
+        end
+    elseif key == 205 then --right
+        local currentTarget = ParadiseZ.getSpectateTarget(pl)
+        if currentTarget then
+            local nextPl = ParadiseZ.getNextPlayer(currentTarget, true)
+            if nextPl then
+                pl:getModData().Spectating = nextPl:getUsername()
+            end
+        end
     end
     
     return key
@@ -187,3 +207,25 @@ end
 
 Events.OnKeyPressed.Remove(ParadiseZ.setSpectateOffset)
 Events.OnKeyPressed.Add(ParadiseZ.setSpectateOffset)
+
+
+function ParadiseZ.getNextPlayer(currentPl, forward)
+    local players = {}
+    for i=0,getNumActivePlayers()-1 do
+        local p = getSpecificPlayer(i)
+        if p and p:isAlive() and p ~= getPlayer() then
+            table.insert(players, p)
+        end
+    end
+    table.sort(players, function(a,b) return a:getUsername() < b:getUsername() end)
+    for i,p in ipairs(players) do
+        if p == currentPl then
+            if forward then
+                return players[i % #players + 1]
+            else
+                return players[(i - 2) % #players + 1]
+            end
+        end
+        return nil
+    end
+end

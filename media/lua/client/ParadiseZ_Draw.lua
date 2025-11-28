@@ -149,8 +149,14 @@ function ParadiseZ.doDrawZone()
     end
     local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo  
     local msg = ParadiseZ.getZoneName(pl)
-    if isAdm or isShowInfo then
-        msg = ParadiseZ.getZoneInfo(pl)
+    if isAdm or not isShowInfo then
+--[[  ]]
+      --[[   local x, y = ParadiseZ.getXY(pl)
+        local name = ParadiseZ.getXYZoneName(x, y)
+        local Inside = ParadiseZ.isXYInsideZone(x, y, name)
+        local Border = ParadiseZ.isXYOnZoneEdge(x, y, name)
+ ]]
+        msg = tostring(ParadiseZ.getZoneInfo(pl))..'\n'..tostring(ParadiseZ.getReboundInfo())
     end
     getTextManager():DrawString(UIFont.Medium, 68, 100, msg, color.r, color.g, color.b, alpha)
     if texture then
@@ -159,3 +165,17 @@ function ParadiseZ.doDrawZone()
 end
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)
+
+function ParadiseZ.getReboundInfo()
+    local pl = getPlayer() 
+    if getCore():getDebug() then 
+		local rebound = ParadiseZ.getReboundXYZ(pl)
+		local x = rebound.x
+		local y = rebound.y
+		local z = rebound.z
+
+		local msg = "\nREBOUND: \n"..tostring(round(x)) ..',  '.. tostring(round(y)) ..', '..tostring(z)
+		return msg
+		--ParadiseZ.echo(msg, true)   
+    end
+end

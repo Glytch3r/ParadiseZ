@@ -37,10 +37,13 @@ end
 
 function ParadiseZ.isXYInsideZone(x, y, name)
     local pl = getPlayer() 
+    if not pl then return false end
     name = name or ParadiseZ.getZoneName(pl)
+    if not name then return false end
     if not x or not y then 
         x, y = ParadiseZ.getXY(pl)
     end
+    if not x or not y then return false end
     local zone = ParadiseZ.ZoneData[name]
     if not zone then return false end
     return x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2
@@ -120,6 +123,11 @@ function ParadiseZ.saveRebound(pl, name)
         return tab
     end
     return nil
+end
+
+function ParadiseZ.getReboundXYZ(pl)
+    local x, y, z = ParadiseZ.getLastCoord(pl)
+    return {x = x, y = y, z = z}
 end
 
 function ParadiseZ.getLastCoord(pl)
