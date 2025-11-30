@@ -186,3 +186,5 @@ function ParadiseZ.doDrawZone()
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
 end
+Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
+Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)

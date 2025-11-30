@@ -24,7 +24,13 @@ option ParadiseZ.showTrailingMarkers
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_showTrailingMarkers,
 }
+option ParadiseZ.ClearRadius
+{
+	type = integer, min = 0, max = 100, default = 15,
+	page = ParadiseZ, translation = ParadiseZ_ClearRadius,
+}
 
+	
 option ParadiseZ.pvpStaggerChance
 {
 	type = double,	 min = 0.00,  max = 100,  default = 34,
@@ -60,13 +66,7 @@ option ParadiseZ.ShowPvETag
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ShowPvETag,
 }
-option ParadiseZ.ClearRadius
-{
-	type = integer, min = 0, max = 100, default = 15,
-	page = ParadiseZ, translation = ParadiseZ_ClearRadius,
-}
 
-	
 
 
 option ParadiseZ.GunUpdater
