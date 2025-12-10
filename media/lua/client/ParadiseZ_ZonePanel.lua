@@ -1,6 +1,15 @@
 --client/ParadiseZ_ZonePanel.lua
 require "ISUI/ISCollapsableWindow"
 ParadiseZ = ParadiseZ or {}
+
+function ParadiseZ.snapshot(t)
+    local copy = {}
+    for k, v in pairs(t) do
+        copy[k] = v
+    end
+    return copy
+end
+
 ParadiseZ.ZoneEditorWindow = ISCollapsableWindow:derive("ParadiseZ.ZoneEditorWindow")
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
@@ -44,7 +53,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     local btnHgt = math.max(25, FONT_HGT_SMALL + 6)
     local entryHgt = FONT_HGT_MEDIUM + 4
     local titleBarHgt = self:titleBarHeight()
-
+    local pl = getPlayer() 
     local contentY = titleBarHgt + MARGIN + 5
     local labelY = MARGIN + 15
     local contentX = 10
@@ -247,22 +256,20 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.newZoneName:instantiate()
     self.newZoneName.target = self
     self:addChild(self.newZoneName)
-
+    
     newZoneRowX = newZoneRowX + newZoneEntryWid + newZoneSpacing
     self.newZoneX1 = ISTextEntryBox:new("", newZoneRowX, newZoneRowY, newZoneEntryWid2, newZoneEntryHgt)
     self.newZoneX1.font = newZonefont
-    self.newZoneName.tooltip =  "X1"
-
+    self.newZoneX1.tooltip =  "X1"
     self.newZoneX1:initialise()
     self.newZoneX1:instantiate()
     self.newZoneX1.target = self
     self:addChild(self.newZoneX1)
-
+    
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
     self.newZoneY1 = ISTextEntryBox:new("", newZoneRowX, newZoneRowY, newZoneEntryWid2, newZoneEntryHgt)
     self.newZoneY1.font = newZonefont
-    self.newZoneName.tooltip =  "Y1"
-
+    self.newZoneY1.tooltip =  "Y1"
     self.newZoneY1:initialise()
     self.newZoneY1:instantiate()
     self.newZoneY1.target = self
@@ -271,8 +278,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
     self.newZoneX2 = ISTextEntryBox:new("", newZoneRowX, newZoneRowY, newZoneEntryWid2, newZoneEntryHgt)
     self.newZoneX2.font = newZonefont
-    self.newZoneName.tooltip =  "X2"
-
+    self.newZoneX2.tooltip =  "X2"
     self.newZoneX2:initialise()
     self.newZoneX2:instantiate()
     self.newZoneX2.target = self
@@ -281,15 +287,45 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
     self.newZoneY2 = ISTextEntryBox:new("", newZoneRowX, newZoneRowY, newZoneEntryWid2, newZoneEntryHgt)
     self.newZoneY2.font = newZonefont
-    self.newZoneName.tooltip =  "Y2"
-
+    self.newZoneY2.tooltip =  "Y2"
     self.newZoneY2:initialise()
     self.newZoneY2:instantiate()
     self.newZoneY2.target = self
     self:addChild(self.newZoneY2)
 
+    --add*d
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
-    self.btnAdd = ISButton:new(newZoneRowX, newZoneRowY, btnWid, btnHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
+    self.btnAdd = ISButton:new(newZoneRowX, newZoneRowY, btnWid, btnHgt, "", self, function()
+      --  local tempZone = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
+        
+        local name =  self.newZoneName:getText()
+        if name == "" then
+            name = "New Zone"
+        end
+        
+        ParadiseZ.ZoneData[name] = {
+            name = name,
+            x1 = tonumber(self.newZoneX1:getText()) or round(pl:getX()-5),
+            y1 = tonumber(self.newZoneY1:getText()) or round(pl:getY()-5),
+            x2 = tonumber(self.newZoneX2:getText()) or round(pl:getX()+5),
+            y2 = tonumber(self.newZoneY2:getText()) or round(pl:getY()+5),
+            isKos = false,
+            isPvE = false,
+            isSafe = false,
+            isBlocked = false,
+        }
+        
+        ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
+
+        self.newZoneName:setText("")
+        self.newZoneX1:setText("")
+        self.newZoneY1:setText("")
+        self.newZoneX2:setText("")
+        self.newZoneY2:setText("")
+        self.shouldSync = false
+        self:refreshList()
+        print('auto synced')    
+    end)
     self.btnAdd.internal = "ADD"
     self.btnAdd:initialise()
     self.btnAdd:instantiate()
@@ -299,7 +335,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self:addChild(self.btnAdd)
 
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
-
+    --save*
     self.btnSave = ISButton:new(self.btnDelete:getRight() + MARGIN - 2, btnY2, btnWid, btnHgt, "", self, function()
         print('ParadiseZ.saveZoneData')    
         local zones = {}
@@ -318,9 +354,8 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
                 isBlocked = z.isBlocked,
             }
         end
-
         ParadiseZ.saveZoneData(zones)
-
+        self:refreshList()
         self.shouldSync = false
     end)
 
@@ -342,7 +377,6 @@ end
 function ParadiseZ.ZoneEditorWindow:titleBarHeight()
     return 24
 end
-
 function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     local o = ISCollapsableWindow:new(x, y, width, height)
     setmetatable(o, self)
@@ -357,7 +391,7 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o.buttonBorderColor = {r = 0.7, g = 0.7, b = 0.7, a = 0.5}
     o.totalResult = 0
     o.shouldSync = false
-    o.ZoneData = ParadiseZ.ZoneData
+    o.ZoneData = {}
     o.filter = {}
     o.filterMap = {}
     o.moveWithMouse = true
@@ -365,7 +399,6 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o.bgTexture  = getTexture("media/ui/paradise/bg.png")
     ParadiseZ.ZoneEditorWindow.instance = o
     o:setResizable(true)
-
     return o
 end
 
@@ -379,11 +412,45 @@ function ParadiseZ.ZoneEditorWindow:prerender()
     end
 end
 
+function ParadiseZ.ZoneEditorWindow:initList()
+    self.totalResult = 0
+    self.datas:clear()
+    self.datas.fullList = nil
+    self.ZoneData = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
+   
+    if not self.ZoneData then return end
+    for name, zone in pairs(self.ZoneData) do
+        self.datas:addItem(zone.name, zone)
+        self.totalResult = self.totalResult + 1
+    end
+    table.sort(self.datas.items, function(a, b)
+        if not a or not b or not a.item or not b.item then return false end
+        return a.item.name < b.item.name
+    end)
+    self.totalLabel:setName("Total Zones: " .. self.totalResult)
+end
+
+function ParadiseZ.ZoneEditorWindow:refreshList()
+    self.ZoneData = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
+    local selectedIdx = self.datas.selected
+    self.datas.fullList = nil
+    self:initList()
+    if #self.filter > 0 then
+        ParadiseZ.ZoneEditorWindow.onFilterChange(self.filter[1])
+    end
+    if selectedIdx > #self.datas.items then
+        selectedIdx = #self.datas.items
+    end
+    self.datas.selected = selectedIdx
+end
+
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
     local zone = selected and selected.item
-    if button.internal == "ADD" then
+
+--[[     if button.internal == "ADD" then
+
         local name = self.newZoneName:getText()
         name = self.newZoneName:getText() or "New Zone"
         local newZone = {
@@ -398,8 +465,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             isBlocked = false,
         }
         self.datas.fullList = nil
-        ParadiseZ.ZoneData = ModData.getOrCreate('ParadiseZ_ZoneData') or ParadiseZ.ZoneData or {}
-        ParadiseZ.ZoneData[name] = newZone
+        self.ZoneData[name] = newZone
         self.newZoneName:setText("")
         self.newZoneX1:setText("")
         self.newZoneY1:setText("")
@@ -409,9 +475,33 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
         self.shouldSync = true
         return
     end
-    
-    if not zone then return end
+     ]]
+--[[ 
+    if button.internal == "ADD" then
+        local name = self.newZoneName:getText() or 'New Zone'
 
+
+
+        local preAdd = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
+
+        preAdd[tostring(name)] = {
+            name = name,
+            x1 = tonumber(self.newZoneX1:getText()) or round(pl:getX()-5),
+            y1 = tonumber(self.newZoneY1:getText()) or round(pl:getY()-5),
+            x2 = tonumber(self.newZoneX2:getText()) or round(pl:getX()+5),
+            y2 = tonumber(self.newZoneY2:getText()) or round(pl:getY()+5),
+            isKos = false,
+            isPvE = false,
+            isSafe = false,
+            isBlocked = false,
+        }
+        
+        self.shouldSync = false
+        self:refreshList()
+        return
+
+    end ]]
+    if not zone then return end
     if button.internal == "POINT1" then
         zone.x1 = round(pl:getX())
         zone.y1 = round(pl:getY())
@@ -441,53 +531,23 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.btnTp:setImage(TP_TEX_OFF)
         end)
     elseif button.internal == "DELETE" then
-        self.datas.selected = 0
-        self.datas.fullList = nil
-        ParadiseZ.removeZone(tostring(zone.name), true)
+        self.ZoneData[tostring(zone.name)] = nil
         self.shouldSync = true
-        self.btnDelete:setImage(delete_TEX_ON)
-        timer:Simple(1, function() 
-            self.btnDelete:setImage(delete_TEX_OFF)
+        self.datas.fullList = nil
+        self.datas:clear()
+        for name, z in pairs(self.ZoneData) do
+            self.datas:addItem(z.name, z)
+        end
+        table.sort(self.datas.items, function(a, b)
+            if not a or not b or not a.item or not b.item then return false end
+            return a.item.name < b.item.name
         end)
     elseif button.internal == "RESET" then
-
-        ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
-        self.shouldSync = true
-
+        ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup or {}
+        ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
+        self.shouldSync = false
+        self:refreshList()
     end
-    self:refreshList()
-end
-
-function ParadiseZ.ZoneEditorWindow:initList()
-    self.totalResult = 0
-    self.datas:clear()
-    self.datas.fullList = nil
-    ParadiseZ.ZoneData = ModData.getOrCreate('ParadiseZ_ZoneData') or ParadiseZ.ZoneData or {}
-    if not ParadiseZ.ZoneData then return end
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        self.datas:addItem(zone.name, zone)
-        self.totalResult = self.totalResult + 1
-    end
-    table.sort(self.datas.items, function(a, b)
-        if not a or not b or not a.item or not b.item then return false end
-        return a.item.name < b.item.name
-    end)
-    self.totalLabel:setName("Total Zones: " .. self.totalResult)
-end
-
-function ParadiseZ.ZoneEditorWindow:refreshList()
-    ParadiseZ.ZoneData = ModData.getOrCreate('ParadiseZ_ZoneData') or ParadiseZ.ZoneData or {}
-    self.ZoneData = ParadiseZ.ZoneData
-    local selectedIdx = self.datas.selected
-    self.datas.fullList = nil
-    self:initList()
-    if #self.filter > 0 then
-        ParadiseZ.ZoneEditorWindow.onFilterChange(self.filter[1])
-    end
-    if selectedIdx > #self.datas.items then
-        selectedIdx = #self.datas.items
-    end
-    self.datas.selected = selectedIdx
 end
 
 function ParadiseZ.ZoneEditorWindow:update()
@@ -569,7 +629,6 @@ function ParadiseZ.ZoneEditorWindow:filterisBlocked(widget, zone)
     if widget.selected == 1 then return true end
     return tostring(zone.isBlocked) == widget:getOptionText(widget.selected)
 end
-
 function ParadiseZ.ZoneEditorWindow.onFilterChange(widget)
     local datas = widget.parent.datas
     if not datas.fullList then
@@ -578,12 +637,10 @@ function ParadiseZ.ZoneEditorWindow.onFilterChange(widget)
             table.insert(datas.fullList, v)
         end
     end
-
     widget.parent.totalResult = 0
     datas:clear()
-
     for i, v in ipairs(datas.fullList) do
-        if v.item and ParadiseZ.ZoneData[v.item.name] then
+        if v.item and widget.parent.ZoneData[v.item.name] then
             local add = true
             for j, w in ipairs(widget.parent.filter) do
                 if not w.zoneFilter(widget.parent, w, v.item) then
@@ -597,10 +654,8 @@ function ParadiseZ.ZoneEditorWindow.onFilterChange(widget)
             end
         end
     end
-
     widget.parent.totalLabel:setName("Total Zones: " .. widget.parent.totalResult)
 end
-
 function ParadiseZ.ZoneEditorWindow:drawDatas(y, item, alt)
     if y + self:getYScroll() + self.itemheight < 0 or y + self:getYScroll() >= self.height then
         return y + self.itemheight
@@ -677,31 +732,35 @@ function ParadiseZ.ZoneEditorPopupPanel:createChildren()
     local x = 20
     local w = self.width - 40
     local h = 28
-
+    
     self.entryName = ISTextEntryBox:new(self.zoneRef.name or "", x, y, w, h)
     self.entryName:initialise()
     self.entryName:instantiate()
     self:addChild(self.entryName)
     y = y + h + 10
-
+    
     local cw = math.floor((w - 30) / 4)
 
     self.entryX1 = ISTextEntryBox:new(tostring(self.zoneRef.x1 or 0), x, y, cw, h)
+    self.entryX1.tooltip =  "X1"
     self.entryX1:initialise()
     self.entryX1:instantiate()
     self:addChild(self.entryX1)
 
     self.entryY1 = ISTextEntryBox:new(tostring(self.zoneRef.y1 or 0), x + cw + 10, y, cw, h)
+    self.entryY1.tooltip =  "Y1"
     self.entryY1:initialise()
     self.entryY1:instantiate()
     self:addChild(self.entryY1)
-
+    
     self.entryX2 = ISTextEntryBox:new(tostring(self.zoneRef.x2 or 0), x + (cw + 10) * 2, y, cw, h)
+    self.entryX2.tooltip =  "X2"
     self.entryX2:initialise()
     self.entryX2:instantiate()
     self:addChild(self.entryX2)
 
     self.entryY2 = ISTextEntryBox:new(tostring(self.zoneRef.y2 or 0), x + (cw + 10) * 3, y, cw, h)
+    self.entryY2.tooltip =  "Y2"
     self.entryY2:initialise()
     self.entryY2:instantiate()
     self:addChild(self.entryY2)
@@ -776,7 +835,7 @@ function ParadiseZ.ZoneEditorPopupPanel:onOK(button)
     zone.isSafe = (self.comboSafe.options[self.comboSafe.selected] == "true")
     zone.isBlocked = (self.comboBlocked.options[self.comboBlocked.selected] == "true")
     if orig and orig ~= name then
-        ParadiseZ.ZoneData = ModData.getOrCreate('ParadiseZ_ZoneData') or ParadiseZ.ZoneData or {}
+        ParadiseZ.ZoneData = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
         ParadiseZ.ZoneData[name] = zone
         ParadiseZ.ZoneData[orig] = nil
     end

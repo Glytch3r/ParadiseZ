@@ -61,6 +61,19 @@ function ParadiseZ.setTag(targ)
     end
 end
 
+function ParadiseZ.setTempTag(targ)
+    if not targ then targ = getPlayer() end
+    if not ParadiseZ.isTagEmpty(targ) then return end
+    if ParadiseZ.isPvE(targ) then return end
+    local spr = getSprite("media/ui/Tags/Glytch3r_Tag.png"):newInstance()
+    if spr then
+        targ:setAttachedAnimSprite(ArrayList.new())
+        targ:getAttachedAnimSprite():add(spr)
+    end
+    timer:Simple(3, function() 
+        ParadiseZ.removeTag(targ)
+    end)
+end
 function ParadiseZ.isShouldShow(targ)
     local pl = getPlayer()
     if targ and (pl:CanSee(targ) or pl == targ) then

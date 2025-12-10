@@ -7,7 +7,7 @@ function ParadiseZ.dbgKeys(key)
     if not getCore():getDebug() then return end
 	local pl = getPlayer()
 	if not pl then return end
-
+	
 	if (key == getCore():getKey("Equip/Turn On/Off Light Source")) then
 		local pl = getPlayer()
         local sq = ParadiseZ.getPointer()

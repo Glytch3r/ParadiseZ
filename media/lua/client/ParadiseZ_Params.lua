@@ -71,11 +71,6 @@ function ParadiseZ.applyGunParams()
 end
 
 
-
-
-
-                       
-
 Events.OnInitGlobalModData.Add(function()
     ParadiseZ.applyGunParams()    
 end)

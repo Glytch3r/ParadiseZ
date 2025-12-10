@@ -6,6 +6,20 @@ option ParadiseZ.BlockedList  {
 }
 
 
+option ParadiseZ.Glytch3rGift  {
+	type = string, default =  Base.Bleach,
+	page = ParadiseZ, translation = ParadiseZ_Glytch3rGift,
+}
+
+option ParadiseZ.HideAvatar {
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_HideAvatar,
+}
+
+option ParadiseZ.AutoInvisible  {
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_AutoInvisible,
+}
 
 option ParadiseZ.ReboundSystem  {
 	type = boolean, default = true,
@@ -16,8 +30,6 @@ option ParadiseZ.ReboundExitsCar
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ReboundExitsCar,
 }
-
-
 
 option ParadiseZ.showTrailingMarkers
 {

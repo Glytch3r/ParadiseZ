@@ -42,10 +42,10 @@ getSafeHouse()
 
 SafeHouse.getSafeHouse(sq);
 
-function myModule.addTip(pl, context, opt, optTip, desc, iconPath)
+function ParadiseZ.addTip(pl, context, opt, optTip, desc, iconPath)
 	local tip = ISWorldObjectContextMenu.addToolTip()
 	tip.description = tostring(desc) or ""
-	tip:setName("myModule: ")
+	tip:setName("ParadiseZ: ")
 	if iconPath then
 		optTip.iconTexture = getTexture(iconPath)
 		tip:setTexture(iconPath)
@@ -53,7 +53,7 @@ function myModule.addTip(pl, context, opt, optTip, desc, iconPath)
 	optTip.toolTip = tip
 end
 
-function myModule.context(plNum, context, worldobjects, test)
+function ParadiseZ.context(plNum, context, worldobjects, test)
 	local pl = getSpecificPlayer(plNum)
 	--local targ = clickedPlayer
 	local obj = nil
@@ -64,7 +64,7 @@ function myModule.context(plNum, context, worldobjects, test)
 	for i=0, sq:getObjects():size()-1 do
 		local check = sq:getObjects():get(i)
 		if instanceof(check, "IsoObject") then
-			local sprCheck = myModule.getSprName(obj)
+			local sprCheck = ParadiseZ.getSprName(obj)
 			if sprCheck then
 				if sprCheck == "" or luautils.stringStarts(sprCheck, "") then
 					obj = check
@@ -76,7 +76,7 @@ function myModule.context(plNum, context, worldobjects, test)
 	end
     
 	--if not obj then return end
-	local mainMenu = "myModule: "
+	local mainMenu = "ParadiseZ: "
 	local Main = context:addOptionOnTop(mainMenu)
 	Main.iconTexture = getTexture("media/ui/chop_tree.png")
 	local opt = ISContextMenu:getNew(context)
@@ -98,14 +98,14 @@ function myModule.context(plNum, context, worldobjects, test)
 	end
 	local iconPath = "media/ui/chop_tree.png"
 	--context:setOptionChecked(optTip, isCheck)
-	myModule.addTip(pl, context, opt, optTip, desc, iconPath)
+	ParadiseZ.addTip(pl, context, opt, optTip, desc, iconPath)
 
 	if shouldHide then
 		context:removeOptionByName(mainMenu)
 	end
 end
-Events.OnFillWorldObjectContextMenu.Remove(myModule.context)
-Events.OnFillWorldObjectContextMenu.Add(myModule.context)
+Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
+Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.context)
 
 --<RGB:0,1,0>
 

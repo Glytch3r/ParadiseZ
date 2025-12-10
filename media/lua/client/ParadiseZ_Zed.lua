@@ -29,7 +29,7 @@ function ParadiseZ.ZedReactToScareCrow(zed)
     end
 end
 --Events.OnZombieUpdate.Remove(ParadiseZ.ZedReactToScareCrow)
-Events.OnZombieUpdate.Add(ParadiseZ.ZedReactToScareCrow)
+--Events.OnZombieUpdate.Add(ParadiseZ.ZedReactToScareCrow)
 
 function ParadiseZ.moveToXYZ(zed, x, y, z)
     if not zed or not x or not y or not z then return end
@@ -85,4 +85,4 @@ function ParadiseZ.zHit(zed, pl, part, wpn)
         zed:becomeCorpse() ]]
     end
 end
-Events.OnHitZombie.Add(ParadiseZ.zHit)
+--Events.OnHitZombie.Add(ParadiseZ.zHit)

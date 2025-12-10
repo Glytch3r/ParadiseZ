@@ -36,23 +36,35 @@ function ParadiseZ.getFallbackCoord()
 end
 
 function ParadiseZ.getZoneArea(name)
-    if not name then return nil end
+    if not name or name == "Outside" then return nil, nil, nil, nil end
+
+    if not name then return  nil, nil, nil, nil end
     local zone = ParadiseZ.ZoneData[name]
-    if not zone then return nil end
+    if not zone then return  nil, nil, nil, nil end
     return zone.x1, zone.y1, zone.x2, zone.y2
 end
 
 -- inside whole zone
 function ParadiseZ.isXYInsideZone(x, y, name)
+    if not name or name == "Outside" then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
+    if not (x1 and y1 and x2 and y2) then return false end
+
+    local x, y, z = ParadiseZ.parseCoords()
+    if not (x and y and z) then return false end
+
     if not x1 then return false end
     return x >= x1 and x <= x2 and y >= y1 and y <= y2
 end
 
 -- 3 tiles of any edges
 function ParadiseZ.isXYZoneOuter(x, y, name)
+    if not name or name == "Outside" then return false end
+
     if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
+    if not (x1 and y1 and x2 and y2) then return false end
+
     if x <= x1 + 2 or x >= x2 - 2 then return true end
     if y <= y1 + 2 or y >= y2 - 2 then return true end
     return false
@@ -60,8 +72,12 @@ end
 
 -- inside zone NOT within 3 tiles of any edge
 function ParadiseZ.isXYZoneInner(x, y, name)
+    if not name or name == "Outside" then return false end
+
     if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
+    if not (x1 and y1 and x2 and y2) then return false end
+
     if x <= x1 + 2 then return false end
     if x >= x2 - 2 then return false end
     if y <= y1 + 2 then return false end
@@ -80,7 +96,9 @@ function ParadiseZ.reboundHandler(pl)
     if name and ParadiseZ.isXYZoneOuter(plX, plY, name) then
         ParadiseZ.saveRebound(pl, name)
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
-        if sq then ParadiseZ.addTempMarker(sq) end
+        if getCore():getDebug() then 
+            if sq then ParadiseZ.addTempMarker(sq) end
+        end
     end
     
     if name == "Outside" then return end
@@ -243,16 +261,15 @@ function ParadiseZ.isZoneEdge(targUser, name, margin)
 end
 
 function ParadiseZ.isRestricted(sq, pl)
-    pl = pl or getPlayer()
+    pl = ParadiseZ.getPl(pl)
     if not pl then return false end
     sq = sq or pl:getCurrentSquare()
     if not sq then return false end
     if ParadiseZ.isOutsideSq(sq) then return false end
     local x, y = sq:getX(), sq:getY()
     local name = ParadiseZ.getZoneName(sq)
-    if ParadiseZ.isXYZoneInner(x, y, name) and not ParadiseZ.isXYZoneInner(x, y, name) then
-        if (ParadiseZ.isKosZoneFromSquare(sq) and ParadiseZ.isPvE(pl)) 
-           or ParadiseZ.isBlockedZone(pl) then
+    if ParadiseZ.isXYZoneInner(x, y, name) then
+        if (ParadiseZ.isKosZoneFromSquare(sq) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl) then
             return true
         end
     end

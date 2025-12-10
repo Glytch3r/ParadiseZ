@@ -15,16 +15,21 @@ Commands.ParadiseZ.knockDownZed = function(player, args)
     sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, zedID = args.zedID})
 end
 
+Commands.ParadiseZ.staggerTarg = function(player, args)
+    local playerId = player:getOnlineID();
+    sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, targID = args.targID})
+end
+
 Commands.ParadiseZ.speedUp = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'speedUp', {id = playerId, zedID = args.zedID})
 end
-
+--[[ 
 Commands.ParadiseZ.SyncBlockedZones = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'SyncBlockedZones', {id = playerId, strList = args.strList })
 end
-
+ ]]
 
 
 

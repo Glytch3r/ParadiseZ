@@ -53,7 +53,7 @@ function ParadiseZ.chatCmd(cmd)
 
     local dbg = getCore():getDebug()
     if cmd == "/stuck" then
-
+    
         ParadiseZ.reboundCountdown()
 
       --[[   --ISWorldObjectContextMenu.onTeleport()    
@@ -68,13 +68,38 @@ function ParadiseZ.chatCmd(cmd)
             pl:setBumpDone(true)
             pl:reportEvent("wasBumped")
         end) ]]
+    elseif  string.lower(cmd) == "/glytch3r" or string.lower(cmd)  == "/glytch"   then
+        local item = SandboxVars.ParadiseZ.Glytch3rGift 
+        if not item or item == '' then return end
+
+        if not pl:isAlive() then return end
+        if pl:getModData()['GiftAttempt'] ~= nil then return end
+        local user = pl:getUsername() 
+        if not user then return end
+
+        local msg = 'Glytch3r: Thanks for your support '..tostring(user)..'! Take this '..tostring(item)..' as a gift! Enjoy Paradise! '
+        ParadiseZ.setTempTag(pl)
+        if not ParadiseZ.isGiftRecieved(user) then
+            pl:playEmote('thankyou')
+            ParadiseZ.recordGifted(user)
+            local inv = pl:getInventory()
+            if not inv then return end
+            inv:AddItem(item)
+            getSoundManager():playUISound("ParadiseZ_Intro_2")
+        else
+            pl:getModData()['GiftAttempt'] = true
+            pl:playEmote('shrug')
+            msg = 'Glytch3r: Can only recieve once per account.'    
+            getSoundManager():playUISound("ZombieSurprisedPlayer")
+        end
+        pl:addLineChatElement(tostring(msg))
+        
     elseif cmd == "/scare" then
         if dbg then
             getSoundManager():PlayWorldSound("ZombieSurprisedPlayer", pl:getSquare(), 0, 5, 5, false)
         end
     end
 end
-
 Events.OnChatCmd.Remove(ParadiseZ.chatCmd)
 Events.OnChatCmd.Add(ParadiseZ.chatCmd)
 

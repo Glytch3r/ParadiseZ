@@ -1,249 +1,107 @@
-----------------------------------------------------------------
------  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
------ █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
------ █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
------  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
-----------------------------------------------------------------
---                                                            --
---   Project Zomboid Modding Commissions                      --
---   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
---                                                            --
---   ▫ Discord  ꞉   glytch3r                                  --
---   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
---   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
---   ▫ Github   ꞉   https://github.com/Glytch3r               --
---                                                            --
-----------------------------------------------------------------
------ ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
------ █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
------ ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
------  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
-----------------------------------------------------------------
-
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.isOnOrOff(bool)
     return bool and "On" or "Off"
 end
-
-
-
-function ParadiseZ.context(plNum, context, worldobjects, test)
+function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
-
     if string.lower(pl:getAccessLevel()) ~= "admin" then return end
-    
-	local mainMenu = "ParadiseZ:"
-	local Main = context:addOptionOnTop(mainMenu)
-	Main.iconTexture = getTexture("media/ui/Paradise/ContextIcon.png")
-	local opt = ISContextMenu:getNew(context)
-	context:addSubMenu(Main, opt)
 
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
     if not sq then return end
 
-    local csq = pl:getCurrentSquare() 
+    local csq = pl:getCurrentSquare()
     if not csq then return end
 
     local dist = csq:DistTo(sq:getX(), sq:getY())
-    if (dist and dist <= 3) or getCore():getDebug() then
-        local optTip = opt:addOption("Zone Editor Panel", worldobjects, function()
-            ParadiseZ.editor(true)
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/ZoneContextIcon.png")
+    if not (dist and dist <= 3) and not getCore():getDebug() then return end
+    if not context then return end
 
-        local isHideAdminTag = ParadiseZ.isHideAdminTag(pl)
-        local optTip =  opt:addOption("Hide Admin Tag:  "..tostring(ParadiseZ.isOnOrOff(isHideAdminTag)), worldobjects, function()
-            ParadiseZ.toggleHideAdminTag(pl, activate)
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/AdmTagContextIcon.png")
+    local mainMenu = "ParadiseZ:"
+    local Main = context:addOptionOnTop(mainMenu)
+    if not Main then return end
+    Main.iconTexture = getTexture("media/ui/Paradise/ContextIcon.png")
 
-        local trailLightStatus = ParadiseZ.isTrailingLightMode(pl) or false
-        local optTip = opt:addOption("TrailingLight:  "..tostring(ParadiseZ.isOnOrOff(trailLightStatus)), worldobjects, function()            
-            ParadiseZ.toggleTrailingLightMode(pl)            
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/LightContextIcon.png")
+    local opt = ISContextMenu:getNew(context)
+    if not opt then return end
+    context:addSubMenu(Main, opt)
 
-        local optTip = opt:addOption("Force Rebound", worldobjects, function()            
-            ParadiseZ.doRebound(pl)
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
+    local function addSafeOption(menu, text, callback, icon)
+        if not menu then return end
+        local optTip = menu:addOption(text, worldobjects, function()
+            if callback then callback() end
+            if context and context.hideAndChildren then context:hideAndChildren() end
         end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/ReboundContextIcon.png")
+        if optTip and icon then
+            optTip.iconTexture = getTexture(icon)
+        end
+    end
 
-        local isNVG = pl:isWearingNightVisionGoggles() 
-        local optTip = opt:addOption("NVG:  "..tostring(ParadiseZ.isOnOrOff(isNVG)), worldobjects, function()    
-            pl:setWearingNightVisionGoggles(not isNVG)        
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/NVGContextIcon.png")
+    addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true) getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
+    addSafeOption(opt, "Hide Admin Tag: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isHideAdminTag(pl))), function() ParadiseZ.toggleHideAdminTag(pl, activate) end, "media/ui/Paradise/AdmTagContextIcon.png")
+    addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
+    
+    if not pl:getVehicle() then
+        addSafeOption(opt, "Force Rebound", function() ParadiseZ.doRebound(pl) end, "media/ui/Paradise/ReboundContextIcon.png")
+    else
+        local disabled = opt:addOption("Force Rebound")
+        if disabled then
+            disabled.notAvailable = true
+            disabled.iconTexture = getTexture("media/ui/Paradise/ReboundContextIcon.png")
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
+            tooltip.description = "Unavailable in Vehicle"
+            disabled.toolTip = tooltip
+        end
+    end
 
-        local optTip = opt:addOption("Level Up", worldobjects, function()    
-            ParadiseZ.lvlUp()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/LvlContextIcon.png")
+    addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
+    addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")
+    addSafeOption(opt, "Prevent Zed Attacks: "..tostring(ParadiseZ.isOnOrOff(pl:isZombiesDontAttack())), function() pl:setZombiesDontAttack(not pl:isZombiesDontAttack()) end, "media/ui/Paradise/StopZedContextIcon.png")
+    addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
+    addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
 
-        local isStopZed = pl:isZombiesDontAttack() 
-        local optTip = opt:addOption("Prevent Zed Attacks:  "..tostring(ParadiseZ.isOnOrOff(isStopZed)), worldobjects, function()    
-            pl:setZombiesDontAttack(not isStopZed)        
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/StopZedContextIcon.png")
-
-        local optTip = opt:addOption("Suicide", worldobjects, function()    
-            pl:Kill(pl)
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/RIPContextIcon.png")
-
-        local optTip = opt:addOption("Explode Here", worldobjects, function()    
-            local args = { x = pl:getX(), y = pl:getY(), z = pl:getZ() }
-            sendClientCommand(pl, 'object', 'addExplosionOnSquare', args)
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/ExplodeContextIcon.png")
-        -----------------------            ---------------------------
-        local subMenu = "Clear: "
-        local Sub = opt:addOptionOnTop(subMenu)
+    local subMenu = "Clear: "
+    local Sub = opt:addOptionOnTop(subMenu)
+    if Sub then
         Sub.iconTexture = getTexture("media/ui/Paradise/ClearContextIcon.png")
         local sbopt = ISContextMenu:getNew(context)
-        context:addSubMenu(Sub, sbopt)
-  
-        local optTip =  sbopt:addOption("Clean Character", worldobjects, function()
-            ParadiseZ.washChar()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/WashContextIcon.png")
+        if sbopt then context:addSubMenu(Sub, sbopt) end
 
+        addSafeOption(sbopt, "Clean Character", function() ParadiseZ.washChar() end, "media/ui/Paradise/WashContextIcon.png")
+        addSafeOption(sbopt, "Clear Trees", function() ParadiseZ.ClearTrees() end, "media/ui/Paradise/TreesContextIcon.png")
+        addSafeOption(sbopt, "Clear Plants", function() ParadiseZ.DespawnPlants() end, "media/ui/Paradise/PlantsContextIcon.png")
+        addSafeOption(sbopt, "Clear Cars", function() ParadiseZ.DespawnCars() end, "media/ui/Paradise/CarsContextIcon.png")
+        addSafeOption(sbopt, "Clear Fire", function() ParadiseZ.StopFire() end, "media/ui/Paradise/NoFireContextIcon.png")
+        addSafeOption(sbopt, "Clear Map Record", function() ParadiseZ.ClearMap() end, "media/ui/Paradise/MapContextIcon.png")
+        addSafeOption(sbopt, "Clear Floor Items", function() ParadiseZ.ClearFloorItems2() end, "media/ui/Paradise/NoItemsContextIcon.png")
+        addSafeOption(sbopt, "Clear Weather", function() ParadiseZ.clearWeather() end, "media/ui/Paradise/WeatherContextIcon.png")
+        addSafeOption(sbopt, "Clear Corpse", function() ParadiseZ.DespawnBodies() end, "media/ui/Paradise/CorpseContextIcon.png")
+        addSafeOption(sbopt, "Clear Worn Items", function() ParadiseZ.ClearWornItems() end, "media/ui/Paradise/WornItemsContextIcon.png")
+        addSafeOption(sbopt, "Clear Perks", function() ParadiseZ.ClearPerks() end, "media/ui/Paradise/MemoryContextIcon.png")
+        addSafeOption(sbopt, "Clear Traits", function() ParadiseZ.ClearTraits() end, "media/ui/Paradise/TraitsContextIcon.png")
+        addSafeOption(sbopt, "Clear Learned Recipes", function() ParadiseZ.ClearLearned() end, "media/ui/Paradise/LearnContextIcon.png")
+    end
 
-        local optTip =  sbopt:addOption("Clear Trees", worldobjects, function()
-            ParadiseZ.ClearTrees()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/TreesContextIcon.png")
-        
-
-        local optTip =  sbopt:addOption("Clear Plants", worldobjects, function()
-            ParadiseZ.DespawnPlants()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/PlantsContextIcon.png")
-
-        local optTip =  sbopt:addOption("Clear Cars", worldobjects, function()
-            ParadiseZ.DespawnCars()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/CarsContextIcon.png")
-
-        local optTip =  sbopt:addOption("Clear Fire", worldobjects, function()
-            ParadiseZ.StopFire()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/NoFireContextIcon.png")
-      
-
-
-        local optTip =  sbopt:addOption("Clear Map Record", worldobjects, function()
-            ParadiseZ.ClearMap()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/MapContextIcon.png")
-
-
-        local optTip =  sbopt:addOption("Clear Floor Items", worldobjects, function()
-            ParadiseZ.ClearFloorItems()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/NoItemsContextIcon.png")
-
-        local optTip =  sbopt:addOption("Clear Weather", worldobjects, function()
-            ParadiseZ.clearWeather()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/WeatherContextIcon.png")
-      
-        local optTip =  sbopt:addOption("Clear Corpse", worldobjects, function()
-            ParadiseZ.DespawnBodies()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/CorpseContextIcon.png")
-
-        local optTip =  sbopt:addOption("Clear Worn Items", worldobjects, function()
-            ParadiseZ.ClearWornItems()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/WornItemsContextIcon.png")
-      
-        local optTip =  sbopt:addOption("Clear Perks", worldobjects, function()
-            ParadiseZ.ClearPerks()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/MemoryContextIcon.png")
-
-         local optTip =  sbopt:addOption("Clear Traits", worldobjects, function()
-            ParadiseZ.ClearTraits()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/TraitsContextIcon.png")
-      
-        local optTip =  sbopt:addOption("Clear Learned Recipes", worldobjects, function()
-            ParadiseZ.ClearLearned()
-            getSoundManager():playUISound("UIActivateMainMenuItem")
-            context:hideAndChildren()
-        end)
-        optTip.iconTexture = getTexture("media/ui/Paradise/LearnContextIcon.png")
-      
-        -----------------------            ---------------------------
-        if clickedPlayer and clickedPlayer ~= pl then 
-            if string.lower(pl:getAccessLevel()) == "admin" then
-                local targUser = clickedPlayer:getUsername() 
-                if targUser then         
-                    print( targUser ) 
-                    local optTip = context:addOptionOnTop("Spectate: "..tostring(targUser), worldobjects, function()            
-                        ParadiseZ.setSpectate(targUser)
-                        getSoundManager():playUISound("UIActivateMainMenuItem")
-                        context:hideAndChildren()
-                    end)
-                    optTip.iconTexture = getTexture("media/ui/Paradise/SpectateContextIcon.png")
-                end
-            end 
-        end 
+    if clickedPlayer and clickedPlayer ~= pl and string.lower(pl:getAccessLevel()) == "admin" then
+        local targUser = clickedPlayer:getUsername()
+        if targUser then
+            addSafeOption(context, "Spectate: "..tostring(targUser), function() ParadiseZ.setSpectate(targUser) end, "media/ui/Paradise/SpectateContextIcon.png")
+        end
     end
 end
+
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.context)
 
-
-function ParadiseZ.hideAdminTrade(plNum, context, worldobjects, test)
-    if not clickedPlayer then return end    
+function ParadiseZ.hideAdminTrade(plNum, context, worldobjects)
+    if not clickedPlayer then return end
     if string.lower(clickedPlayer:getAccessLevel()) == "admin" or clickedPlayer:isInvisible() then
-        context:removeOptionByName(getText("ContextMenu_Trade"))        
-    end 
+        context:removeOptionByName(getText("ContextMenu_Trade"))
+    end
 end
+
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.hideAdminTrade)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.hideAdminTrade)
+

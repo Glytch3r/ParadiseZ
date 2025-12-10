@@ -6,6 +6,11 @@ function ParadiseZ.hideAdminTag(pl)
             pl:setShowAdminTag(false);
             sendPlayerExtraInfo(pl)
         end
+    else
+        if not pl:isShowAdminTag() then
+            pl:setShowAdminTag(true);
+            sendPlayerExtraInfo(pl)
+        end
     end
 end
 Events.OnPlayerUpdate.Remove(ParadiseZ.hideAdminTag)
@@ -18,7 +23,6 @@ function ParadiseZ.isHideAdminTag(pl)
     md.isHideAdminTag = md.isHideAdminTag or false
     return md.isHideAdminTag
 end
-
 
 function ParadiseZ.setHideAdminTag(activate, pl)
     pl = pl or getPlayer()

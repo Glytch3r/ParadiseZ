@@ -4,6 +4,7 @@ Events.OnGameStart.Add(function()
     ParadiseZ.ISServerSandboxOptionsUIonButtonApply = ISServerSandboxOptionsUI.onButtonApply
     function ISServerSandboxOptionsUI:onButtonApply()
         self:settingsFromUI(self.options)
+--[[ 
         local strList = SandboxVars.ParadiseZ.BlockedList
         ParadiseZ.parseZone(strList)
         if isClient() then
@@ -12,6 +13,8 @@ Events.OnGameStart.Add(function()
             ParadiseZ.parseZone(strList)
 
         end
+ ]]
+
         ParadiseZ.echo("SandboxOptions Updated")
         self.options:sendToServer()
         getSandboxOptions():toLua()
@@ -21,7 +24,6 @@ Events.OnGameStart.Add(function()
 end)
 
 function ParadiseZ.hookSafety()
-
         function ISSafetyUI:onMouseUp(x, y)
             ParadiseZ.doToggle()
         end

@@ -55,8 +55,25 @@ Commands.ParadiseZ.knockDownZed = function(args)
 		end
 	end
 end
+--[[ 
+Commands.ParadiseZ.staggerTarg = function(args)
+    getPlayer():getOnlineID()
+    local targ = getPlayerByOnlineID(args.targID)
+    if targ then
+        
+    end
+	
+end
+ ]]
+--[[ 
 
 
+Commands.ParadiseZ. = function(player, args)
+    local playerId = player:getOnlineID();
+    sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, targID = args.targID})
+end
+
+ ]]
 -----------------------            ---------------------------
 
 Commands.ParadiseZ.isScareCrow = function(args)
@@ -74,13 +91,13 @@ Commands.ParadiseZ.isScareCrow = function(args)
         end
     end
 end
-
+--[[ 
 Commands.ParadiseZ.SyncBlockedZones = function(args)
     local list = args.strList or SandboxVars.ParadiseZ.BlockedList
     ParadiseZ.parseZone(list)
     ParadiseZ.echo("Block Zones Synced")
 end
-
+ ]]
 Events.OnServerCommand.Add(function(module, command, args)
 	if Commands[module] and Commands[module][command] then
 		Commands[module][command](args)

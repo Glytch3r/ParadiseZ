@@ -180,8 +180,9 @@ function ParadiseZ.doDrawZone()
     end
 
     getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
-    getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
-
+    if reboundInfo then
+        getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
+    end
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
