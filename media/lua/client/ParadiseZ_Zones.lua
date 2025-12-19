@@ -89,6 +89,7 @@ end
 
 
 
+
 function ParadiseZ.isOutsideZone(pl)
     local targ = ParadiseZ.getPl(pl)
     local zoneName = ParadiseZ.getZoneName(targ)
@@ -105,4 +106,3 @@ function ParadiseZ.isBlockedZone(pl)
     if not zone then return false end
     return zone.isBlocked == true
 end
-

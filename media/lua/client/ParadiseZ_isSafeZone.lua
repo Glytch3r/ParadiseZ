@@ -1,6 +1,7 @@
 -- client/ParadiseZ_isSafeZone.lua
 ParadiseZ = ParadiseZ or {}
 
+
 function ParadiseZ.isSafeZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
@@ -8,7 +9,7 @@ function ParadiseZ.isSafeZone(pl)
     if zoneName == "Outside" then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
-    return zone.isSafe == true
+    return zone.isSafe == true 
 end
 
 
@@ -30,6 +31,8 @@ function ParadiseZ.restoreHandler(obj)
 end
 Events.OnTileRemoved.Remove(ParadiseZ.restoreHandler)
 Events.OnTileRemoved.Add(ParadiseZ.restoreHandler)
+
+
 --[[ 
 function ParadiseZ.safeHouseCheck()
     local pl = getPlayer() 

@@ -49,33 +49,26 @@ local sq = getPlayer():getSquare()
 print(ParadiseZ.isSquareWalkable(sq))
 
  ]]
-
 function ParadiseZ.isKosZoneFromSquare(sq)
     if not sq then return false end
+    local zoneName = ParadiseZ.getZoneName(sq)
+    if zoneName == "Outside" then return false end
+    local zone = ParadiseZ.ZoneData[zoneName]
+    if not zone then return false end
+
     if SandboxVars.ParadiseZ.VanillaNonPvpZone then
         local x = sq:getX()
         local y = sq:getY()
         if x and y and NonPvpZone.getNonPvpZone(x, y) then
-            return false
+            return true or zone.isKos == true
         end
     end
-    local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == "Outside" then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isKos == true and not zone.isPvE
+
+    return zone.isKos == true
 end
 
 function ParadiseZ.isOutsideSq(sq)
     return ParadiseZ.getZoneName(sq) == "Outside"
-end
-
-function ParadiseZ.isBlockedZone(sq)
-    local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == "Outside" then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isBlocked == true
 end
 
 

@@ -5,4 +5,6 @@ poster=poster.png
 authors=Glytch3r
 icon=icon.png
 
+tiledef=PineHosting 2631
+pack=PineHosting
 

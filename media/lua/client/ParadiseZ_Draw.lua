@@ -37,10 +37,12 @@ function ParadiseZ.getZoneInfo(pl)
 
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
+
     local zoneName = name
     if not (x and y) then return end
 
-    if name ~= "Outside" and ParadiseZ.isXYZoneInner(x, y, name) then
+  
+    if name ~= "Outside" and ParadiseZ.isXYZoneOuter(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
 

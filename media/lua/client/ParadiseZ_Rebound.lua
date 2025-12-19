@@ -44,6 +44,45 @@ function ParadiseZ.getZoneArea(name)
     return zone.x1, zone.y1, zone.x2, zone.y2
 end
 
+
+
+function ParadiseZ.isXYInsideZone(x, y, name)
+    if not name or name == "Outside" then return false end
+    if not x or not y then return false end
+
+    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
+    if not (x1 and y1 and x2 and y2) then return false end
+
+    return x >= x1 and x <= x2 and y >= y1 and y <= y2
+end
+function ParadiseZ.isXYZoneOuter(x, y, name, margin)
+    margin = margin or 3
+    if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
+
+    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
+    if not (x1 and y1 and x2 and y2) then return false end
+
+    return x <= x1 + (margin - 1)
+        or x >= x2 - (margin - 1)
+        or y <= y1 + (margin - 1)
+        or y >= y2 - (margin - 1)
+end
+function ParadiseZ.isXYZoneInner(x, y, name, margin)
+    margin = margin or 3
+    if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
+    return not ParadiseZ.isXYZoneOuter(x, y, name, margin)
+end
+
+
+
+
+
+
+
+--[[ 
+
+
+
 -- inside whole zone
 function ParadiseZ.isXYInsideZone(x, y, name)
     if not name or name == "Outside" then return false end
@@ -73,8 +112,8 @@ end
 -- inside zone NOT within 3 tiles of any edge
 function ParadiseZ.isXYZoneInner(x, y, name)
     if not name or name == "Outside" then return false end
-
-    if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
+    
+   -- if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
     if not (x1 and y1 and x2 and y2) then return false end
 
@@ -84,35 +123,8 @@ function ParadiseZ.isXYZoneInner(x, y, name)
     if y >= y2 - 2 then return false end
     return true
 end
-
+ ]]
 -----------------------            ---------------------------
-
-function ParadiseZ.reboundHandler(pl)
-    if not pl then return end
-    local plX, plY = ParadiseZ.getXY(pl) 
-    if not plX or not plY then return end
-    local name = ParadiseZ.getZoneName(pl)
-    
-    if name and ParadiseZ.isXYZoneOuter(plX, plY, name) then
-        ParadiseZ.saveRebound(pl, name)
-        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
-        if getCore():getDebug() then 
-            if sq then ParadiseZ.addTempMarker(sq) end
-        end
-    end
-    
-    if name == "Outside" then return end
-    
-    if ParadiseZ.isXYZoneInner(plX, plY, name) and ParadiseZ.isRestricted(pl:getCurrentSquare(), pl) then
-        ParadiseZ.doRebound(pl)
-        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
-        if sq then ParadiseZ.addTempMarker(sq) end
-    end
-end
-
-Events.OnPlayerMove.Remove(ParadiseZ.reboundHandler)
-Events.OnPlayerMove.Add(ParadiseZ.reboundHandler)
-
 
 function ParadiseZ.saveRebound(pl, name)
     pl = pl or getPlayer()
@@ -123,7 +135,7 @@ function ParadiseZ.saveRebound(pl, name)
     name = name or ParadiseZ.getZoneName(pl)
     local md = pl:getModData()
     
-    if ParadiseZ.isXYZoneInner(plX, plY, name) then
+    if ParadiseZ.isXYZoneOuter(plX, plY, name) then
         local tab = {
             name = name,
             x = plX,
@@ -142,7 +154,7 @@ function ParadiseZ.getReboundXYZ(pl)
     return {x = x, y = y, z = z}
 end
 
-function ParadiseZ.getLastCoord(pl)
+function ParadiseZ.getLastCoord(pl, isChat)
     pl = pl or getPlayer()
     if not pl then return ParadiseZ.getFallbackCoord() end
     
@@ -152,21 +164,21 @@ function ParadiseZ.getLastCoord(pl)
     if rebound and rebound.x and rebound.y and rebound.z then     
         return rebound.x, rebound.y, rebound.z        
     end
-    
-    local sh = SafeHouse.hasSafehouse(pl)
-    if sh then
-        return sh:getX(), sh:getY(), 0
+    if not isChat then
+        local sh = SafeHouse.hasSafehouse(pl)
+        if sh then
+            return sh:getX(), sh:getY(), 0
+        end
     end
-    
     return ParadiseZ.getFallbackCoord()
 end
 
-function ParadiseZ.doRebound(pl)
+function ParadiseZ.doRebound(pl, isChat)
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
     if not pl or not pl:isAlive() then return end
     
-    local x, y, z = ParadiseZ.getLastCoord(pl)
+    local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
     if not x or not y or not z then return end
     
     local car = pl:getVehicle()
@@ -181,13 +193,13 @@ function ParadiseZ.doRebound(pl)
 end
 
 
-function ParadiseZ.reboundCountdown()
+function ParadiseZ.reboundCountdown(isChat)
     local pl = getPlayer() 
 
     if not  timer:Exists('countdown') then
         timer:Create('countdown', 1, 10, function() 
             if c >= 1 then
-                ParadiseZ.doRebound(pl)
+                ParadiseZ.doRebound(pl, isChat)
             else
                 local c = timer:RepsLeft('countdown')
                 print(c)
@@ -196,7 +208,7 @@ function ParadiseZ.reboundCountdown()
 
         end)
     else
-        ParadiseZ.doRebound(pl)
+        ParadiseZ.doRebound(pl, isChat)
     end
 end
 
@@ -260,18 +272,49 @@ function ParadiseZ.isZoneEdge(targUser, name, margin)
     return false
 end
 
+
 function ParadiseZ.isRestricted(sq, pl)
     pl = ParadiseZ.getPl(pl)
     if not pl then return false end
     sq = sq or pl:getCurrentSquare()
     if not sq then return false end
     if ParadiseZ.isOutsideSq(sq) then return false end
-    local x, y = sq:getX(), sq:getY()
     local name = ParadiseZ.getZoneName(sq)
+    local x, y = ParadiseZ.getXY(pl)
     if ParadiseZ.isXYZoneInner(x, y, name) then
-        if (ParadiseZ.isKosZoneFromSquare(sq) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl) then
+        if (ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl) then
             return true
         end
     end
     return false
 end
+
+local ticks = 0
+function ParadiseZ.reboundHandler(pl)
+    ticks = ticks + 1
+    if ticks % 3 == 0 then        
+        if not pl then return end
+        local plX, plY = ParadiseZ.getXY(pl) 
+        if not plX or not plY then return end
+        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
+        if not sq then return end 
+        local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
+        if not name or name == "Outside" then return end
+        if ParadiseZ.isXYZoneOuter(plX, plY, name) then
+            ParadiseZ.saveRebound(pl, name)
+            if getCore():getDebug() then 
+                if sq then ParadiseZ.addTempMarker(sq) end
+            end
+        else        
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and ParadiseZ.isRestricted(sq, pl) then
+                ParadiseZ.doRebound(pl)
+                local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
+                if sq then ParadiseZ.addTempMarker(sq) end
+            end
+        end
+    end
+end
+
+Events.OnPlayerUpdate.Remove(ParadiseZ.reboundHandler)
+Events.OnPlayerUpdate.Add(ParadiseZ.reboundHandler)
+

@@ -1,5 +1,5 @@
 ParadiseZ = ParadiseZ or {}
-function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
+function ParadiseZ.pvpHit(char, targ, wpn, dmg)
     local isAvoid = false
     local isHasPveTrait = ParadiseZ.isPvE(char) or ParadiseZ.isPvE(targ)
     local isHasPveZone = ParadiseZ.isPveZone(char) or ParadiseZ.isPveZone(targ)
@@ -45,9 +45,9 @@ function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
             print(dmg)
         end
     end
-
-    local pvpStaggerChance = SandboxVars.ParadiseZ.pvpStaggerChance or 34
-    if pvpStaggerChance and ParadiseZ.doRoll(pvpStaggerChance) then
+    
+    if not SandboxVars.ParadiseZ.pvpStagger  then return end   
+    if targ.isCriticalHit and targ:isCriticalHit() then
         local isBackstab = targ:isHitFromBehind()
         local pushedDir = "pushedFront"
         if isBackstab then
@@ -60,9 +60,8 @@ function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
     end
 end
 
-Events.OnWeaponHitCharacter.Remove(ParadiseZ.AvoidDmg)
-Events.OnWeaponHitCharacter.Add(ParadiseZ.AvoidDmg)
-
+Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
+Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
 
 
 

@@ -43,10 +43,10 @@ option ParadiseZ.ClearRadius
 }
 
 	
-option ParadiseZ.pvpStaggerChance
+option ParadiseZ.pvpStagger
 {
-	type = double,	 min = 0.00,  max = 100,  default = 34,
-	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_pvpStagger,
 }
 
 option ParadiseZ.AdminOnlyZoneInfo
@@ -86,6 +86,7 @@ option ParadiseZ.GunUpdater
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_GunUpdater,
 }
+
 option ParadiseZ.GunVersionKey
 {
 	type = string, default = adfawfq3,
@@ -96,6 +97,14 @@ option ParadiseZ.GunTooltip
 	type = string, default = Updated Paradise Server Gun,
 	page = ParadiseZ, translation = ParadiseZ_GunTooltip,
 }
+
+option ParadiseZ.ShotgunList {
+	type = string, default = Base.Shotgun;Base.Spas12;Base.Spas12Folded;Base.ShotgunSemi;Base.Shotgun2;Base.ShotgunSawnoff;Base.ShotgunSawnoffNoStock;Base.DoubleBarrelShotgun;Base.DoubleBarrelShotgunSawnoff;Base.DoubleBarrelShotgunSawnoffNoStock;SpoonEngineerStuff.ScrappyBlunderbuss;Base.AssaultRifleMasterkeyShotgun;Base.M2400_Shotgun,
+	page = ParadiseZ, translation = ParadiseZ_ShotgunList,
+}
+
+
+
 option ParadiseZ.PerkModifierShotgun
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.001,

@@ -1,77 +1,81 @@
 
 
+
 ParadiseZ = ParadiseZ or {}
 
-ParadiseZ.isShotgun = {
-    ["Base.Shotgun"] = true, 
-    ["Base.Spas12"] = true, 
-    ["Base.Spas12Folded"] = true, 
-    ["Base.ShotgunSemi"] = true, 
-    ["Base.Shotgun2"] = true, 
-    ["Base.ShotgunSawnoff"] = true, 
-    ["Base.ShotgunSawnoffNoStock"] = true, 
-    ["Base.DoubleBarrelShotgun"] = true, 
-    ["Base.DoubleBarrelShotgunSawnoff"] = true, 
-    ["Base.DoubleBarrelShotgunSawnoffNoStock"] = true, 
-    ["SpoonEngineerStuff.ScrappyBlunderbuss"] = true, 
-    ["Base.AssaultRifleMasterkeyShotgun"] = true, 
-    ["Base.M2400_Shotgun"] = true, 
+ParadiseZ.defaultShotguns = {
+    ["Base.Shotgun"] = true,
+    ["Base.Spas12"] = true,
+    ["Base.Spas12Folded"] = true,
+    ["Base.ShotgunSemi"] = true,
+    ["Base.Shotgun2"] = true,
+    ["Base.ShotgunSawnoff"] = true,
+    ["Base.ShotgunSawnoffNoStock"] = true,
+    ["Base.DoubleBarrelShotgun"] = true,
+    ["Base.DoubleBarrelShotgunSawnoff"] = true,
+    ["Base.DoubleBarrelShotgunSawnoffNoStock"] = true,
+    ["SpoonEngineerStuff.ScrappyBlunderbuss"] = true,
+    ["Base.AssaultRifleMasterkeyShotgun"] = true,
+    ["Base.M2400_Shotgun"] = true,
 }
+
+function ParadiseZ.parseShotgun()
+    local src = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ShotgunList
+
+    if type(src) == "string" and src ~= "" then
+        local tab = {}
+        for str in string.gmatch(src, "[^;]+") do
+            tab[str] = true
+        end
+        return tab
+    end
+
+    if type(src) == "table" then
+        return src
+    end
+
+    return ParadiseZ.defaultShotguns
+end
+
 
 function ParadiseZ.applyGunParams()
     local allItems = getScriptManager():getAllItems()
     local sm = ScriptManager.instance
-    local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey 
-    local GunTooltip = SandboxVars.ParadiseZ.GunTooltip 
+    local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
+    local GunTooltip = SandboxVars.ParadiseZ.GunTooltip
 
     for i = 1, allItems:size() do
-        local item = allItems:get(i-1)
-        local fType = item:getModuleName() .. '.' .. item:getName()
-        if fType then
-            local wpn = sm:getItem(fType)
-            if wpn then
-                local check = getScriptManager():FindItem(tostring(fType))
-                if check then
-                    if wpn.isRanged and wpn:isRanged()  then
-                        local PerkModifier
-                        local MinAngle
-                        if wpn.isTwoHandWeapon and wpn:isTwoHandWeapon() then
-                            if ParadiseZ.isShotgun[tostring(fType)] then                            
-                                print('Shotgun:   '..tostring(fType).."   modified")
-                                --wpn:DoParam("AimingPerkMinAngleModifier = 0.001")
-                                --wpn:DoParam("MinAngle = 0.99")
-                                PerkModifier = SandboxVars.ParadiseZ.PerkModifierShotgun 
-                                MinAngle = SandboxVars.ParadiseZ.MinAngleShotgun 
-                            else 
-                                print('Rifle:   '..tostring(fType).."   modified")
-                                --wpn:DoParam("AimingPerkMinAngleModifier = 0.0005")
-                                --wpn:DoParam("MinAngle = 0.999")
-                                PerkModifier = SandboxVars.ParadiseZ.PerkModifierRifle 
-                                MinAngle = SandboxVars.ParadiseZ.MinAngleRifle 
-                            end
-                        else 
-                            print('Pistol:   '..tostring(fType).."   modified")
-                            --wpn:DoParam("AimingPerkMinAngleModifier = 0.0005")
-                            --wpn:DoParam("MinAngle = 0.999")
-                            PerkModifier = SandboxVars.ParadiseZ.PerkModifierPistol 
-                            MinAngle = SandboxVars.ParadiseZ.MinAnglePistol 
-                        end
-                        wpn:DoParam("AimingPerkMinAngleModifier = "..tostring(PerkModifier))
-                        wpn:DoParam("MinAngle = "..tostring(MinAngle))
+        local item = allItems:get(i - 1)
+        local fType = item:getModuleName() .. "." .. item:getName()
+        local wpn = sm:getItem(fType)
 
-                        wpn:DoParam("AngleFalloff = true")
-                        wpn:DoParam("ParadiseGun = "..tostring(GunVersionKey))
-                        wpn:DoParam("Tooltip = "..tostring(GunTooltip))
-                        
-                    end
+        if wpn and wpn.isRanged and wpn:isRanged() then
+            local PerkModifier
+            local MinAngle
+            if wpn.isTwoHandWeapon and wpn:isTwoHandWeapon() then
+                ParadiseZ.isShotgun = ParadiseZ.parseShotgun()
+                if ParadiseZ.isShotgun[fType] then
+                    PerkModifier = SandboxVars.ParadiseZ.PerkModifierShotgun
+                    MinAngle = SandboxVars.ParadiseZ.MinAngleShotgun
+                else
+                    PerkModifier = SandboxVars.ParadiseZ.PerkModifierRifle
+                    MinAngle = SandboxVars.ParadiseZ.MinAngleRifle
                 end
+            else
+                PerkModifier = SandboxVars.ParadiseZ.PerkModifierPistol
+                MinAngle = SandboxVars.ParadiseZ.MinAnglePistol
             end
+
+            wpn:DoParam("AimingPerkMinAngleModifier = " .. tostring(PerkModifier))
+            wpn:DoParam("MinAngle = " .. tostring(MinAngle))
+            wpn:DoParam("AngleFalloff = true")
+            wpn:DoParam("ParadiseGun = " .. tostring(GunVersionKey))
+            wpn:DoParam("Tooltip = " .. tostring(GunTooltip))
         end
     end
 end
 
-
-Events.OnInitGlobalModData.Add(function()
+Events.OnCreatePlayer.Add(function()
     ParadiseZ.applyGunParams()    
 end)
 
@@ -183,3 +187,94 @@ function ParadiseZ.updateGun(item, inv)
 
     ISInventoryPage.dirtyUI()
 end
+-----------------------            ---------------------------
+
+--[[ 
+ParadiseZ.defaultShotguns = {
+    ["Base.Shotgun"] = true, 
+    ["Base.Spas12"] = true, 
+    ["Base.Spas12Folded"] = true, 
+    ["Base.ShotgunSemi"] = true, 
+    ["Base.Shotgun2"] = true, 
+    ["Base.ShotgunSawnoff"] = true, 
+    ["Base.ShotgunSawnoffNoStock"] = true, 
+    ["Base.DoubleBarrelShotgun"] = true, 
+    ["Base.DoubleBarrelShotgunSawnoff"] = true, 
+    ["Base.DoubleBarrelShotgunSawnoffNoStock"] = true, 
+    ["SpoonEngineerStuff.ScrappyBlunderbuss"] = true, 
+    ["Base.AssaultRifleMasterkeyShotgun"] = true, 
+    ["Base.M2400_Shotgun"] = true, 
+}
+function ParadiseZ.parseShotgun()
+    local tab = {}
+    local strList = SandboxVars.ParadiseZ.ShotgunList
+    if not strList then
+        strList = ParadiseZ.defaultShotguns
+    end
+    if strList then
+        if type(strList) ~= "string" or strList == "" then
+            return tab
+        end
+
+        for str in string.gmatch(strList, "[^;]+") do
+            tab[str] = true
+        end
+    end
+    return tab
+end
+
+
+
+
+function ParadiseZ.applyGunParams()
+    local allItems = getScriptManager():getAllItems()
+    local sm = ScriptManager.instance
+    local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey 
+    local GunTooltip = SandboxVars.ParadiseZ.GunTooltip 
+
+    for i = 1, allItems:size() do
+        local item = allItems:get(i-1)
+        local fType = item:getModuleName() .. '.' .. item:getName()
+        if fType then
+            local wpn = sm:getItem(fType)
+            if wpn then
+                local check = getScriptManager():FindItem(tostring(fType))
+                if check then
+                    if wpn.isRanged and wpn:isRanged()  then
+                        local PerkModifier
+                        local MinAngle
+                        if wpn.isTwoHandWeapon and wpn:isTwoHandWeapon() then
+                            if ParadiseZ.isShotgun[tostring(fType)] then                            
+                                print('Shotgun:   '..tostring(fType).."   modified")
+                                --wpn:DoParam("AimingPerkMinAngleModifier = 0.001")
+                                --wpn:DoParam("MinAngle = 0.99")
+                                PerkModifier = SandboxVars.ParadiseZ.PerkModifierShotgun 
+                                MinAngle = SandboxVars.ParadiseZ.MinAngleShotgun 
+                            else 
+                                print('Rifle:   '..tostring(fType).."   modified")
+                                --wpn:DoParam("AimingPerkMinAngleModifier = 0.0005")
+                                --wpn:DoParam("MinAngle = 0.999")
+                                PerkModifier = SandboxVars.ParadiseZ.PerkModifierRifle 
+                                MinAngle = SandboxVars.ParadiseZ.MinAngleRifle 
+                            end
+                        else 
+                            print('Pistol:   '..tostring(fType).."   modified")
+                            --wpn:DoParam("AimingPerkMinAngleModifier = 0.0005")
+                            --wpn:DoParam("MinAngle = 0.999")
+                            PerkModifier = SandboxVars.ParadiseZ.PerkModifierPistol 
+                            MinAngle = SandboxVars.ParadiseZ.MinAnglePistol 
+                        end
+                        wpn:DoParam("AimingPerkMinAngleModifier = "..tostring(PerkModifier))
+                        wpn:DoParam("MinAngle = "..tostring(MinAngle))
+
+                        wpn:DoParam("AngleFalloff = true")
+                        wpn:DoParam("ParadiseGun = "..tostring(GunVersionKey))
+                        wpn:DoParam("Tooltip = "..tostring(GunTooltip))
+                        
+                    end
+                end
+            end
+        end
+    end
+end
+ ]]
