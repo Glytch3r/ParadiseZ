@@ -164,12 +164,14 @@ function ParadiseZ.getLastCoord(pl, isChat)
     if rebound and rebound.x and rebound.y and rebound.z then     
         return rebound.x, rebound.y, rebound.z        
     end
+--[[ 
     if not isChat then
         local sh = SafeHouse.hasSafehouse(pl)
         if sh then
             return sh:getX(), sh:getY(), 0
         end
     end
+ ]]
     return ParadiseZ.getFallbackCoord()
 end
 
