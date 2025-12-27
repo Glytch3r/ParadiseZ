@@ -55,6 +55,17 @@ Commands.ParadiseZ.knockDownZed = function(args)
 		end
 	end
 end
+Commands.ParadiseZ.gunParams = function(args)
+    ParadiseZ.applyGunParams(getCore():getDebug())   
+    local pl = getPlayer() 
+    if not pl then return end
+    if string.lower(pl:getAccessLevel()) == "admin" then
+        local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
+        pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)   
+    end
+end
+
+
 --[[ 
 Commands.ParadiseZ.staggerTarg = function(args)
     getPlayer():getOnlineID()

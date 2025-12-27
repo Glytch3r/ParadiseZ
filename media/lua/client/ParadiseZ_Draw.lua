@@ -1,35 +1,28 @@
+--client\ParadiseZ_Draw.lua
 ParadiseZ = ParadiseZ or {}
 
 ParadiseZ.showZoneInfo = true
 
---[[ 
-    ParadiseZ.showZoneInfo = false
- ]]
-
- function ParadiseZ.LifeBarVisibility(pl)
+function ParadiseZ.LifeBarVisibility(pl)
     pl = pl or getPlayer()
     if not pl then return end
 
-    local name = ParadiseZ.getZoneName(pl)
-    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    local isOutsideZone = ParadiseZ.isOutside(pl)
     local isKosZone = ParadiseZ.isKosZone(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
-    local x, y = ParadiseZ.getXY(pl)
-    local isBlockedZone = ParadiseZ.isBlockedZone(pl)
     local isPvpPlayer = ParadiseZ.isPvE(pl)
 
     if isPvpPlayer or (isPveZone and not isKosZone) then
-        LifeBarUI.hide()   
+        LifeBarUI.hide()
     end
-    if not isPvpPlayer and (isKosZone and not isPveZone)or isOutsideZone then
+
+    if ((not isPvpPlayer) and isKosZone and not isPveZone) or isOutsideZone then
         LifeBarUI.show()
     end
-    
 end
+
 Events.OnPlayerUpdate.Remove(ParadiseZ.LifeBarVisibility)
 Events.OnPlayerUpdate.Add(ParadiseZ.LifeBarVisibility)
-
-
 
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
@@ -37,16 +30,14 @@ function ParadiseZ.getZoneInfo(pl)
 
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
-
-    local zoneName = name
     if not (x and y) then return end
 
-  
-    if name ~= "Outside" and ParadiseZ.isXYZoneOuter(x, y, name) then
+    local zoneName = name
+    if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr) and ParadiseZ.isXYZoneOuter(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
 
-    local info = {zoneName}
+    local info = { zoneName }
 
     if ParadiseZ.isKosZone(pl) then
         table.insert(info, "KosZone")
@@ -63,9 +54,6 @@ function ParadiseZ.getZoneInfo(pl)
     return table.concat(info, "\n")
 end
 
-
-
-
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
     local pl = ParadiseZ.getPl(char)
@@ -77,70 +65,49 @@ function ParadiseZ.getDrawStr(char)
     local str
     if ParadiseZ.isPartOfSH(sq) then
         str = "HQ"
-    elseif ParadiseZ.isOutsideZone(pl) then
-        str = "Outside"
-    elseif ParadiseZ.isRegularZone(pl) then
-        str = "Zone"
-    elseif ParadiseZ.isPveZone(pl) then
-        str = "NonPvp"
+    elseif ParadiseZ.isOutside(pl) then
+        str = tostring(SandboxVars.ParadiseZ.OutsideStr)
     elseif ParadiseZ.isKosZone(pl) then
         str = "PvP"
+    elseif ParadiseZ.isPveZone(pl) then
+        str = "NonPvp"
     elseif ParadiseZ.isBlockedZone(pl) then
         str = "Blocked"
     elseif ParadiseZ.isSafeZone(pl) then
         str = "Protected"
+    elseif ParadiseZ.isRegularZone(pl) then
+        str = "Zone"
     end
+
     return str or ""
-   
 end
------------------------            ---------------------------
+
 function ParadiseZ.getReboundData()
     local data = getPlayer():getModData()
-    local rebound = data['Rebound']
+    local rebound = data["Rebound"]
     if not rebound or not rebound.name then return "" end
     local x, y, z = rebound.x, rebound.y, rebound.z
     if not (x and y and z) then return "" end
-    return "Rebound:".. tostring(rebound.name).."\nCoord:   X " .. tostring(round(x)) .. "   ,   Y " .. tostring(round(y))
+    return "Rebound:" .. tostring(rebound.name) .. "\nCoord:   X " .. tostring(round(x)) .. "   ,   Y " .. tostring(round(y))
 end
 
 function ParadiseZ.getReboundInfo()
     local pl = getPlayer()
     if not pl then return "" end
+    if not getCore():getDebug() or pl:isTeleporting() then return "" end
 
     local modData = pl:getModData()
-    local rebound = modData['Rebound']
+    local rebound = modData["Rebound"]
 
     if type(rebound) ~= "table" or not (rebound.x and rebound.y and rebound.z) then
         local x, y, z = ParadiseZ.getFallbackCoord()
-        if x and y and z then
-            modData['Rebound'] = {x = x, y = y, z = z, name = "Fallback"}
-            rebound = modData['Rebound']
-        else
-            return ""
-        end
+        if not (x and y and z) then return "" end
+        rebound = { x = x, y = y, z = z, name = "Fallback" }
+        modData["Rebound"] = rebound
     end
 
-    if getCore():getDebug() then
-        return "\nREBOUND: \n"..tostring(round(rebound.x))..", "..tostring(round(rebound.y))..", "..tostring(rebound.z)
-    end
-
-    return ""
+    return "\nREBOUND: \n" .. tostring(round(rebound.x)) .. ", " .. tostring(round(rebound.y)) .. ", " .. tostring(rebound.z)
 end
-
-function ParadiseZ.getReboundInfo()
-    local pl = getPlayer() 
-    if getCore():getDebug() and not pl:isTeleporting() then 
-		local rebound = ParadiseZ.getReboundXYZ(pl)
-		local x = rebound.x
-		local z = rebound.z
-		local y = rebound.y
-        
-		local msg = "\nREBOUND: \n"..tostring(round(x)) ..',  '.. tostring(round(y)) ..', '..tostring(z)
-		return msg
-		--ParadiseZ.echo(msg, true)   
-    end
-end
-
 
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
@@ -150,44 +117,47 @@ function ParadiseZ.doDrawZone()
     local str = ParadiseZ.getDrawStr(pl)
 
     local textures = {
-        ['HQ'] = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
-        ['Outside'] = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
-        ['Zone'] = getTexture("media/textures/zone/ParadiseZ_Zone_Inside.png"),
-        ['NonPvp'] = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"),
-        ['PvP'] = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), 
-        ['Blocked']  = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
-        ['Protected']  = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
+        HQ = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
+        Outside = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
+        Zone = getTexture("media/textures/zone/ParadiseZ_Zone_Inside.png"),
+        NonPvp = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"),
+        PvP = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"),
+        Blocked = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
+        Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
     }
 
     local colors = {
-        ['HQ'] = {r=0,g=0,b=1},
-        ['Outside'] = {r=1,g=0.4,b=0},
-        ['Zone'] = {r=1,g=1,b=1},
-        ['NonPvp'] = {r=0,g=1,b=0},
-        ['PvP'] = {r=0.9,g=0.2,b=0.2},
-        ['Blocked'] = { r = 0.13, g = 0.13, b = 0.13 },
-        ['Protected'] = { r = 0.84, g = 0.76, b = 0.67 },
+        HQ = { r = 0, g = 0, b = 1 },
+        Outside = { r = 1, g = 0.4, b = 0 },
+        Zone = { r = 1, g = 1, b = 1 },
+        NonPvp = { r = 0, g = 1, b = 0 },
+        PvP = { r = 0.9, g = 0.2, b = 0.2 },
+        Blocked = { r = 0.13, g = 0.13, b = 0.13 },
+        Protected = { r = 0.84, g = 0.76, b = 0.67 },
     }
 
     local texture = textures[str]
-    local color = colors[str] or {r=1,g=1,b=1}
+    local color = colors[str] or { r = 1, g = 1, b = 1 }
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-    local alpha = (str == nil or str == "") and (isAdm and 0.1 or 0) or 0.8
-    local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo  
-    local msg = ParadiseZ.getZoneName(pl) or ''
-    local zoneInfo = ParadiseZ.getZoneInfo(pl) or ''
+    local alpha = (not str or str == "") and (isAdm and 0.1 or 0) or 0.8
+    local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo
+    local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
     local reboundInfo
-    if isAdm or not isShowInfo then 
-         reboundInfo = ParadiseZ.getReboundInfo(pl) or ''
+
+    if isAdm or not isShowInfo then
+        reboundInfo = ParadiseZ.getReboundInfo() or ""
     end
 
     getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
-    if reboundInfo then
+
+    if reboundInfo and reboundInfo ~= "" then
         getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
     end
+
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
 end
+
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)

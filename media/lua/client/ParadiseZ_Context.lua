@@ -3,6 +3,9 @@ ParadiseZ = ParadiseZ or {}
 function ParadiseZ.isOnOrOff(bool)
     return bool and "On" or "Off"
 end
+
+
+
 function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
@@ -26,7 +29,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local opt = ISContextMenu:getNew(context)
     if not opt then return end
     context:addSubMenu(Main, opt)
+    
 
+    
     local function addSafeOption(menu, text, callback, icon)
         if not menu then return end
         local optTip = menu:addOption(text, worldobjects, function()
@@ -37,7 +42,20 @@ function ParadiseZ.context(plNum, context, worldobjects)
             optTip.iconTexture = getTexture(icon)
         end
     end
-
+    
+    addSafeOption(opt, "ReApply Gun Params", function() 
+        --ParadiseZ.applyGunParams(getCore():getDebug())    
+        if isClient() then 
+            sendClientCommand("ParadiseZ", "gunParams", { })
+        else
+            ParadiseZ.applyGunParams(getCore():getDebug()) 
+        end	
+        local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
+        pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)     
+		getSoundManager():playUISound("UIActivateMainMenuItem")
+		context:hideAndChildren()
+    end, "media/ui/Paradise/GunParams.png")
+    
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true) getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     addSafeOption(opt, "Hide Admin Tag: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isHideAdminTag(pl))), function() ParadiseZ.toggleHideAdminTag(pl, activate) end, "media/ui/Paradise/AdmTagContextIcon.png")
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
@@ -95,13 +113,53 @@ end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.context)
 
-function ParadiseZ.hideAdminTrade(plNum, context, worldobjects)
-    if not clickedPlayer then return end
-    if string.lower(clickedPlayer:getAccessLevel()) == "admin" or clickedPlayer:isInvisible() then
-        context:removeOptionByName(getText("ContextMenu_Trade"))
+
+
+--[[ 
+function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
+    local pl = getSpecificPlayer(plNum)
+    if not pl then return end
+    if clickedPlayer then 
+        if  string.lower(clickedPlayer:getAccessLevel()) == "admin" or clickedPlayer:isInvisible() then
+            context:removeOptionByName(getText("ContextMenu_Trade"))
+        end 
+    end
+
+    if ParadiseZ.isSafeZone(pl) then   
+        local tab = {
+            "ContextMenu_Destroy",
+            "ContextMenu_Disassemble",
+            "ContextMenu_Unbarricade",
+        }
+        loop iterate tab
+
+        context:removeOptionByName(getText("ContextMenu_Destroy"))
+
+        local disabled = context:addOption(getText("ContextMenu_Destroy"))
+        if disabled then
+            disabled.notAvailable = true
+            --disabled.iconTexture = getTexture("media/ui/Paradise/ReboundContextIcon.png")
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
+            tooltip.description = "Protected Zone"
+            disabled.toolTip = tooltip
+        end
+
+        context:removeOptionByName(getText("ContextMenu_Disassemble"))
+
+        local disabled = context:addOption(getText("ContextMenu_Disassemble"))
+        if disabled then
+            disabled.notAvailable = true
+            --disabled.iconTexture = getTexture("media/ui/Paradise/ReboundContextIcon.png")
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
+            tooltip.description = "Protected Zone"
+            disabled.toolTip = tooltip
+        end
+
     end
 end
 
-Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.hideAdminTrade)
-Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.hideAdminTrade)
-
+Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
+Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
+ ]]

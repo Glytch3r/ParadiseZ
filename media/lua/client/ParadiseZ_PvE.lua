@@ -50,7 +50,7 @@ function ParadiseZ.isCanToggle(pl)
     local isPlayerPvE = ParadiseZ.isPvE(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isKosZone = ParadiseZ.isKosZone(pl) 
-    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    local isOutsideZone = ParadiseZ.isOutside(pl)
     if ParadiseZ.isBlockedZone(pl) then return false end
 --[[ 
     if isPlayerPvE then return false end
@@ -96,7 +96,7 @@ function ParadiseZ.autoToggle(pl)
     local isPlayerPvE = ParadiseZ.isPvE(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isKosZone = ParadiseZ.isKosZone(pl)    
-    local isOutsideZone = ParadiseZ.isOutsideZone(pl)
+    local isOutsideZone = ParadiseZ.isOutside(pl)
 
     local isVisible = data.safetyUI:getIsVisible()
     if isPlayerPvE then

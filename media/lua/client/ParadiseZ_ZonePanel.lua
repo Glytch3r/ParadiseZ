@@ -36,8 +36,8 @@ local Point1_TEX = getTexture("media/ui/Paradise/Point1.png")
 local Point2_TEX = getTexture("media/ui/Paradise/Point2.png")
 
 
-local sync_TEX_ON  = getTexture("media/ui/Paradise/sync.png")
-local sync_TEX_OFF = getTexture("media/ui/Paradise/sync_off.png")
+local sync_TEX_ON  = getTexture("media/ui/Paradise/sync_on.png")
+local sync_TEX_OFF = getTexture("media/ui/Paradise/sync.png")
 
 local reset_TEX = getTexture("media/ui/Paradise/reset.png")
 local add_TEX = getTexture("media/ui/Paradise/add.png")
@@ -583,7 +583,12 @@ function ParadiseZ.ZoneEditorWindow:update()
         end
     
     end
-    self.btnSave:setImage(not self.shouldSync and sync_TEX_ON or sync_TEX_OFF )
+    local syncImg = sync_TEX_OFF
+    if self.shouldSync then
+        syncImg = sync_TEX_ON
+    end
+    self.btnSave:setImage(syncImg)
+
     if self.btnSave.blinkImageAlpha ~= self.shouldSync then
         self.btnSave.blinkImageAlpha = self.shouldSync
     end

@@ -19,7 +19,10 @@ Commands.ParadiseZ.staggerTarg = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, targID = args.targID})
 end
-
+Commands.ParadiseZ.gunParams = function(player, args)
+    local playerId = player:getOnlineID();
+    sendServerCommand('ParadiseZ', 'gunParams', {})
+end
 Commands.ParadiseZ.speedUp = function(player, args)
     local playerId = player:getOnlineID();
     sendServerCommand('ParadiseZ', 'speedUp', {id = playerId, zedID = args.zedID})

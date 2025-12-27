@@ -15,7 +15,7 @@ function ParadiseZ.initializeRebound(pl)
     if not plX or not plY then
         plX, plY, plZ = ParadiseZ.getFallbackCoord()
         if not plX or not plY or not plZ then return end
-        name = "Outside"
+        name = tostring(SandboxVars.ParadiseZ.OutsideStr)
     end
     
     local tab = {
@@ -36,7 +36,7 @@ function ParadiseZ.getFallbackCoord()
 end
 
 function ParadiseZ.getZoneArea(name)
-    if not name or name == "Outside" then return nil, nil, nil, nil end
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return nil, nil, nil, nil end
 
     if not name then return  nil, nil, nil, nil end
     local zone = ParadiseZ.ZoneData[name]
@@ -47,7 +47,7 @@ end
 
 
 function ParadiseZ.isXYInsideZone(x, y, name)
-    if not name or name == "Outside" then return false end
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     if not x or not y then return false end
 
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
@@ -85,7 +85,7 @@ end
 
 -- inside whole zone
 function ParadiseZ.isXYInsideZone(x, y, name)
-    if not name or name == "Outside" then return false end
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
     if not (x1 and y1 and x2 and y2) then return false end
 
@@ -98,7 +98,7 @@ end
 
 -- 3 tiles of any edges
 function ParadiseZ.isXYZoneOuter(x, y, name)
-    if not name or name == "Outside" then return false end
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
 
     if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
@@ -111,7 +111,7 @@ end
 
 -- inside zone NOT within 3 tiles of any edge
 function ParadiseZ.isXYZoneInner(x, y, name)
-    if not name or name == "Outside" then return false end
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     
    -- if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
     local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
@@ -164,14 +164,12 @@ function ParadiseZ.getLastCoord(pl, isChat)
     if rebound and rebound.x and rebound.y and rebound.z then     
         return rebound.x, rebound.y, rebound.z        
     end
---[[ 
     if not isChat then
         local sh = SafeHouse.hasSafehouse(pl)
         if sh then
             return sh:getX(), sh:getY(), 0
         end
     end
- ]]
     return ParadiseZ.getFallbackCoord()
 end
 
@@ -301,7 +299,7 @@ function ParadiseZ.reboundHandler(pl)
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
         if not sq then return end 
         local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
-        if not name or name == "Outside" then return end
+        if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
         if ParadiseZ.isXYZoneOuter(plX, plY, name) then
             ParadiseZ.saveRebound(pl, name)
             if getCore():getDebug() then 

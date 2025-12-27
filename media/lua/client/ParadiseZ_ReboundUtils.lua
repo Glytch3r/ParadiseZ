@@ -12,7 +12,7 @@ function ParadiseZ.forceExitCar()
     local seat = car:getSeat(pl)
     car:exit(pl)
     if seat then
-        car:setCharacterPosition(pl, seat, "outside")
+        car:setCharacterPosition(pl, seat, tostring(SandboxVars.ParadiseZ.OutsideStr))
     end
     
     pl:PlayAnim("Idle")
@@ -139,7 +139,7 @@ function ParadiseZ.findReboundPoint(pl, originSq, outward)
     if not px then return nil end
     local pz = originSq:getZ()
     local zoneName = ParadiseZ.getZoneName(pl)
-    if not zoneName or zoneName == "Outside" then return nil end
+    if not zoneName or zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return nil end
 
     local edgeX, edgeY, edgeZ = ParadiseZ.getZoneEdge(pl, zoneName)
     if not edgeX then return nil end

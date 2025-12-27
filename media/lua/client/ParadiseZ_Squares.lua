@@ -28,7 +28,7 @@ function ParadiseZ.isPveZoneFromSquare(sq)
         end
     end
     local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == "Outside" then return false end
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
     return zone.isPvE == true and not zone.isKos
@@ -52,7 +52,7 @@ print(ParadiseZ.isSquareWalkable(sq))
 function ParadiseZ.isKosZoneFromSquare(sq)
     if not sq then return false end
     local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == "Outside" then return false end
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
 
@@ -68,7 +68,7 @@ function ParadiseZ.isKosZoneFromSquare(sq)
 end
 
 function ParadiseZ.isOutsideSq(sq)
-    return ParadiseZ.getZoneName(sq) == "Outside"
+    return ParadiseZ.getZoneName(sq) == tostring(SandboxVars.ParadiseZ.OutsideStr)
 end
 
 
@@ -82,7 +82,7 @@ function ParadiseZ.isSafeZoneFromSquare(sq)
         end
     end
     local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == "Outside" then return false end
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
     return zone.isSafe == true
@@ -114,42 +114,50 @@ function ParadiseZ.getZoneName(var, var2)
     if pl then
         return ParadiseZ.getPlZoneName(pl)
     end
-    return "Outside"
+    return tostring(SandboxVars.ParadiseZ.OutsideStr)
 end
---[[ 
+--*tostring(SandboxVars.ParadiseZ.OutsideStr)
 function ParadiseZ.getXYZoneName(x, y)
-    for name, zone in pairs(ParadiseZ.ZoneData) do
-        if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
-            return name
-        end
-    end
-    return "Outside"
-end ]]
-function ParadiseZ.getXYZoneName(x, y)
-    if type(ParadiseZ.ZoneData) ~= "table" then return "Outside" end
+    local outStr = tostring(SandboxVars.ParadiseZ.OutsideStr)
+    if type(ParadiseZ.ZoneData) ~= "table" then return outStr end
+
+    local matches = {}
+
     for name, zone in pairs(ParadiseZ.ZoneData) do
         if zone and zone.x1 and zone.x2 and zone.y1 and zone.y2 then
             if x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2 then
-                return name
+                local area = (zone.x2 - zone.x1) * (zone.y2 - zone.y1)
+                matches[#matches + 1] = {name = name, area = area}
             end
         end
     end
-    return "Outside"
+
+    if #matches == 0 then
+        return tostring(SandboxVars.ParadiseZ.OutsideStr)
+    end
+
+    table.sort(matches, function(a, b) return a.area < b.area end)
+
+    return matches[1].name
 end
 
 function ParadiseZ.getPlZoneName(pl)
-    if not pl then return "Outside" end
+    local outStr = tostring(SandboxVars.ParadiseZ.OutsideStr)
+    
+    if not pl then return outStr end
     local sq = pl:getCurrentSquare()
-    if not sq then return "Outside" end
+    if not sq then return outStr end
     return ParadiseZ.getXYZoneName(sq:getX(), sq:getY())
 end
 
 function ParadiseZ.getSqZoneName(sq)
-    if not sq then return "Outside" end
+    if not sq then return tostring(SandboxVars.ParadiseZ.OutsideStr) end
+
     return ParadiseZ.getXYZoneName(sq:getX(), sq:getY())
 end
 
 -----------------------    zone*        ---------------------------
+--[[ 
 function ParadiseZ.getZone(var, var2)
     local name
 
@@ -180,3 +188,4 @@ function ParadiseZ.getZone(var, var2)
 
     return ParadiseZ.ZoneData[name]
 end
+ ]]

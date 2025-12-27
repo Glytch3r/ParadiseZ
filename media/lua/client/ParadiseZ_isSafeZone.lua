@@ -6,7 +6,7 @@ function ParadiseZ.isSafeZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == "Outside" then return false end
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
     return zone.isSafe == true 
@@ -30,8 +30,72 @@ function ParadiseZ.restoreHandler(obj)
     end
 end
 Events.OnTileRemoved.Remove(ParadiseZ.restoreHandler)
-Events.OnTileRemoved.Add(ParadiseZ.restoreHandler)
+--Events.OnTileRemoved.Add(ParadiseZ.restoreHandler)
 
+-----------------------            ---------------------------
+function ParadiseZ.getBlocks()
+    local opt = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ContextRemoveList
+    if not opt or opt == "" then return {} end
+
+    local t = {}
+    for key in string.gmatch(opt, "[^;]+") do
+        t[#t + 1] = key
+    end
+    return t
+end
+function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
+    local pl = getSpecificPlayer(plNum)
+    if not pl then return end
+
+    if clickedPlayer then
+        local access = clickedPlayer:getAccessLevel()
+        if access and (string.lower(access) == "admin" or clickedPlayer:isInvisible()) then
+            context:removeOptionByName(getText("ContextMenu_Trade"))
+        end
+    end
+
+    if not ParadiseZ.isSafeZone(pl) then return end
+
+    local pickupText = getText("IGUI_Pickup")
+    local pickupOpt = context:getOptionFromName(pickupText)
+    if pickupOpt then
+        context:removeOptionByName(pickupText)
+
+        local opt = context:addOption(pickupText)
+        if opt then
+            opt.notAvailable = true
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
+            tooltip.description = "Protected Zone"
+            opt.toolTip = tooltip
+        end
+    end
+
+    ParadiseZ.blocks = ParadiseZ.getBlocks()
+    for _, key in ipairs(ParadiseZ.blocks) do
+        local text = getText(key)
+        local existing = context:getOptionFromName(text)
+
+        if existing then
+            context:removeOptionByName(text)
+
+            local opt = context:addOption(text)
+            if opt then
+                opt.notAvailable = true
+                local tooltip = ISToolTip:new()
+                tooltip:initialise()
+                tooltip.description = "Protected Zone"
+                opt.toolTip = tooltip
+            end
+        end
+    end
+end
+
+Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
+Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
+
+
+-----------------------            ---------------------------
 
 --[[ 
 function ParadiseZ.safeHouseCheck()
