@@ -123,7 +123,6 @@ function ParadiseZ.oldGunDespawner()
     end
 end
 
-
 Events.OnPreFillInventoryObjectContextMenu.Add(ParadiseZ.oldGunDespawner)
 Events.OnClothingUpdated.Add(ParadiseZ.oldGunDespawner)
 Events.OnEquipPrimary.Add(ParadiseZ.oldGunDespawner)
