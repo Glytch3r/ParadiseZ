@@ -37,15 +37,19 @@ end
 --ParadiseZ.saveZoneData(ParadiseZ.ZoneData) 
 function ParadiseZ.ClientSync(module, command, args)
     if module ~= "ParadiseZ" then return end
-
+        local pl = getPlayer() 
     if command == "Sync" and args.data then
         for k, _ in pairs(ParadiseZ.ZoneData) do ParadiseZ.ZoneData[k] = nil end
 
         for k, v in pairs(args.data) do
             ParadiseZ.ZoneData[k] = v
         end
+        if pl and iParadiseZ.isAdm() then
+            pl:setHaloNote(tostring("ParadiseZ: Client synced."),150,250,150,900) 
+            print("ParadiseZ: Client synced.")
+        end
         
-        print("ParadiseZ: Client synced.")
+
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()
 		end
