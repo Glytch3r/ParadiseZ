@@ -6,6 +6,7 @@ UI_EN = {
     UI_Intro1 = "From the ashes of the old world we rise",
     UI_Intro2 = "Because greatness is forged in fire",
     UI_Intro3 = "Welcome to Paradise",
+    UI_ClickToSkip = "Enter Paradise",
 
     UI_ServerOption_AntiCheatProtectionType1_tooltip = "PVP Damage",
     UI_ServerOption_AntiCheatProtectionType2_tooltip = "Speed",

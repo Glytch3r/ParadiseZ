@@ -7,6 +7,15 @@ end
 
 Events.OnGameStart.Add(function()
 
+    ParadiseZ.ISMoveablesActionisValidObject = ISMoveablesAction.isValidObject
+    function ISMoveablesAction:isValidObject()
+        if ParadiseZ.isSafeZone() then 
+            return false
+        end
+        return ParadiseZ.ISMoveablesActionisValidObject(self)
+    end
+    
+    
     ParadiseZ.ISServerSandboxOptionsUIonButtonApply = ISServerSandboxOptionsUI.onButtonApply
     function ISServerSandboxOptionsUI:onButtonApply()
         self:settingsFromUI(self.options)
@@ -56,6 +65,5 @@ function ParadiseZ.hookSafety()
     Events.OnKeyPressed.Add(ISSafetyUI.onKeyPressed);
     ParadiseZ.CheckSafetyHook = true
 end
-
 Events.OnInitGlobalModData.Add(ParadiseZ.hookSafety)
 

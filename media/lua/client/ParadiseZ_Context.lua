@@ -6,6 +6,21 @@ end
 
 
 
+function ParadiseZ.pause(seconds, callback)
+    local start = getTimestampMs()
+    local duration = seconds * 1000
+
+    local function tick()
+        local now = getTimestampMs()
+        if now - start >= duration then
+            Events.OnTick.Remove(tick)
+            if callback then callback() end
+        end
+    end
+
+    Events.OnTick.Add(tick)
+end
+
 function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
@@ -42,6 +57,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
             optTip.iconTexture = getTexture(icon)
         end
     end
+    addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true) getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     
     addSafeOption(opt, "ReApply Gun Params", function() 
         --ParadiseZ.applyGunParams(getCore():getDebug())    
@@ -56,7 +72,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
 		context:hideAndChildren()
     end, "media/ui/Paradise/GunParams.png")
     
-    addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true) getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     addSafeOption(opt, "Hide Admin Tag: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isHideAdminTag(pl))), function() ParadiseZ.toggleHideAdminTag(pl, activate) end, "media/ui/Paradise/AdmTagContextIcon.png")
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
     
@@ -79,9 +94,13 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Prevent Zed Attacks: "..tostring(ParadiseZ.isOnOrOff(pl:isZombiesDontAttack())), function() pl:setZombiesDontAttack(not pl:isZombiesDontAttack()) end, "media/ui/Paradise/StopZedContextIcon.png")
     addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
     addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
+    
+    addSafeOption(opt, "Thunder", function() sendClientCommand(pl, "ParadiseZ", "thunder", { })  end, "media/ui/LootableMaps/map_lightning.png")
+    
+
 
     local subMenu = "Clear: "
-    local Sub = opt:addOptionOnTop(subMenu)
+    local Sub = opt:addOption(subMenu)
     if Sub then
         Sub.iconTexture = getTexture("media/ui/Paradise/ClearContextIcon.png")
         local sbopt = ISContextMenu:getNew(context)

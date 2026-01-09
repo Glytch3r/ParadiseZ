@@ -64,27 +64,24 @@ Commands.ParadiseZ.gunParams = function(args)
         pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)   
     end
 end
-
-
---[[ 
-Commands.ParadiseZ.staggerTarg = function(args)
-    getPlayer():getOnlineID()
-    local targ = getPlayerByOnlineID(args.targID)
-    if targ then
-        
-    end
-	
-end
- ]]
---[[ 
-
-
-Commands.ParadiseZ. = function(player, args)
-    local playerId = player:getOnlineID();
-    sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, targID = args.targID})
+-----------------------            ---------------------------
+function ParadiseZ.doThunder() 
+    getSoundManager():playUISound("Thunder")
+    local pl = getPlayer() 
+    if not pl then return end
+    pl:startMuzzleFlash()
+--[[     ParadiseZ.pause(0.4, function() 
+        pl:startMuzzleFlash()
+    end)
+    ParadiseZ.pause(0.8, function() 
+        pl:startMuzzleFlash()
+    end) ]]
 end
 
- ]]
+Commands.ParadiseZ.thunder = function(args)
+    ParadiseZ.doThunder() 
+end
+
 -----------------------            ---------------------------
 
 Commands.ParadiseZ.isScareCrow = function(args)

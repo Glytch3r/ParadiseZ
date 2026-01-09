@@ -41,7 +41,7 @@ function LifeBarUI.UI:render()
 
 
 
-
+    
 end
 
 function LifeBarUI.UI:new(x, y, width, height)

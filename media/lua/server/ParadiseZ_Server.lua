@@ -34,7 +34,10 @@ Commands.ParadiseZ.SyncBlockedZones = function(player, args)
 end
  ]]
 
-
+Commands.ParadiseZ.thunder = function(player, args)
+    local playerId = player:getOnlineID();
+    sendServerCommand('ParadiseZ', 'thunder', {id = playerId})
+end
 
 Events.OnClientCommand.Add(function(module, command, player, args)
 	if Commands[module] and Commands[module][command] then

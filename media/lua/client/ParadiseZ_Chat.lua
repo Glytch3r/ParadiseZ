@@ -68,6 +68,8 @@ function ParadiseZ.chatCmd(cmd)
             pl:setBumpDone(true)
             pl:reportEvent("wasBumped")
         end) ]]
+    elseif cmd == "/die" then
+        pl:Kill(pl)
     elseif  string.lower(cmd) == "/glytch3r" or string.lower(cmd)  == "/glytch"   then
         local item = SandboxVars.ParadiseZ.Glytch3rGift 
         if not item or item == '' then return end
