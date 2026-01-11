@@ -1,13 +1,21 @@
 ParadiseZ = ParadiseZ or {}
+function ParadiseZ.isPvpInvalid(char)
+    char = char or getPlayer() 
+    local isHasPveTrait = ParadiseZ.isPvE(char)
+    local isHasPveZone = ParadiseZ.isPveZone(char)
+    return isHasPveTrait or isHasPveZone
+end
+function ParadiseZ.isUnarmed(pl)
+	return tostring(WeaponType.getWeaponType(pl)) == 'barehand'
+end
 function ParadiseZ.pvpHit(char, targ, wpn, dmg)
-    local isAvoid = false
+    local isAvoid = true
     local isHasPveTrait = ParadiseZ.isPvE(char) or ParadiseZ.isPvE(targ)
     local isHasPveZone = ParadiseZ.isPveZone(char) or ParadiseZ.isPveZone(targ)
     local isHasZed = instanceof(char, 'IsoZombie') or instanceof(targ, 'IsoZombie')
     local pvpDmg = true
 
     if isHasPveTrait or isHasPveZone then
-        isAvoid = true
         pvpDmg = false
     end
 
@@ -15,12 +23,10 @@ function ParadiseZ.pvpHit(char, targ, wpn, dmg)
         isAvoid = false
         pvpDmg = false
     end
+    targ:setAvoidDamage(isAvoid)
+    
+    --dmg = dmg * (SandboxVars.ParadiseZ.pvpDmgMult or 1.6)
 
-    dmg = dmg * (SandboxVars.ParadiseZ.pvpDmgMult or 1.6)
-
-    if not ParadiseZ.isUnarmed(char) then
-        targ:setAvoidDamage(isAvoid)
-    end
 
     local isLocalTarg = targ == getPlayer()
 
@@ -32,32 +38,29 @@ function ParadiseZ.pvpHit(char, targ, wpn, dmg)
         if md.LifePoints <= 0 then
             targ:Kill(char)
         else
-            local recoverHP = dmg / 3
+
+ --[[            local recoverHP = dmg / 3
             for i = 2, 6, 2 do
                 timer:Simple(i, function()
                     md.LifePoints = math.min(100, md.LifePoints + recoverHP)
                 end)
+            end ]]
+            
+            if ParadiseZ.doRoll(SandboxVars.ParadiseZ.pvpStaggerChance)  then     
+                
+                local isBackstab = targ:isHitFromBehind()
+                local pushedDir = "pushedFront"
+                if isBackstab then
+                    pushedDir = "pushedbehind"
+                end
+                sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
+
             end
+
         end
 
-        if getCore():getDebug() then 
-            print(md.LifePoints)
-            print(dmg)
-        end
     end
-    
-    if not SandboxVars.ParadiseZ.pvpStagger  then return end   
-    if targ.isCriticalHit and targ:isCriticalHit() then
-        local isBackstab = targ:isHitFromBehind()
-        local pushedDir = "pushedFront"
-        if isBackstab then
-            pushedDir = "pushedbehind"
-        end
-        targ:setBumpType(pushedDir)
-        targ:setVariable("BumpDone", false);
-        targ:setVariable("BumpFall", true)
-        targ:setVariable("BumpFallType", pushedDir)
-    end
+
 end
 
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
@@ -125,9 +128,7 @@ end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.AvoidDmg)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.AvoidDmg)
  ]]
-function ParadiseZ.isUnarmed(pl)
-	return tostring(WeaponType.getWeaponType(pl)) == 'barehand'
-end
+
 --[[ 
 
 function testHit(char, targ, wpn, dmg)

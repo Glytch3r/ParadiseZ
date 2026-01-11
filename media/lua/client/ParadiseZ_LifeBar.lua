@@ -37,7 +37,8 @@ function LifeBarUI.UI:render()
         self:drawRect(0, 0, getCore():getScreenWidth(), getCore():getScreenHeight(), alpha * 0.5, 1, 0, 0, 0)
         md.LifeBarFlash = math.max(0, md.LifeBarFlash - LifeBarUI.flashDecayRate)
     end
-    md.LifePoints = math.min(100, md.LifePoints + 0.01)
+    
+    md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZ.LifeBarRecovery))
 
 
 

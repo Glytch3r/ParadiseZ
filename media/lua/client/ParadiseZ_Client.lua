@@ -10,6 +10,68 @@ print(getPlayer():getModData()['isScareCrow'] )
  ]]
 
 -----------------------            ---------------------------
+
+
+function ParadiseZ.doRoll(percent)
+	if percent <= 0 then return false end
+	if percent >= 100 then return true end
+	return percent >= ZombRand(1, 101)
+end
+-----------------------            ---------------------------
+--[[ Commands.ParadiseZ.knockDownZed = function(args)
+    local source = getPlayer();
+    local player = getPlayerByOnlineID(args.id)
+    local zedID = args.zedID
+    if type(zedID) == "string" then zedID = tonumber(zedID) end
+    local zed = ParadiseZ.findzedID(zedID)
+	if source ~= player then
+		if zed ~= nil then
+			zed:setKnockedDown(true)
+		end
+	end
+end
+ ]]
+function ParadiseZ.doKnockDownPl(targ, pushedDir)
+   -- targ:setBumpType("stagger");
+    targ:setVariable("BumpDone", true);
+    targ:setVariable("BumpFall", true);
+    targ:setVariable("BumpFallType", tostring(pushedDir));
+    targ:reportEvent("wasBumped")
+end
+
+Commands.ParadiseZ.knockDownPl = function(args)
+	local targ = getPlayerByOnlineID(args.targId)
+    ParadiseZ.doKnockDownPl(targ, args.pushedDir)
+end
+
+Commands.ParadiseZ.gunParams = function(args)
+    ParadiseZ.applyGunParams(getCore():getDebug())   
+    local pl = getPlayer() 
+    if not pl then return end
+end
+
+-----------------------            ---------------------------
+function ParadiseZ.doThunder() 
+    getSoundManager():playUISound("Thunder")
+    local pl = getPlayer() 
+    if not pl then return end
+    ParadiseZ.doFlash(pl)
+end
+
+Commands.ParadiseZ.thunder = function(args)
+    ParadiseZ.doThunder() 
+end
+
+-----------------------            ---------------------------
+
+--[[ 
+Commands.ParadiseZ.SyncBlockedZones = function(args)
+    local list = args.strList or SandboxVars.ParadiseZ.BlockedList
+    ParadiseZ.parseZone(list)
+    ParadiseZ.echo("Block Zones Synced")
+end
+ ]]
+
 function ParadiseZ.ScareCrow()
     if not isIngameState() then return end    
     
@@ -35,55 +97,6 @@ end
 Events.OnScoreboardUpdate.Add(ParadiseZ.ScareCrow)
 Events.OnClothingUpdated.Add(ParadiseZ.ScareCrow)
 
------------------------            ---------------------------
-
-function ParadiseZ.doRoll(percent)
-	if percent <= 0 then return false end
-	if percent >= 100 then return true end
-	return percent >= ZombRand(1, 101)
-end
------------------------            ---------------------------
-Commands.ParadiseZ.knockDownZed = function(args)
-    local source = getPlayer();
-    local player = getPlayerByOnlineID(args.id)
-    local zedID = args.zedID
-    if type(zedID) == "string" then zedID = tonumber(zedID) end
-    local zed = ParadiseZ.findzedID(zedID)
-	if source ~= player then
-		if zed ~= nil then
-			zed:setKnockedDown(true)
-		end
-	end
-end
-Commands.ParadiseZ.gunParams = function(args)
-    ParadiseZ.applyGunParams(getCore():getDebug())   
-    local pl = getPlayer() 
-    if not pl then return end
-    if string.lower(pl:getAccessLevel()) == "admin" then
-        local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
-        pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)   
-    end
-end
------------------------            ---------------------------
-function ParadiseZ.doThunder() 
-    getSoundManager():playUISound("Thunder")
-    local pl = getPlayer() 
-    if not pl then return end
-    pl:startMuzzleFlash()
---[[     ParadiseZ.pause(0.4, function() 
-        pl:startMuzzleFlash()
-    end)
-    ParadiseZ.pause(0.8, function() 
-        pl:startMuzzleFlash()
-    end) ]]
-end
-
-Commands.ParadiseZ.thunder = function(args)
-    ParadiseZ.doThunder() 
-end
-
------------------------            ---------------------------
-
 Commands.ParadiseZ.isScareCrow = function(args)
     local source = getPlayer();
     local player = getPlayerByOnlineID(args.id)
@@ -99,13 +112,7 @@ Commands.ParadiseZ.isScareCrow = function(args)
         end
     end
 end
---[[ 
-Commands.ParadiseZ.SyncBlockedZones = function(args)
-    local list = args.strList or SandboxVars.ParadiseZ.BlockedList
-    ParadiseZ.parseZone(list)
-    ParadiseZ.echo("Block Zones Synced")
-end
- ]]
+-----------------------            ---------------------------
 Events.OnServerCommand.Add(function(module, command, args)
 	if Commands[module] and Commands[module][command] then
 		Commands[module][command](args)

@@ -2,7 +2,7 @@
 ParadiseZ = ParadiseZ or {}
 
 
-function ParadiseZ.isSafeZone(pl)
+--[[ function ParadiseZ.isSafeZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
@@ -11,9 +11,28 @@ function ParadiseZ.isSafeZone(pl)
     if not zone then return false end
     return zone.isSafe == true 
 end
+ ]]
 
+function ParadiseZ.isSafeZone(plOrSq)
+    local sq
 
+    if instanceof(plOrSq, "IsoGridSquare") then
+        sq = plOrSq
+    else
+        local targ = ParadiseZ.getPl(plOrSq)
+        if not targ then return false end
+        sq = targ:getSquare()
+        if not sq then return false end
+    end
 
+    local zoneName = ParadiseZ.getZoneName(sq)
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
+
+    local zone = ParadiseZ.ZoneData[zoneName]
+    if not zone then return false end
+
+    return zone.isSafe == true
+end
 function ParadiseZ.restoreHandler(obj)    
     if not obj then return end
     local sq = obj:getSquare()
@@ -54,7 +73,8 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
         end
     end
 
-    if not ParadiseZ.isSafeZone(pl) then return end
+    --if not ParadiseZ.isSafeZone(pl) then return end
+    if ParadiseZ.isSafeZone(pl) and ParadiseZ.isSafeZone(sq) then return end
 
     local pickupText = getText("IGUI_Pickup")
     local pickupOpt = context:getOptionFromName(pickupText)

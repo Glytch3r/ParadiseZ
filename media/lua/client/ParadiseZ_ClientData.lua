@@ -30,18 +30,29 @@ function ParadiseZ.isGiftRecieved(user)
     return ParadiseZ_Gift[user]
 end
 
-
+function ParadiseZ.isAdm()
+    local pl = getPlayer()
+    return ((pl and string.lower(pl:getAccessLevel()) == "admin") or (isClient() and isAdmin())) 
+end
 
 --local user = getPlayer():getUsername()
 --ParadiseZ.ZoneData[user]={["test"]=123}
 --ParadiseZ.saveZoneData(ParadiseZ.ZoneData) 
---[[ 
 function ParadiseZ.ClientSync(module, command, args)
     if module ~= "ParadiseZ" then return end
-
+    local pl = getPlayer() 
     if command == "Sync" and args.data then
-        ModData.add("ParadiseZ_ZoneData", args.data)
-        print("ParadiseZ: Client synced.")
+        for k, _ in pairs(ParadiseZ.ZoneData) do ParadiseZ.ZoneData[k] = nil end
+
+        for k, v in pairs(args.data) do
+            ParadiseZ.ZoneData[k] = v
+        end
+        if pl and iParadiseZ.isAdm() then
+            pl:setHaloNote(tostring("ParadiseZ: Client synced."),150,250,150,900) 
+            print("ParadiseZ: Client synced.")
+        end
+        
+
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()
 		end
@@ -50,22 +61,6 @@ function ParadiseZ.ClientSync(module, command, args)
     end
 end
 Events.OnServerCommand.Add(ParadiseZ.ClientSync)
- ]]
-function ParadiseZ.ClientSync(module, command, args)
-    if module ~= "ParadiseZ" then return end
-
-    if command == "Sync" and args.data then
-        ModData.add("ParadiseZ_ZoneData", args.data)
-        print("ParadiseZ: Client synced.")
-		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
-			ParadiseZ.ZoneEditorWindow.instance:refreshList()
-		end
-    elseif command == "Gift" and args.user then        
-        ParadiseZ_Gift[args.user] = true
-    end
-end
-Events.OnServerCommand.Add(ParadiseZ.ClientSync)
-
 
 function ParadiseZ.DataInit()
 	ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData")
@@ -73,11 +68,3 @@ function ParadiseZ.DataInit()
 end
 
 Events.OnInitGlobalModData.Add(ParadiseZ.DataInit)
-
-function ParadiseZ.OnReceiveGlobalModData(key, data)
-    if key == "ParadiseZ" or key == "ParadiseZ_ZoneData" then
-       ModData.add("ParadiseZ_ZoneData", data) 
-    end
-end
-Events.OnReceiveGlobalModData.Add(ParadiseZ.OnReceiveGlobalModData)
-
