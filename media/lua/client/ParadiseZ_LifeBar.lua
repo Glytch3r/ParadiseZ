@@ -14,8 +14,14 @@ end
 
 
 function LifeBarUI.UI:render()
+  
     local pl = getPlayer()
     if not pl then return end
+
+    if ParadiseZ.isPvE(pl) then 
+        return 
+    end
+
     local md = pl:getModData()
     md.LifePoints = md.LifePoints or 100
     md.LifeBarFlash = md.LifeBarFlash or 0
