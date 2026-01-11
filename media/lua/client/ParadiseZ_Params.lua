@@ -56,7 +56,6 @@ function ParadiseZ.isFirearm(item)
 end
 
 function ParadiseZ.resolveGunParams(scriptItem, fType, shotgunTable)
-    local scale = SandboxVars.ParadiseZ.PerkModifierScale or 1000
     local perk
     local minAngle
     local class
@@ -64,16 +63,16 @@ function ParadiseZ.resolveGunParams(scriptItem, fType, shotgunTable)
     if scriptItem.getSwingAnim and scriptItem:getSwingAnim() == "Rifle" then
         if shotgunTable[fType] then
             class = "Shotgun"
-            perk = (SandboxVars.ParadiseZ.PerkModifierShotgun or 2) / scale
+            perk = tonumber(SandboxVars.ParadiseZ.PerkModifierShotgun)  or 0.002
             minAngle = SandboxVars.ParadiseZ.MinAngleShotgun
         else
             class = "Rifle"
-            perk = (SandboxVars.ParadiseZ.PerkModifierRifle or 1) / scale
+            perk = tonumber(SandboxVars.ParadiseZ.PerkModifierRifle)  or 0.001
             minAngle = SandboxVars.ParadiseZ.MinAngleRifle
         end
     else
         class = "Pistol"
-        perk = (SandboxVars.ParadiseZ.PerkModifierPistol or 1) / scale
+        perk = tonumber(SandboxVars.ParadiseZ.PerkModifierPistol) or 0.001
         minAngle = SandboxVars.ParadiseZ.MinAnglePistol
     end
 

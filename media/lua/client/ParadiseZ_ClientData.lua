@@ -47,11 +47,7 @@ function ParadiseZ.ClientSync(module, command, args)
         for k, v in pairs(args.data) do
             ParadiseZ.ZoneData[k] = v
         end
-        if pl and iParadiseZ.isAdm() then
-            pl:setHaloNote(tostring("ParadiseZ: Client synced."),150,250,150,900) 
-            print("ParadiseZ: Client synced.")
-        end
-        
+
 
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()

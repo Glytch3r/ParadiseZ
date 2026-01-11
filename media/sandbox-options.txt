@@ -56,13 +56,6 @@ option ParadiseZ.ClearRadius
 }
 
 
-option ParadiseZ.pvpStaggerChance
-{
-	type = double,	 min = 0.00,  max = 100,  default = 40,
-
-	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
-}
-
 option ParadiseZ.AdminOnlyZoneInfo
 {
 	type = boolean, default = true,
@@ -124,24 +117,26 @@ option ParadiseZ.ShotgunList {
 
 option ParadiseZ.PerkModifierShotgun
 {
-	type = double,	 min = 0.00,  max = 100,  default = 0.001,
+	type = string, default = 0.002,
 	page = ParadiseZ, translation = ParadiseZ_PerkModifierShotgun,
 }
 option ParadiseZ.PerkModifierRifle
 {
-	type = double,	 min = 0.00,  max = 100,  default = 0.0005,
+	type = string,  default = 0.001,
 	page = ParadiseZ, translation = ParadiseZ_PerkModifierRifle,
 }
+
+option ParadiseZ.PerkModifierPistol
+{
+	type = string,  default = 0.001,
+	page = ParadiseZ, translation = ParadiseZ_PerkModifierPistol,
+}
+
 
 option ParadiseZ.MinAngleShotgun
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.99,
 	page = ParadiseZ, translation = ParadiseZ_MinAngleShotgun,
-}
-option ParadiseZ.PerkModifierPistol
-{
-	type = double,	 min = 0.00,  max = 100,  default = 0.0005,
-	page = ParadiseZ, translation = ParadiseZ_PerkModifierPistol,
 }
 
 option ParadiseZ.MinAngleRifle
@@ -167,4 +162,16 @@ option ParadiseZ.ThunderFlashDecay
 {
 	type = double,	 min = 0.000,  max = 5,  default = 0.4,
 	page = ParadiseZ, translation = ParadiseZ_ThunderFlashDecay,
+}
+option ParadiseZ.pvpDmgMult
+{
+	type = double,	 min = 0.00,  max = 100,  default = 2.6,
+	page = ParadiseZ, translation = ParadiseZ_pvpDmgMult,
+}
+
+option ParadiseZ.pvpStaggerChance
+{
+	type = double,	 min = 0.00,  max = 100,  default = 40,
+
+	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
 }

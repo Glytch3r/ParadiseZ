@@ -8,6 +8,7 @@ end
 function ParadiseZ.isUnarmed(pl)
 	return tostring(WeaponType.getWeaponType(pl)) == 'barehand'
 end
+
 function ParadiseZ.pvpHit(char, targ, wpn, dmg)
     local isAvoid = true
     local isHasPveTrait = ParadiseZ.isPvE(char) or ParadiseZ.isPvE(targ)
@@ -28,11 +29,10 @@ function ParadiseZ.pvpHit(char, targ, wpn, dmg)
     --dmg = dmg * (SandboxVars.ParadiseZ.pvpDmgMult or 1.6)
 
 
-    local isLocalTarg = targ == getPlayer()
 
-    if pvpDmg and isLocalTarg then
+    if pvpDmg and targ == getPlayer() then
         local md = targ:getModData()
-        md.LifePoints = math.max(0, (md.LifePoints or 100) - dmg)
+        md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg*SandboxVars.ParadiseZ.pvpDmgMult))
         md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
 
         if md.LifePoints <= 0 then
@@ -62,8 +62,8 @@ function ParadiseZ.pvpHit(char, targ, wpn, dmg)
     end
 
 end
-
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
+
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
 
 

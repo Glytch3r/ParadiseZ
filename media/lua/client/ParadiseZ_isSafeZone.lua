@@ -72,11 +72,11 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
             context:removeOptionByName(getText("ContextMenu_Trade"))
         end
     end
-    local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
+    local sq = clickedSquare
     if not sq then return end
     --if not ParadiseZ.isSafeZone(pl) then return end
-    if ParadiseZ.isSafeZone(pl) and ParadiseZ.isSafeZone(sq) then return end
-
+    if ParadiseZ.isSafeZone(pl) or ParadiseZ.isSafeZone(sq) then return end
+    
     local pickupText = getText("IGUI_Pickup")
     local pickupOpt = context:getOptionFromName(pickupText)
     if pickupOpt then

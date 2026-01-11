@@ -10,7 +10,7 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
     if command == "Sync" and args.data then
         for k, _ in pairs(ParadiseZ.ZoneData) do ParadiseZ.ZoneData[k] = nil end
         for k, v in pairs(args.data) do ParadiseZ.ZoneData[k] = v end
-        sendServerCommand("ParadiseZ", "Sync", { data = args.data  })
+        sendServerCommand("ParadiseZ", "Sync", { data = ParadiseZ.ZoneData  })
     elseif command == "Gift" and args.user then
         sendServerCommand("ParadiseZ", "Gift", { user = args.user  })
     end
