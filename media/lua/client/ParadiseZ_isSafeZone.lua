@@ -52,6 +52,7 @@ Events.OnTileRemoved.Remove(ParadiseZ.restoreHandler)
 --Events.OnTileRemoved.Add(ParadiseZ.restoreHandler)
 
 -----------------------            ---------------------------
+
 function ParadiseZ.getBlocks()
     local opt = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ContextRemoveList
     if not opt or opt == "" then return {} end
@@ -65,7 +66,6 @@ end
 function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl then return end
-
     if clickedPlayer then
         local access = clickedPlayer:getAccessLevel()
         if access and (string.lower(access) == "admin" or clickedPlayer:isInvisible()) then
@@ -74,14 +74,13 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
     end
     local sq = clickedSquare
     if not sq then return end
-    --if not ParadiseZ.isSafeZone(pl) then return end
-    if ParadiseZ.isSafeZone(pl) or ParadiseZ.isSafeZone(sq) then return end
     
+    if not ParadizeZ.isSafeZone(pl) and not ParadiseZ.isSafeZone(sq) then return end
+            
     local pickupText = getText("IGUI_Pickup")
     local pickupOpt = context:getOptionFromName(pickupText)
     if pickupOpt then
         context:removeOptionByName(pickupText)
-
         local opt = context:addOption(pickupText)
         if opt then
             opt.notAvailable = true
@@ -91,15 +90,12 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
             opt.toolTip = tooltip
         end
     end
-
     ParadiseZ.blocks = ParadiseZ.getBlocks()
     for _, key in ipairs(ParadiseZ.blocks) do
         local text = getText(key)
         local existing = context:getOptionFromName(text)
-
         if existing then
             context:removeOptionByName(text)
-
             local opt = context:addOption(text)
             if opt then
                 opt.notAvailable = true
@@ -109,12 +105,10 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
                 opt.toolTip = tooltip
             end
         end
-    end
+    end   
 end
-
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
-
 
 -----------------------            ---------------------------
 

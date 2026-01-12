@@ -83,11 +83,11 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
 
         if md.LifePoints <= 0 then
             if SandboxVars.ParadiseZ.teleportPvpDeath then
-                targ:setPlayingDeathSound(true)
                 ParadiseZ.doRebound(targ)
-            else
+            else               
                 targ:Kill(char)
             end
+            targ:setPlayingDeathSound(true)
       
         else
             if isCrit then

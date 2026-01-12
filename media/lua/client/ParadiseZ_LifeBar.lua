@@ -80,9 +80,13 @@ end
 
 Events.OnCreatePlayer.Add(function()
     LifeBarUI.create()
+    if not ParadiseZ.isPvE(getPlayer()) then
+        LifeBarUI.show()
+    end
 end)
 
 function ParadiseZ.getConditionRGB(condition)
     local t = condition / 100
     return {r = 1 - t, g = 0, b = t}
 end
+
