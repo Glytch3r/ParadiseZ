@@ -9,7 +9,44 @@ function ParadiseZ.isUnarmed(pl)
 	return tostring(WeaponType.getWeaponType(pl)) == 'barehand'
 end
 
-function ParadiseZ.pvpHit(char, targ, wpn, dmg)
+function ParadiseZ.getPvpWpnDmg(wpn, char)
+    char = char or getPlayer()
+    local wpnDmg = 0
+
+    if ParadiseZ.isUnarmed(char) then
+        return 0
+    end
+
+    wpn = wpn or char:getPrimaryHandItem()
+    if not wpn then
+        return SandboxVars.ParadiseZ.MeleePvpDmg or 10
+    end
+
+    local item = ScriptManager.instance:getItem(wpn:getFullType())
+    local isMeleeAttack = char:IsInMeleeAttack()
+    if not item or not item:isRanged() or isMeleeAttack then
+        return SandboxVars.ParadiseZ.MeleePvpDmg or 10
+    end
+
+    if item.getSwingAnim and item:getSwingAnim() == "Rifle" then
+        local shotgunTable = ParadiseZ.getShotgunTable()
+        if shotgunTable[wpn:getFullType()] then
+            wpnDmg = SandboxVars.ParadiseZ.ShotgunPvpDmg or 25
+        else
+            wpnDmg = SandboxVars.ParadiseZ.RiflePvpDmg or 20
+        end
+    else
+        wpnDmg = SandboxVars.ParadiseZ.PistolPvpDmg or 15
+    end
+
+    return wpnDmg
+end
+
+
+
+
+
+function ParadiseZ.pvpHit(char, targ, wpn, damage)
     local isAvoid = true
     local isHasPveTrait = ParadiseZ.isPvE(char) or ParadiseZ.isPvE(targ)
     local isHasPveZone = ParadiseZ.isPveZone(char) or ParadiseZ.isPveZone(targ)
@@ -26,44 +63,52 @@ function ParadiseZ.pvpHit(char, targ, wpn, dmg)
     end
     targ:setAvoidDamage(isAvoid)
     
-    --dmg = dmg * (SandboxVars.ParadiseZ.pvpDmgMult or 1.6)
+    
+    --dmg = dmg * ( or 1.6)
+    local bonus = 0
+    
+    --print(targ == getPlayer())
 
 
-
+  
     if pvpDmg and targ == getPlayer() then
+        local dmg = ParadiseZ.getPvpWpnDmg(wpn, char)
         local md = targ:getModData()
-        md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg*SandboxVars.ParadiseZ.pvpDmgMult))
+        local isCrit = targ:isCriticalHit() 
+        if isCrit then
+            bonus = ZombRand(0, SandboxVars.ParadiseZ.pvpDmgMult + 1)
+        end
+        md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg+bonus))
         md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
 
         if md.LifePoints <= 0 then
-            targ:Kill(char)
+            if SandboxVars.ParadiseZ.teleportPvpDeath then
+                targ:setPlayingDeathSound(true)
+                ParadiseZ.doRebound(targ)
+            else
+                targ:Kill(char)
+            end
+      
         else
+            if isCrit then
+                local roll = ParadiseZ.doRoll(SandboxVars.ParadiseZ.pvpStaggerChance)
+      
 
- --[[            local recoverHP = dmg / 3
-            for i = 2, 6, 2 do
-                timer:Simple(i, function()
-                    md.LifePoints = math.min(100, md.LifePoints + recoverHP)
-                end)
-            end ]]
-            
-            if ParadiseZ.doRoll(SandboxVars.ParadiseZ.pvpStaggerChance)  then     
-                
-                local isBackstab = targ:isHitFromBehind()
-                local pushedDir = "pushedFront"
-                if isBackstab then
-                    pushedDir = "pushedbehind"
+                if roll  then    
+                    local isBackstab = targ:isHitFromBehind()
+                    local pushedDir = "pushedFront"
+                    if isBackstab then
+                        pushedDir = "pushedbehind"
+                    end
+                    sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
                 end
-                sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
-
             end
 
         end
 
     end
-
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
-
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
 
 

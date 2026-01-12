@@ -165,13 +165,46 @@ option ParadiseZ.ThunderFlashDecay
 }
 option ParadiseZ.pvpDmgMult
 {
-	type = double,	 min = 0.00,  max = 100,  default = 2.6,
+	type = double,	 min = 0.00,  max = 100,  default = 5,
 	page = ParadiseZ, translation = ParadiseZ_pvpDmgMult,
 }
 
 option ParadiseZ.pvpStaggerChance
 {
 	type = double,	 min = 0.00,  max = 100,  default = 40,
-
 	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
 }
+
+
+
+option ParadiseZ.teleportPvpDeath
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_teleportPvpDeath,
+}
+
+
+option ParadiseZ.ShotgunPvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 25,
+	page = ParadiseZ, translation = ParadiseZ_ShotgunPvpDmg,
+}
+
+option ParadiseZ.RiflePvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 20,
+	page = ParadiseZ, translation = ParadiseZ_RiflePvpDmg,
+}
+
+option ParadiseZ.PistolPvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 15,
+	page = ParadiseZ, translation = ParadiseZ_PistolPvpDmg,
+}
+
+option ParadiseZ.MeleePvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 10,
+	page = ParadiseZ, translation = ParadiseZ_UnarmedPvpDmg,
+}
+

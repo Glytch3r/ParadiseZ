@@ -79,6 +79,8 @@ function ParadiseZ.resolveGunParams(scriptItem, fType, shotgunTable)
     return class, perk, minAngle
 end
 -----------------------            ---------------------------
+
+
 function ParadiseZ.applyGunParams(shouldPrint)
     local sm = ScriptManager.instance
     local allItems = sm:getAllItems()

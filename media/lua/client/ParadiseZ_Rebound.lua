@@ -205,7 +205,7 @@ function ParadiseZ.reboundCountdown(isChat)
                 print(c)
                 pl:setHaloNote('Rebound '..tostring(c),150,250,150,180)  
             end
-
+            
         end)
     else
         ParadiseZ.doRebound(pl, isChat)

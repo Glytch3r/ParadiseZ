@@ -139,7 +139,7 @@ function ParadiseZ.addTempMarker(sq)
 	end
 end
 
-function ParadiseZ.testDmg(targ, dmg)
+function ParadiseZ.testDmg(targ, dmg, pushedDir)
     dmg = dmg or 15
     dmg = math.min(100, dmg)
     targ = targ or getPlayer() 
@@ -150,19 +150,20 @@ function ParadiseZ.testDmg(targ, dmg)
 
     local percent = SandboxVars.ParadiseZ.pvpStaggerChance or 34
     if ParadiseZ.doRoll(percent) then
-        targ:setBumpType("pushedbehind")
-        targ:setVariable("BumpFall", true)
-        targ:setVariable("BumpFallType", "pushedbehind")
-    else
-        targ:setVariable("HitReaction", "Shot")
+		pushedDir = pushedDir or 'pushedbehind'
+--[[         targ:setBumpType(pushedDir)
+        targ:setVariable("BumpFall", true) ]]
+        --targ:setVariable("BumpFallType", "pushedbehind")
+		sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
+
     end
 
-    local recoverHP = dmg / 3
+--[[     local recoverHP = dmg / 3
     for i = 2, 6, 2 do
         timer:Simple(i, function()
             md.LifePoints = math.min(100, md.LifePoints + recoverHP)
         end)
-    end
+    end ]]
 end
 
 

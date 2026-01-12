@@ -16,6 +16,10 @@ function ParadiseZ.LifeBarVisibility(pl)
         LifeBarUI.hide()
     end
 
+    if pl:isDead() then
+        LifeBarUI.hide()
+    end
+    
     if ((not isPvpPlayer) and isKosZone and not isPveZone) or isOutsideZone then
         LifeBarUI.show()
     end

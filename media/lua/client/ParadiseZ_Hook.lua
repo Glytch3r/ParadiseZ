@@ -67,3 +67,34 @@ function ParadiseZ.hookSafety()
 end
 Events.OnInitGlobalModData.Add(ParadiseZ.hookSafety)
 
+function ParadiseZ.getIngameDateTime()
+    local gt = getGameTime()
+    local months = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" }
+
+    local year = gt:getYear()
+    local month = months[gt:getMonth() + 1]
+    local day = string.format("%02d", gt:getDay())
+    local tod = gt:getTimeOfDay()
+    local hour = math.floor(tod)
+    local min = math.floor((tod - hour) * 60)
+
+    return month .. " " .. day .. " " .. year..' / '..string.format("%02d:%02d", hour, min)
+end
+
+function ParadiseZ.getServerRealWorldDateTime()
+    local t = os.date("*t")
+
+    local months = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" }
+
+    local month = months[t.month]
+    local day = string.format("%02d", t.day)
+    local year = t.year
+    local hour = string.format("%02d", t.hour)
+    local min = string.format("%02d", t.min)
+
+    return month .. " " .. day .. " " .. year..' / '..hour .. ":" .. min
+end
+
+
+--[[ ParadiseZ.getIngameDateTime()
+ParadiseZ.getServerRealWorldDateTime() ]]

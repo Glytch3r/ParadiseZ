@@ -31,12 +31,19 @@ end
 	end
 end
  ]]
+
 function ParadiseZ.doKnockDownPl(targ, pushedDir)
    -- targ:setBumpType("stagger");
-    targ:setVariable("BumpDone", true);
+--[[     targ:setVariable("BumpDone", true);
     targ:setVariable("BumpFall", true);
     targ:setVariable("BumpFallType", tostring(pushedDir));
-    targ:reportEvent("wasBumped")
+    targ:reportEvent("wasBumped") ]]
+--[[     if getCore():getDebug() then 
+        print('knockdown')
+    end ]]
+    targ:setBumpType(pushedDir)
+    targ:setVariable("BumpFall", true)
+
 end
 
 Commands.ParadiseZ.knockDownPl = function(args)

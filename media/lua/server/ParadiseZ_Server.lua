@@ -15,7 +15,7 @@ Commands.ParadiseZ.knockDownZed = function(player, args)
     sendServerCommand('ParadiseZ', 'knockDownZed', {id = playerId, zedID = args.zedID})
 end
 Commands.ParadiseZ.knockDownPl = function(player, args)    
-    sendServerCommand('ParadiseZ', 'knockDownZed', {targId = args.targId, pushedDir = args.pushedDir})
+    sendServerCommand('ParadiseZ', 'knockDownPl', {targId = args.targId, pushedDir = args.pushedDir})
 end
 
 Commands.ParadiseZ.gunParams = function(player, args)
