@@ -57,23 +57,21 @@ function ParadiseZ.isTrailingLightMode(pl)
     md.isTrailLight = md.isTrailLight or false
     return md.isTrailLight
 end
-ParadiseZ.ticks = 0
+
+ParadiseZ.trailTicks = 0
 function ParadiseZ.TrailingLight(pl)
-    ParadiseZ.ticks = ParadiseZ.ticks + 1
-    if ParadiseZ.ticks % 3 ~= 0 then 
+    ParadiseZ.trailTicks = ParadiseZ.trailTicks + 1
+    if ParadiseZ.trailTicks % 3 ~= 0 then 
         if not ParadiseZ.isTrailingLightMode(pl) then return end
-        
         if string.lower(pl:getAccessLevel()) == "admin" then 
-                
-                ParadiseZ.addLamp()
-                local csq = pl:getCurrentSquare()
-                if not csq then return end                
-                ParadiseZ.addTrail(pl, csq)
+            ParadiseZ.addLamp()
+            local csq = pl:getCurrentSquare()
+            if not csq then return end                
+            ParadiseZ.addTrail(pl, csq)
         end
        
     end
 end
-
 Events.OnPlayerUpdate.Remove(ParadiseZ.TrailingLight)
 Events.OnPlayerUpdate.Add(ParadiseZ.TrailingLight)
 

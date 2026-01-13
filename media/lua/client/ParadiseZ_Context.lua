@@ -25,7 +25,8 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
     if string.lower(pl:getAccessLevel()) ~= "admin" then return end
-
+    --Events.OnPlayerUpdate.Remove(ParadiseZ.highlightSqHandler)
+    ParadiseZ.closeModal()
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
     if not sq then return end
 
@@ -44,9 +45,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local opt = ISContextMenu:getNew(context)
     if not opt then return end
     context:addSubMenu(Main, opt)
-    
 
-    
     local function addSafeOption(menu, text, callback, icon)
         if not menu then return end
         local optTip = menu:addOption(text, worldobjects, function()
@@ -57,10 +56,10 @@ function ParadiseZ.context(plNum, context, worldobjects)
             optTip.iconTexture = getTexture(icon)
         end
     end
-    addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true) getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
-    
+
+    addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
+    addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
     addSafeOption(opt, "ReApply Gun Params", function() 
-        --ParadiseZ.applyGunParams(getCore():getDebug())    
         if isClient() then 
             sendClientCommand("ParadiseZ", "gunParams", { })
         else
@@ -68,12 +67,10 @@ function ParadiseZ.context(plNum, context, worldobjects)
         end	
         local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
         pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)     
-		getSoundManager():playUISound("UIActivateMainMenuItem")
-		context:hideAndChildren()
+        getSoundManager():playUISound("UIActivateMainMenuItem")
+        context:hideAndChildren()
     end, "media/ui/Paradise/GunParams.png")
-    
     addSafeOption(opt, "Hide Admin Tag: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isHideAdminTag(pl))), function() ParadiseZ.toggleHideAdminTag(pl, activate) end, "media/ui/Paradise/AdmTagContextIcon.png")
-    addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
     
     if not pl:getVehicle() then
         addSafeOption(opt, "Force Rebound", function() ParadiseZ.doRebound(pl) end, "media/ui/Paradise/ReboundContextIcon.png")
@@ -94,10 +91,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Prevent Zed Attacks: "..tostring(ParadiseZ.isOnOrOff(pl:isZombiesDontAttack())), function() pl:setZombiesDontAttack(not pl:isZombiesDontAttack()) end, "media/ui/Paradise/StopZedContextIcon.png")
     addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
     addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
-    
     addSafeOption(opt, "Thunder", function() sendClientCommand(pl, "ParadiseZ", "thunder", { })  end, "media/ui/LootableMaps/map_lightning.png")
-    
-
 
     local subMenu = "Clear: "
     local Sub = opt:addOption(subMenu)
@@ -106,15 +100,28 @@ function ParadiseZ.context(plNum, context, worldobjects)
         local sbopt = ISContextMenu:getNew(context)
         if sbopt then context:addSubMenu(Sub, sbopt) end
 
+        local clearOptions = {
+            { label = "Clear Trees", fn = ParadiseZ.ClearTrees, icon = "media/ui/Paradise/TreesContextIcon.png" },
+            { label = "Clear Plants", fn = ParadiseZ.DespawnPlants, icon = "media/ui/Paradise/PlantsContextIcon.png" },
+            { label = "Clear Cars", fn = ParadiseZ.DespawnCars, icon = "media/ui/Paradise/CarsContextIcon.png" },
+            { label = "Clear Fire", fn = ParadiseZ.StopFire, icon = "media/ui/Paradise/NoFireContextIcon.png" },
+            { label = "Clear Floor Items", fn = ParadiseZ.ClearFloorItems2, icon = "media/ui/Paradise/NoItemsContextIcon.png" },
+        }
+
+        for _, cOpt in ipairs(clearOptions) do
+            local label = cOpt.label
+            local fn = cOpt.fn
+            local icon = cOpt.icon
+
+            addSafeOption(sbopt, label, function()
+                ParadiseZ.popup("Paradise Clear Functions", label, fn, "Clear")
+                getSoundManager():playUISound("UIActivateMainMenuItem")
+            end, icon)
+        end
+
         addSafeOption(sbopt, "Clean Character", function() ParadiseZ.washChar() end, "media/ui/Paradise/WashContextIcon.png")
-        addSafeOption(sbopt, "Clear Trees", function() ParadiseZ.ClearTrees() end, "media/ui/Paradise/TreesContextIcon.png")
-        addSafeOption(sbopt, "Clear Plants", function() ParadiseZ.DespawnPlants() end, "media/ui/Paradise/PlantsContextIcon.png")
-        addSafeOption(sbopt, "Clear Cars", function() ParadiseZ.DespawnCars() end, "media/ui/Paradise/CarsContextIcon.png")
-        addSafeOption(sbopt, "Clear Fire", function() ParadiseZ.StopFire() end, "media/ui/Paradise/NoFireContextIcon.png")
         addSafeOption(sbopt, "Clear Map Record", function() ParadiseZ.ClearMap() end, "media/ui/Paradise/MapContextIcon.png")
-        addSafeOption(sbopt, "Clear Floor Items", function() ParadiseZ.ClearFloorItems2() end, "media/ui/Paradise/NoItemsContextIcon.png")
         addSafeOption(sbopt, "Clear Weather", function() ParadiseZ.clearWeather() end, "media/ui/Paradise/WeatherContextIcon.png")
-        --addSafeOption(sbopt, "Clear Corpse", function() ParadiseZ.DespawnBodies() end, "media/ui/Paradise/CorpseContextIcon.png")
         addSafeOption(sbopt, "Clear Worn Items", function() ParadiseZ.ClearWornItems() end, "media/ui/Paradise/WornItemsContextIcon.png")
         addSafeOption(sbopt, "Clear Perks", function() ParadiseZ.ClearPerks() end, "media/ui/Paradise/MemoryContextIcon.png")
         addSafeOption(sbopt, "Clear Traits", function() ParadiseZ.ClearTraits() end, "media/ui/Paradise/TraitsContextIcon.png")
@@ -132,8 +139,14 @@ end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.context)
 
+--[[         addSafeOption(sbopt, "Clear Trees", function() ParadiseZ.ClearTrees() end, "media/ui/Paradise/TreesContextIcon.png")
+        addSafeOption(sbopt, "Clear Plants", function() ParadiseZ.DespawnPlants() end, "media/ui/Paradise/PlantsContextIcon.png")
+        addSafeOption(sbopt, "Clear Cars", function() ParadiseZ.DespawnCars() end, "media/ui/Paradise/CarsContextIcon.png")
+        addSafeOption(sbopt, "Clear Fire", function() ParadiseZ.StopFire() end, "media/ui/Paradise/NoFireContextIcon.png")
+        addSafeOption(sbopt, "Clear Floor Items", function() ParadiseZ.popup("Paradise Clear Functions", "Clear Floor Items", ParadiseZ.ClearFloorItems2, "Clear") end, "media/ui/Paradise/NoItemsContextIcon.png")
+ ]]
 
-
+-----------------------            ---------------------------
 --[[ 
 function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)

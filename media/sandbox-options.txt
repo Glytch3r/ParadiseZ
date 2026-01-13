@@ -46,7 +46,7 @@ option ParadiseZ.ReboundExitsCar
 
 option ParadiseZ.showTrailingMarkers
 {
-	type = boolean, default = true,
+	type = boolean, default = false,
 	page = ParadiseZ, translation = ParadiseZ_showTrailingMarkers,
 }
 option ParadiseZ.ClearRadius

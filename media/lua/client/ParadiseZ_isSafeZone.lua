@@ -13,6 +13,7 @@ ParadiseZ = ParadiseZ or {}
 end
  ]]
 
+
 function ParadiseZ.isSafeZone(plOrSq)
     local sq
 
@@ -33,7 +34,96 @@ function ParadiseZ.isSafeZone(plOrSq)
 
     return zone.isSafe == true
 end
-function ParadiseZ.restoreHandler(obj)    
+
+
+function ParadiseZ.isSafePlorSq(pl, sq)
+    pl = pl or getPlayer()
+    sq = sq or pl:getSquare() 
+    local safePl = ParadiseZ.isSafeZone(pl)
+    local safeSq = ParadiseZ.isSafeZone(sq)
+    return safePl or safeSq
+end
+-----------------------            ---------------------------
+--[[ 
+function ParadiseZ.ProtectThump(char, wpn, obj)
+    if not char then return end
+    if instanceof(char, "IsoZombie")  then return end
+    if not obj then return print('obj') end
+    if not obj:isThumpable() then return print('isThumpable') end
+    local sq = obj:getSquare()
+    if not sq then return end
+    if not ParadiseZ.isSafePlorSq(char, sq) then return end
+    if getCore():getDebug() then 
+        print(obj:getHealth())
+    end
+    obj:setHealth(obj:getMaxHealth())
+    if isClient() then obj:transmitCompleteItemToServer() end
+end
+Events.OnWeaponHitThumpable.Remove(ParadiseZ.ProtectThump)
+Events.OnWeaponHitThumpable.Add(ParadiseZ.ProtectThump)
+ ]]
+-----------------------            ---------------------------
+
+
+function ParadiseZ.getBlocks()
+    local opt = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ContextRemoveList
+    if not opt or opt == "" then return {} end
+
+    local t = {}
+    for key in string.gmatch(opt, "[^;]+") do
+        t[#t + 1] = key
+    end
+    return t
+end
+
+
+function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
+    local pl = getSpecificPlayer(plNum)
+    if not pl then return end
+    if clickedPlayer then
+        local access = clickedPlayer:getAccessLevel()
+        if access and (string.lower(access) == "admin" or clickedPlayer:isInvisible()) then
+            context:removeOptionByName(getText("ContextMenu_Trade"))
+        end
+    end
+    local sq = clickedSquare
+    if not sq then return end
+    if ParadiseZ.isSafePlorSq(pl, sq) then  
+        local pickupText = getText("IGUI_Pickup")
+        local pickupOpt = context:getOptionFromName(pickupText)
+        if pickupOpt then
+            context:removeOptionByName(pickupText)
+            local opt = context:addOption(pickupText)
+            if opt then
+                opt.notAvailable = true
+                local tooltip = ISToolTip:new()
+                tooltip:initialise()
+                tooltip.description = "Protected Zone"
+                opt.toolTip = tooltip
+            end
+        end
+        ParadiseZ.blocks = ParadiseZ.getBlocks()
+        for _, key in ipairs(ParadiseZ.blocks) do
+            local text = getText(key)
+            local existing = context:getOptionFromName(text)
+            if existing then
+                context:removeOptionByName(text)
+                local opt = context:addOption(text)
+                if opt then
+                    opt.notAvailable = true
+                    local tooltip = ISToolTip:new()
+                    tooltip:initialise()
+                    tooltip.description = "Protected Zone"
+                    opt.toolTip = tooltip
+                end
+            end
+        end  
+    end 
+end
+Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
+Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
+-----------------------            ---------------------------
+--[[ function ParadiseZ.restoreHandler(obj)    
     if not obj then return end
     local sq = obj:getSquare()
     if not sq then return end
@@ -49,67 +139,7 @@ function ParadiseZ.restoreHandler(obj)
     end
 end
 Events.OnTileRemoved.Remove(ParadiseZ.restoreHandler)
---Events.OnTileRemoved.Add(ParadiseZ.restoreHandler)
-
------------------------            ---------------------------
-
-function ParadiseZ.getBlocks()
-    local opt = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ContextRemoveList
-    if not opt or opt == "" then return {} end
-
-    local t = {}
-    for key in string.gmatch(opt, "[^;]+") do
-        t[#t + 1] = key
-    end
-    return t
-end
-function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
-    local pl = getSpecificPlayer(plNum)
-    if not pl then return end
-    if clickedPlayer then
-        local access = clickedPlayer:getAccessLevel()
-        if access and (string.lower(access) == "admin" or clickedPlayer:isInvisible()) then
-            context:removeOptionByName(getText("ContextMenu_Trade"))
-        end
-    end
-    local sq = clickedSquare
-    if not sq then return end
-    
-    if not ParadizeZ.isSafeZone(pl) and not ParadiseZ.isSafeZone(sq) then return end
-            
-    local pickupText = getText("IGUI_Pickup")
-    local pickupOpt = context:getOptionFromName(pickupText)
-    if pickupOpt then
-        context:removeOptionByName(pickupText)
-        local opt = context:addOption(pickupText)
-        if opt then
-            opt.notAvailable = true
-            local tooltip = ISToolTip:new()
-            tooltip:initialise()
-            tooltip.description = "Protected Zone"
-            opt.toolTip = tooltip
-        end
-    end
-    ParadiseZ.blocks = ParadiseZ.getBlocks()
-    for _, key in ipairs(ParadiseZ.blocks) do
-        local text = getText(key)
-        local existing = context:getOptionFromName(text)
-        if existing then
-            context:removeOptionByName(text)
-            local opt = context:addOption(text)
-            if opt then
-                opt.notAvailable = true
-                local tooltip = ISToolTip:new()
-                tooltip:initialise()
-                tooltip.description = "Protected Zone"
-                opt.toolTip = tooltip
-            end
-        end
-    end   
-end
-Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
-Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
-
+Events.OnTileRemoved.Add(ParadiseZ.restoreHandler) ]]
 -----------------------            ---------------------------
 
 --[[ 
