@@ -1,0 +1,3 @@
+IGUI_EN = {
+    IGUI_AdminPanel_SeeTickets = "Paradise Ticket Support",
+}

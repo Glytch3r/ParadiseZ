@@ -6,15 +6,6 @@ function ParadiseZ.isAdm()
 end
 
 Events.OnGameStart.Add(function()
-
-    ParadiseZ.ISMoveablesActionisValidObject = ISMoveablesAction.isValidObject
-    function ISMoveablesAction:isValidObject()
-        if ParadiseZ.isSafeZone() then 
-            return false
-        end
-        return ParadiseZ.ISMoveablesActionisValidObject(self)
-    end
-    
     
     ParadiseZ.ISServerSandboxOptionsUIonButtonApply = ISServerSandboxOptionsUI.onButtonApply
     function ISServerSandboxOptionsUI:onButtonApply()
@@ -24,31 +15,165 @@ Events.OnGameStart.Add(function()
         getSandboxOptions():toLua()
         self:destroy()
     end
-
-    ParadiseZ.ISUnbarricadeAction_isValid = ISUnbarricadeAction.isValid
-    function ISUnbarricadeAction:isValid()
-        if ParadiseZ.isSafeZone() then 
+--[[ 
+    ParadiseZ.ISBuildMenucanBuild = ISBuildMenu.canBuild
+    ISBuildMenu.canBuild = function(plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
+    function ISBuildMenu.canBuild(player, recipe, square)
+        if ParadiseZ.isSafePlorSq(player, square) then 
             return false
         end
-        return ParadiseZ.ISUnbarricadeAction_isValid(self)
+        return ParadiseZ.ISBuildMenucanBuild(player, recipe, square)
+    end
+ ]]
+    ParadiseZ.ISRadialMenuonMouseDown = ISRadialMenu.onMouseDown
+
+    function ISRadialMenu:onMouseDown(x, y)
+        if self.joyfocus then return end
+        local pl = getPlayer() 
+        local sq = pl:getSquare() 
+        if ParadiseZ.isSafePlorSq(pl, sq) then
+            self:undisplay()
+            return
+        end
+        return ParadiseZ.ISRadialMenuonMouseDown(self, x, y)
+    end
+    -----------------------            ---------------------------
+
+    ParadiseZ.ISBuildMenuisMultiStageValid = ISBuildMenu.isMultiStageValid
+    function ISBuildMenu.isMultiStageValid()
+        if not ISBuildMenu.cursor or not ISBuildMenu.cursor.sq then
+            return false
+        end
+        if ParadiseZ.isSafePlorSq(getPlayer(), ISBuildMenu.cursor.sq) then
+            return false
+        end
+        return ParadiseZ.ISBuildMenuisMultiStageValid()
+    end
+    
+    ParadiseZ.ISBuildCursorMouserender = ISBuildCursorMouse.render
+    function ISBuildCursorMouse:render(x, y, z, square)
+        self.sq = square;
+        if self.sprite or self.previousSprite then
+            if not self.sprite then
+                self.sprite = self.previousSprite;
+            end
+            self.previousSprite = self.sprite;
+            ISBuildCursorMouse.spriteRender = IsoSprite.new()
+            ISBuildCursorMouse.spriteRender:LoadFramesNoDirPageSimple(self.sprite)
+            local r,g,b,a = 0.0,1.0,0.0,0.8
+            if not self:isValid(square) or ParadiseZ.isSafePlorSq(self.character, square)  then
+                r = 1.0
+                g = 0.0
+            end
+            ISBuildCursorMouse.spriteRender:RenderGhostTileColor(x, y, z, r, g, b, a)
+        end      
+        self:renderTooltip();
+    end
+
+
+    ParadiseZ.ISBuildCursorMousecreate = ISBuildCursorMouse.create
+    function ISBuildCursorMouse:create(x, y, z, north, sprite)
+        local sq = getWorld():getCell():getGridSquare(x, y, z)
+        if ParadiseZ.isSafePlorSq(self.character, sq) then
+            return
+        end
+        ParadiseZ.ISBuildCursorMousecreate(self, x, y, z, north, sprite)
+        --self:hideTooltip();
+        --self:onSquareSelected(getWorld():getCell():getGridSquare(x, y, z))
+    end
+
+
+    ParadiseZ.ISBuildMenucanBuild = ISBuildMenu.canBuild
+    function ISBuildMenu.canBuild(plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
+        local tooltip = ParadiseZ.ISBuildMenucanBuild(
+            plankNb,
+            nailsNb,
+            hingeNb,
+            doorknobNb,
+            baredWireNb,
+            carpentrySkill,
+            option,
+            player
+        )
+
+        if not option or not player then
+            return tooltip
+        end
+
+        local pl = getSpecificPlayer(player)
+        if not pl then
+            return tooltip
+        end
+
+        local sq = pl:getSquare()
+        if ParadiseZ.isSafePlorSq(pl, sq) then
+            option.onSelect = nil
+            option.notAvailable = true
+
+            if tooltip then
+                tooltip.description = "<LINE><RGB:1,0,0>Protected Zone<LINE>"
+            end
+        end
+
+        return tooltip
+    end
+
+
+    ParadiseZ.ISMoveableCursorisValid = ISMoveableCursor.isValid
+    function ISMoveableCursor:isValid(sq)
+        if ParadiseZ.isSafePlorSq(self.character, sq) then 
+            return false
+        end
+        return ParadiseZ.ISMoveableCursorisValid(self, sq)
+    end
+
+    ParadiseZ.ISMoveablesActionisValidObject = ISMoveablesAction.isValidObject
+    function ISMoveablesAction:isValidObject()
+        if (not self.square) then return false; end;
+        if ParadiseZ.isSafePlorSq(self.character, self.square) then 
+            return false
+        end
+        return ParadiseZ.ISMoveablesActionisValidObject(self)
     end
     
 
-    ParadiseZ.ISDestroyCursor_canDestroy = ISDestroyCursor.canDestroy
-    function ISDestroyCursor:canDestroy(obj)
-        if ParadiseZ.isAdm() then return ParadiseZ.ISDestroyCursor_canDestroy(self, obj) end         
-        if ParadiseZ.isSafeZone() then 
+    ParadiseZ.ISUnbarricadeActionisValid = ISUnbarricadeAction.isValid
+    function ISUnbarricadeAction:isValid()
+        if self.character and self.item and ParadiseZ.isSafePlorSq(self.character, self.item:getSquare()) then
             return false
-        end	
-        return ParadiseZ.ISDestroyCursor_canDestroy(self, obj)
+        end
+        return ParadiseZ.ISUnbarricadeActionisValid(self)
     end
 
-    ParadiseZ.ISMoveablesAction_isValid = ISMoveablesAction.isValid
+    ParadiseZ.ISDestroyCursorisValid = ISDestroyCursor.isValid
+    function ISDestroyCursor:isValid(sq)
+        if ParadiseZ.isSafePlorSq(self.character, sq) then 
+            return false
+        end
+        return ParadiseZ.ISDestroyCursorisValid(self, sq)
+    end
+
+    ParadiseZ.ISDestroyCursorcanDestroy = ISDestroyCursor.canDestroy
+    function ISDestroyCursor:canDestroy(obj)
+        if ParadiseZ.isAdm() then
+            return ParadiseZ.ISDestroyCursorcanDestroy(self, obj)
+        end
+        local sq = obj:getSquare()
+        if obj and sq and ParadiseZ.isSafePlorSq(self.character, sq) then
+            return false
+        end
+        return ParadiseZ.ISDestroyCursorcanDestroy(self, obj)
+    end
+    
+    ParadiseZ.ISMoveablesActionisValid = ISMoveablesAction.isValid
     function ISMoveablesAction:isValid()
         if ParadiseZ.isAdm() or not self.moveProps or (self.mode and not (self.mode == "scrap" or self.mode == "pickup")) then
-            return ParadiseZ.ISMoveablesAction_isValid(self)
+            return ParadiseZ.ISMoveablesActionisValid(self)
         end
-        return ParadiseZ.ISMoveablesAction_isValid(self)
+        if ParadiseZ.isSafePlorSq(self.character, self.square) then 
+            return false
+        end
+        return ParadiseZ.ISMoveablesActionisValid(self)
     end
 end)
 
@@ -66,34 +191,6 @@ function ParadiseZ.hookSafety()
     ParadiseZ.CheckSafetyHook = true
 end
 Events.OnInitGlobalModData.Add(ParadiseZ.hookSafety)
-
-function ParadiseZ.getIngameDateTime()
-    local gt = getGameTime()
-    local months = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" }
-
-    local year = gt:getYear()
-    local month = months[gt:getMonth() + 1]
-    local day = string.format("%02d", gt:getDay())
-    local tod = gt:getTimeOfDay()
-    local hour = math.floor(tod)
-    local min = math.floor((tod - hour) * 60)
-
-    return month .. " " .. day .. " " .. year..' / '..string.format("%02d:%02d", hour, min)
-end
-
-function ParadiseZ.getServerRealWorldDateTime()
-    local t = os.date("*t")
-
-    local months = { "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" }
-
-    local month = months[t.month]
-    local day = string.format("%02d", t.day)
-    local year = t.year
-    local hour = string.format("%02d", t.hour)
-    local min = string.format("%02d", t.min)
-
-    return month .. " " .. day .. " " .. year..' / '..hour .. ":" .. min
-end
 
 
 --[[ ParadiseZ.getIngameDateTime()

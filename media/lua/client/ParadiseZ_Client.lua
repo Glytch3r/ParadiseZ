@@ -3,14 +3,16 @@ ParadiseZ = ParadiseZ or {}
 
 local Commands = {};
 Commands.ParadiseZ = {};
+
+-----------------------            ---------------------------
+
+
+
 --[[ 
 print(ParadiseZ.isScareCrow(getPlayer()))
 print(getPlayer():getVariableBoolean("isScareCrow"))
 print(getPlayer():getModData()['isScareCrow'] )
  ]]
-
------------------------            ---------------------------
-
 
 function ParadiseZ.doRoll(percent)
 	if percent <= 0 then return false end
@@ -41,9 +43,9 @@ function ParadiseZ.doKnockDownPl(targ, pushedDir)
 --[[     if getCore():getDebug() then 
         print('knockdown')
     end ]]
-    targ:setBumpType(pushedDir)
-    targ:setVariable("BumpFall", true)
-
+    --targ:setBumpType(pushedDir)
+    --targ:setVariable("BumpFall", true)
+    targ:fallenOnKnees()
 end
 
 Commands.ParadiseZ.knockDownPl = function(args)

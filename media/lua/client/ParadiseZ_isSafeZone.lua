@@ -16,7 +16,6 @@ end
 
 function ParadiseZ.isSafeZone(plOrSq)
     local sq
-
     if instanceof(plOrSq, "IsoGridSquare") then
         sq = plOrSq
     else

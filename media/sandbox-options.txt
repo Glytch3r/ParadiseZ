@@ -208,3 +208,10 @@ option ParadiseZ.MeleePvpDmg
 	page = ParadiseZ, translation = ParadiseZ_UnarmedPvpDmg,
 }
 
+
+option ParadiseZ.TicketTimestampType
+{
+    type = enum,    numValues = 3,    default = 3,
+    page = ParadiseZ,    translation = ParadiseZ_TicketTimestampType,
+	valueTranslation = ParadiseZ_TicketTimestampType,
+}

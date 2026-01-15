@@ -1,6 +1,5 @@
 -----------------------            ---------------------------
 --client/ParadiseZ_ClientData.lua
---client/ParadiseZ_ClientData.lua
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.saveZoneData(data)
@@ -33,7 +32,6 @@ function ParadiseZ.isGiftRecieved(user)
 end
 
 
-
 function ParadiseZ.ClientSync(module, command, args)
     if module ~= "ParadiseZ" then return end
 
@@ -55,8 +53,16 @@ end
 Events.OnServerCommand.Add(ParadiseZ.ClientSync)
 
 function ParadiseZ.DataInit()
-	ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData")
+
+    if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
+    if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
+
+    ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData");
 	ParadiseZ_Gift = ModData.getOrCreate("ParadiseZ_Gift")
+
+
+    ModData.request("ParadiseZ_ZoneData");
+    ModData.request("ParadiseZ_Gift");
 end
 
 Events.OnInitGlobalModData.Add(ParadiseZ.DataInit)
@@ -78,10 +84,16 @@ function ParadiseZ.Clone_ZoneData(t1, t2)
         end
     end
 end
-function ParadiseZ.OnReceiveGlobalModData(key, data)
+
+function ParadiseZ.RecieveData(key, data)
     if key == "ParadiseZ_ZoneData" then
-       ModData.add("ParadiseZ_ZoneData", data) 
+        if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
+        ModData.add("ParadiseZ_ZoneData", data) 
+        ParadiseZ.ZoneData = data
+    elseif key == "ParadiseZ_Gift" then
+        if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
+        ModData.add("ParadiseZ_Gift", data) 
+        ParadiseZ_Gift = data
     end
 end
-Events.OnReceiveGlobalModData.Add(ParadiseZ.OnReceiveGlobalModData)
-
+Events.OnReceiveGlobalModData.Add(ParadiseZ.RecieveData)

@@ -1,5 +1,6 @@
 
 
+ParadiseZ = ParadiseZ or {}
 
 if isClient() then return; end
 

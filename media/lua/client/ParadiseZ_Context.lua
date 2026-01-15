@@ -104,7 +104,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
             { label = "Clear Trees", fn = ParadiseZ.ClearTrees, icon = "media/ui/Paradise/TreesContextIcon.png" },
             { label = "Clear Plants", fn = ParadiseZ.DespawnPlants, icon = "media/ui/Paradise/PlantsContextIcon.png" },
             { label = "Clear Cars", fn = ParadiseZ.DespawnCars, icon = "media/ui/Paradise/CarsContextIcon.png" },
-            { label = "Clear Fire", fn = ParadiseZ.StopFire, icon = "media/ui/Paradise/NoFireContextIcon.png" },
+           -- { label = "Clear Fire", fn = ParadiseZ.StopFire, icon = "media/ui/Paradise/NoFireContextIcon.png" },
             { label = "Clear Floor Items", fn = ParadiseZ.ClearFloorItems2, icon = "media/ui/Paradise/NoItemsContextIcon.png" },
         }
 
@@ -118,7 +118,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
                 getSoundManager():playUISound("UIActivateMainMenuItem")
             end, icon)
         end
-
+        addSafeOption(sbopt, "Clear Fire", function() ParadiseZ.StopFire() end, "media/ui/Paradise/NoFireContextIcon.png")
         addSafeOption(sbopt, "Clean Character", function() ParadiseZ.washChar() end, "media/ui/Paradise/WashContextIcon.png")
         addSafeOption(sbopt, "Clear Map Record", function() ParadiseZ.ClearMap() end, "media/ui/Paradise/MapContextIcon.png")
         addSafeOption(sbopt, "Clear Weather", function() ParadiseZ.clearWeather() end, "media/ui/Paradise/WeatherContextIcon.png")

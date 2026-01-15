@@ -3,30 +3,6 @@ ParadiseZ = ParadiseZ or {}
 
 ParadiseZ.showZoneInfo = true
 
-function ParadiseZ.LifeBarVisibility(pl)
-    pl = pl or getPlayer()
-    if not pl then return end
-
-    local isOutsideZone = ParadiseZ.isOutside(pl)
-    local isKosZone = ParadiseZ.isKosZone(pl)
-    local isPveZone = ParadiseZ.isPveZone(pl)
-    local isPvpPlayer = ParadiseZ.isPvE(pl)
-
-    if isPvpPlayer or (isPveZone and not isKosZone) then
-        LifeBarUI.hide()
-    end
-
-    if pl:isDead() then
-        LifeBarUI.hide()
-    end
-    
-    if ((not isPvpPlayer) and isKosZone and not isPveZone) or isOutsideZone then
-        LifeBarUI.show()
-    end
-end
-
-Events.OnPlayerUpdate.Remove(ParadiseZ.LifeBarVisibility)
-Events.OnPlayerUpdate.Add(ParadiseZ.LifeBarVisibility)
 
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()

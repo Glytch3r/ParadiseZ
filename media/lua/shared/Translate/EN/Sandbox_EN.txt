@@ -1,0 +1,8 @@
+Sandbox_EN = {
+    Sandbox_ParadiseZ_TicketTimestampType = "Ticket Timestamp Type",
+    Sandbox_ParadiseZ_TicketTimestampType_tooltip = "Ticket Timestamp Type",
+    Sandbox_ParadiseZ_TicketTimestampType_option1 = "Game time",
+    Sandbox_ParadiseZ_TicketTimestampType_option2 = "Local time",
+    Sandbox_ParadiseZ_TicketTimestampType_option3 = "Server time"
+
+}

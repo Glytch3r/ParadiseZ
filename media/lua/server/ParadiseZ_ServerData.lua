@@ -10,17 +10,16 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
     if command == "Sync" and args.data then
         local md = ModData.getOrCreate("ParadiseZ_ZoneData")
 
-        for k in pairs(md) do
-            md[k] = nil
+        for k in pairs(ParadiseZ.ZoneData) do
+            ParadiseZ.ZoneData[k] = nil
         end
 
         for k, v in pairs(args.data) do
-            md[k] = v
+            ParadiseZ.ZoneData[k] = v
         end
 
-        ParadiseZ.ZoneData = md
         ModData.transmit("ParadiseZ_ZoneData")
-        sendServerCommand("ParadiseZ", "Sync", { data = md })
+        sendServerCommand("ParadiseZ", "Sync", { data = args.data })
 
     elseif command == "Gift" and args.user then
         ParadiseZ_Gift[args.user] = true

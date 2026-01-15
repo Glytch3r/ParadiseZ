@@ -195,8 +195,8 @@ end
 
 function ParadiseZ.reboundCountdown(isChat)
     local pl = getPlayer() 
-
-    if not  timer:Exists('countdown') then
+    isChat = isChat or false
+    if not timer:Exists('countdown') then
         timer:Create('countdown', 1, 10, function() 
             if c >= 1 then
                 ParadiseZ.doRebound(pl, isChat)

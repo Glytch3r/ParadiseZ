@@ -69,43 +69,47 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
     
     --print(targ == getPlayer())
 
+    local isCrit = targ:isCriticalHit() 
+    if isCrit then
+        bonus = ZombRand(0, SandboxVars.ParadiseZ.pvpDmgMult + 1)
+    end
+    local isLocal = targ == getPlayer() 
 
-  
-    if pvpDmg and targ == getPlayer() then
+    if pvpDmg then
         local dmg = ParadiseZ.getPvpWpnDmg(wpn, char)
-        local md = targ:getModData()
-        local isCrit = targ:isCriticalHit() 
-        if isCrit then
-            bonus = ZombRand(0, SandboxVars.ParadiseZ.pvpDmgMult + 1)
-        end
-        md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg+bonus))
-        md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
-
-        if md.LifePoints <= 0 then
-            if SandboxVars.ParadiseZ.teleportPvpDeath then
-                ParadiseZ.doRebound(targ)
-            else               
-                targ:Kill(char)
-            end
-            targ:setPlayingDeathSound(true)
-      
-        else
-            if isCrit then
-                local roll = ParadiseZ.doRoll(SandboxVars.ParadiseZ.pvpStaggerChance)
-      
-
-                if roll  then    
-                    local isBackstab = targ:isHitFromBehind()
-                    local pushedDir = "pushedFront"
-                    if isBackstab then
-                        pushedDir = "pushedbehind"
-                    end
-                    sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
+        if isLocal then
+            local md = targ:getModData()    
+            md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg+bonus))
+            md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
+        
+            if md.LifePoints <= 0 then
+                if SandboxVars.ParadiseZ.teleportPvpDeath then
+                    ParadiseZ.doRebound(targ)
+                else               
+                    targ:Kill(char)
                 end
+                targ:setPlayingDeathSound(true)
+--[[ 
+                if isCrit then
+                    local roll = ParadiseZ.doRoll(SandboxVars.ParadiseZ.pvpStaggerChance)
+        
+
+                    if roll  then    
+                        local isBackstab = targ:isHitFromBehind()
+                        local pushedDir = "pushedFront"
+                        if isBackstab then
+                            pushedDir = "pushedbehind"
+                        end
+                        sendClientCommand("ParadiseZ", "knockDownPl", { targId = targ:getOnlineID(), pushedDir = pushedDir })
+                    end
+                end
+ ]]
             end
-
         end
-
+        
+        if targ:isAlive() then
+            targ:setHitReaction("Shot")
+        end
     end
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
