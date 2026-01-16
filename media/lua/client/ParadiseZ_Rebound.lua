@@ -211,6 +211,31 @@ function ParadiseZ.reboundCountdown(isChat)
         ParadiseZ.doRebound(pl, isChat)
     end
 end
+-----------------------            ---------------------------
+function ParadiseZ.parseExileCoords()   
+    local strList = SandboxVars.ParadiseZ.ExileCoords
+    local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
+    tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)    
+    return tx, ty, tz
+end
+
+
+
+
+function ParadiseZ.doExile(pl)
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
+    
+    local car = pl:getVehicle()
+    if car then
+        ISVehicleMenu.onExit(pl)
+    end
+    local x, y, z = ParadiseZ.parseExileCoords()   
+    if not (x and y and z) then return end
+    ParadiseZ.tp(pl, x, y, z)
+end
+
 
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)

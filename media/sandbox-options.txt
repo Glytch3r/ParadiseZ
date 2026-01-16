@@ -12,6 +12,10 @@ option ParadiseZ.ContextRemoveList  {
 	page = ParadiseZ, translation = ParadiseZ_ContextRemoveList,
 }
 
+option ParadiseZ.isSafeAllowActions {
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_isSafeAllowActions,
+}
 
 option ParadiseZ.BlockedList  {
 	type = string, default =  Sample Lock;Sample Lock 2,
@@ -69,6 +73,11 @@ option ParadiseZ.VanillaNonPvpZone
 }
 
 
+option ParadiseZ.ExileCoords 
+{
+	type = string, default = 11641;8324;0, 
+	page = ParadiseZ, translation = ParadiseZ_ExileCoords,
+}
 
 option ParadiseZ.Coords 
 {

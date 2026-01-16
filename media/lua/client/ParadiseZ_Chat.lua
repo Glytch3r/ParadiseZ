@@ -37,7 +37,6 @@ end
 
 
 
-
 LuaEventManager.AddEvent("OnChatCmd")
 local hook = ISChat.logChatCommand
 function ISChat:logChatCommand(command)

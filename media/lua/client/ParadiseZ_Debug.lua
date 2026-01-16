@@ -146,8 +146,8 @@ function ParadiseZ.testDmg(targ, dmg, pushedDir)
     if not targ then return end
     local md = targ:getModData()
     md.LifePoints = math.max(0, md.LifePoints - dmg)
-    md.LifeBarFlash = (md.LifeBarFlash or 0) + dmg
-
+    md.LifeBarFlash = 0.4
+	
     local percent = SandboxVars.ParadiseZ.pvpStaggerChance or 34
     if ParadiseZ.doRoll(percent) then
 		pushedDir = pushedDir or 'pushedbehind'

@@ -37,16 +37,7 @@ function LifeBarUI.UI:render()
     self:drawRect(0, 0, barW, h, 1, col.r, col.g, col.b)
     self:drawRectBorder(0, 0, w, h, 1, 1, 1, 1)
     
-
-    if md.LifeBarFlash > 0 then
-        local alpha = math.min(1, md.LifeBarFlash / 100)
-        self:drawRect(0, 0, getCore():getScreenWidth(), getCore():getScreenHeight(), alpha * 0.5, 1, 0, 0, 0)
-        md.LifeBarFlash = math.max(0, md.LifeBarFlash - LifeBarUI.flashDecayRate)
-    end
-    
     md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZ.LifeBarRecovery))
-
-
 
     
 end
@@ -78,12 +69,6 @@ function LifeBarUI.hide()
     LifeBarUI.panel:setVisible(false)
 end
 
-Events.OnCreatePlayer.Add(function()
-    if not ParadiseZ.isPvE(getPlayer()) then
-        LifeBarUI.show()
-    end
-end)
-
 function ParadiseZ.getConditionRGB(condition)
     local t = condition / 100
     return {r = 1 - t, g = 0, b = t}
@@ -93,18 +78,18 @@ end
 function ParadiseZ.LifeBarVisibility(pl)
     pl = pl or getPlayer()
     if not pl then return end
---[[ 
-    local isOutsideZone = ParadiseZ.isOutside(pl)
-    local isKosZone = ParadiseZ.isKosZone(pl) ]]
+
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isPvePlayer = ParadiseZ.isPvE(pl)
 
-    if isPveZone or isPvePlayer or pl:isDead() then
+
+
+    if isPveZone or isPvePlayer or pl:isDead()  then
         LifeBarUI.hide()
     else
         LifeBarUI.show()
     end
-    
+
 end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.LifeBarVisibility)

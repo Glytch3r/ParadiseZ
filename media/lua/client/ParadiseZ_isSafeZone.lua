@@ -121,6 +121,45 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
 end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.removeContextOptions)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.removeContextOptions)
+
+
+
+Events.OnCreatePlayer.Add(function()
+    ParadiseZ.SafeHousecanBeSafehouse = SafeHouse.canBeSafehouse
+    function SafeHouse.canBeSafehouse(pl, square)
+        local building = square and square:getBuilding()
+        if building then
+            local def = building:getDef()
+            if def then
+                local minX = def:getX()
+                local minY = def:getY()
+                local maxX = minX + def:getW() - 1
+                local maxY = minY + def:getH() - 1
+                local z = square:getZ()
+                local cell = getCell()
+
+                for x = minX, maxX do
+                    for y = minY, maxY do
+                        local sq = cell:getGridSquare(x, y, z)
+                        if sq and ParadiseZ.isSafePlorSq(pl, sq) then
+                            return false
+                        end
+                    end
+                end
+            end
+        end
+
+        return ParadiseZ.SafeHousecanBeSafehouse(pl, square)
+    end
+end)
+
+
+
+
+
+
+
+
 -----------------------            ---------------------------
 --[[ function ParadiseZ.restoreHandler(obj)    
     if not obj then return end
