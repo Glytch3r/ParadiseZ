@@ -5,4 +5,9 @@ Sandbox_EN = {
     Sandbox_ParadiseZ_TicketTimestampType_option2 = "Local time",
     Sandbox_ParadiseZ_TicketTimestampType_option3 = "Server time"
 
+    Sandbox_ParadiseZ_isSafeAllowActions = "Allow isSafe Admin Actions",
+    Sandbox_ParadiseZ_isSafeAllowActions_tooltip = "Allow Admin Actions on isSafe Zones",
+
+
+
 }

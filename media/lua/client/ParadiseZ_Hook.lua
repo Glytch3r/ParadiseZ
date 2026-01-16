@@ -25,10 +25,10 @@ Events.OnGameStart.Add(function()
         return ParadiseZ.ISBuildMenucanBuild(player, recipe, square)
     end
  ]]
+    -----------------------            ---------------------------
     ParadiseZ.ISRadialMenuonMouseDown = ISRadialMenu.onMouseDown
-
     function ISRadialMenu:onMouseDown(x, y)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISRadialMenuonMouseDown(self, x, y) 
         end
         if self.joyfocus then return end
@@ -44,7 +44,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISBuildMenuisMultiStageValid = ISBuildMenu.isMultiStageValid
     function ISBuildMenu.isMultiStageValid()
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISBuildMenuisMultiStageValid()
         end
         if not ISBuildMenu.cursor or not ISBuildMenu.cursor.sq then
@@ -58,7 +58,7 @@ Events.OnGameStart.Add(function()
     
     ParadiseZ.ISBuildCursorMouserender = ISBuildCursorMouse.render
     function ISBuildCursorMouse:render(x, y, z, square)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISBuildCursorMouserender(self, x, y, z, square)
         end
         self.sq = square;
@@ -82,7 +82,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISBuildCursorMousecreate = ISBuildCursorMouse.create
     function ISBuildCursorMouse:create(x, y, z, north, sprite)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISBuildCursorMousecreate(self, x, y, z, north, sprite)
         end
         local sq = getWorld():getCell():getGridSquare(x, y, z)
@@ -97,7 +97,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISBuildMenucanBuild = ISBuildMenu.canBuild
     function ISBuildMenu.canBuild(plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISBuildMenucanBuild(self, plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
         end
         local tooltip = ParadiseZ.ISBuildMenucanBuild(
@@ -136,7 +136,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISMoveableCursorisValid = ISMoveableCursor.isValid
     function ISMoveableCursor:isValid(sq)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISMoveableCursorisValid(self, sq)
         end
         if ParadiseZ.isSafePlorSq(self.character, sq) then 
@@ -147,7 +147,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISMoveablesActionisValidObject = ISMoveablesAction.isValidObject
     function ISMoveablesAction:isValidObject()
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISMoveablesActionisValidObject(self)
         end
         if (not self.square) then return false; end;
@@ -160,7 +160,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISUnbarricadeActionisValid = ISUnbarricadeAction.isValid
     function ISUnbarricadeAction:isValid()
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISUnbarricadeActionisValid(self)
         end
         if self.character and self.item and ParadiseZ.isSafePlorSq(self.character, self.item:getSquare()) then
@@ -171,7 +171,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISDestroyCursorisValid = ISDestroyCursor.isValid
     function ISDestroyCursor:isValid(sq)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISDestroyCursorisValid(self, sq)
         end
         if ParadiseZ.isSafePlorSq(self.character, sq) then 
@@ -182,7 +182,7 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISDestroyCursorcanDestroy = ISDestroyCursor.canDestroy
     function ISDestroyCursor:canDestroy(obj)
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISDestroyCursorcanDestroy(self, obj)
         end
         if ParadiseZ.isAdm() then
@@ -197,7 +197,7 @@ Events.OnGameStart.Add(function()
     
     ParadiseZ.ISMoveablesActionisValid = ISMoveablesAction.isValid
     function ISMoveablesAction:isValid()
-        if SandboxVars.ParadiseZ.isSafeAllowActions then 
+        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
             return ParadiseZ.ISMoveablesActionisValid(self)
         end
         if ParadiseZ.isAdm() or not self.moveProps or (self.mode and not (self.mode == "scrap" or self.mode == "pickup")) then
