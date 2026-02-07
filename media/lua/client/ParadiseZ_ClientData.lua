@@ -55,17 +55,17 @@ function ParadiseZ.ClientSync(module, command, args)
         for k, v in pairs(args.data) do
             ParadiseZ.ZoneData[k] = v
         end
-        
+
         ParadiseZ.ZoneData["Power Station"] = {
             name = "Power Station",
             x1 = 11809,
             y1 = 7876,
             x2 = 11870,
             y2 = 7943,
-            isKos = false,
-            isPvE = false,
-            isSafe = false,
-            isBlocked = false,
+            isKos = SandboxVars.ParadiseZ.RadZoneisKos or false,
+            isPvE = SandboxVars.ParadiseZ.RadZoneisPvE or false,
+            isSafe = SandboxVars.ParadiseZ.RadZoneisSafe or false,
+            isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
             isRad = true,
         }
 
