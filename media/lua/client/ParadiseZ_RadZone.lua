@@ -36,7 +36,7 @@ Events.OnCreatePlayer.Add(function()
             item:DoParam(param)
         end
     end
-
+--[[ 
     if ParadiseZ.Zones  then
         if not ParadiseZ.Zones["Monmouth Power Station"] then
             ParadiseZ.Zones["Monmouth Power Station"] = {
@@ -52,7 +52,7 @@ Events.OnCreatePlayer.Add(function()
                 isRad = true,
             }
         end
-    end
+    end ]]
 
 end)
 --[[ 

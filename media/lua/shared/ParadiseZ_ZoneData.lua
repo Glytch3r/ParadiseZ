@@ -13,6 +13,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Louisville"] = {
         name = "Louisville", 
@@ -24,6 +25,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["West Point"] = {
         name = "West Point", 
@@ -35,6 +37,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["MarchRidge"] = {
         name = "MarchRidge", 
@@ -46,6 +49,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Muldraugh"] = {
         name = "Muldraugh", 
@@ -57,6 +61,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Rosewood"] = {
         name = "Rosewood", 
@@ -68,6 +73,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Riverside"] = {
         name = "Riverside", 
@@ -79,6 +85,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Bedford Falls"] = {
         name = "Bedford Falls", 
@@ -90,6 +97,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Fort Redstone"] = {
         name = "Fort Redstone", 
@@ -101,6 +109,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Lake Ivy Township"] = {
         name = "Lake Ivy Township", 
@@ -112,6 +121,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Greenport"] = {
         name = "Greenport", 
@@ -123,6 +133,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Shipping Port"] = {
         name = "Shipping Port", 
@@ -134,6 +145,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Homepie"] = {
         name = "Homepie", 
@@ -145,6 +157,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },
     ["Hartburg"] = {
         name = "Hartburg", 
@@ -156,6 +169,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },  
     ["Overlook Hotel"] = {
         name = "Overlook Hotel", 
@@ -167,6 +181,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },  
     ["Monmouth County"] = {
         name = "Monmouth County", 
@@ -178,6 +193,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },  
     ["International Airport"] = {
         name = "International Airport", 
@@ -189,6 +205,7 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = false,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
     },  
     ["The Square"] = {
         name = "The Square", 
@@ -200,10 +217,25 @@ ParadiseZ.ZoneDataBackup = {
         isPvE = true,
         isSafe = false,
         isBlocked = false,
+        isRad = false,
+
     },  
+    ["Power Station"] = {
+        name = "Power Station",
+        x1 = 11809,
+        y1 = 7876,
+        x2 = 11870,
+        y2 = 7943,
+        isKos = false,
+        isPvE = false,
+        isSafe = false,
+        isBlocked = false,
+        isRad = true,
+    }
 
 }
 
+     
 --ParadiseZ.ZoneData = ParadiseZ.ZoneData or ParadiseZ.ZoneDataBackup
 
 function ParadiseZ.parseZone(strList)

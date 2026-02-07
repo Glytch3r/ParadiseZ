@@ -315,6 +315,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
             isPvE = false,
             isSafe = false,
             isBlocked = false,
+            isRad = false,
         }
         
         ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
@@ -354,6 +355,7 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
                 isPvE = z.isPvE,
                 isSafe = z.isSafe,
                 isBlocked = z.isBlocked,
+                isRad = false,
             }
         end
         ParadiseZ.saveZoneData(zones)
