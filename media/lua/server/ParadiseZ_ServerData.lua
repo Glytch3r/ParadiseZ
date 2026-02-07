@@ -19,8 +19,6 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
         end
 
 
-
-
         ParadiseZ.ZoneData["Monmouth County Power Station"] = {
             name = "Monmouth County Power Station",
             x1 = 11809,
