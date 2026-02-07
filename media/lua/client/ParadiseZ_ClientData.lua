@@ -56,6 +56,20 @@ function ParadiseZ.ClientSync(module, command, args)
             ParadiseZ.ZoneData[k] = v
         end
         
+        ParadiseZ.ZoneData["Power Station"] = {
+            name = "Power Station",
+            x1 = 11809,
+            y1 = 7876,
+            x2 = 11870,
+            y2 = 7943,
+            isKos = false,
+            isPvE = false,
+            isSafe = false,
+            isBlocked = false,
+            isRad = true,
+        }
+
+
         print("ParadiseZ: Client synced.")
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()

@@ -18,6 +18,21 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
             ParadiseZ.ZoneData[k] = v
         end
 
+
+        ParadiseZ.ZoneData["Power Station"] = {
+            name = "Power Station",
+            x1 = 11809,
+            y1 = 7876,
+            x2 = 11870,
+            y2 = 7943,
+            isKos = false,
+            isPvE = false,
+            isSafe = false,
+            isBlocked = false,
+            isRad = true,
+        }
+
+
         ModData.transmit("ParadiseZ_ZoneData")
         sendServerCommand("ParadiseZ", "Sync", { data = args.data })
 
