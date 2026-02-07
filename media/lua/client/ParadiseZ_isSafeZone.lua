@@ -87,6 +87,7 @@ function ParadiseZ.removeContextOptions(plNum, context, worldobjects)
     end
     local sq = clickedSquare
     if not sq then return end
+    if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then return end
     if ParadiseZ.isSafePlorSq(pl, sq) then  
         local pickupText = getText("IGUI_Pickup")
         local pickupOpt = context:getOptionFromName(pickupText)

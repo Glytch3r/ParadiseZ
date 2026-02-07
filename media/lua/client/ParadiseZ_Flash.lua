@@ -27,6 +27,7 @@ function ParadiseZ.drawFlash()
 
     local sw, sh = getCore():getScreenWidth(), getCore():getScreenHeight()
 
+
     if md.FlashAlpha > 0 then
         getRenderer():renderRect(0, 0, sw, sh, 0.5, 0.5, 0.5, md.FlashAlpha)
         md.FlashAlpha = math.max(0, md.FlashAlpha - md.FlashDecayRate)

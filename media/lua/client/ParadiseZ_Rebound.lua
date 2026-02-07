@@ -220,8 +220,6 @@ function ParadiseZ.parseExileCoords()
 end
 
 
-
-
 function ParadiseZ.doExile(pl)
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -233,7 +231,17 @@ function ParadiseZ.doExile(pl)
     end
     local x, y, z = ParadiseZ.parseExileCoords()   
     if not (x and y and z) then return end
-    ParadiseZ.tp(pl, x, y, z)
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+    if sq then ParadiseZ.addTempMarker(sq) end
+    pl:setX(x)
+    pl:setY(y)
+    pl:setZ(z)
+    if isClient() then
+        pl:setLx(x)
+        pl:setLy(y)
+        pl:setLz(z)
+    end
+   
 end
 
 

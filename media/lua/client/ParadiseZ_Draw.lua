@@ -27,6 +27,9 @@ function ParadiseZ.getZoneInfo(pl)
     end
     if ParadiseZ.isBlockedZone(pl) then
         table.insert(info, "Blocked")
+    end    
+    if ParadiseZ.isRadZone(pl) then
+        table.insert(info, "Radiation")
     end
 
     table.insert(info, "X:" .. tostring(round(x)) .. "    Y:" .. tostring(round(y)))
@@ -55,6 +58,8 @@ function ParadiseZ.getDrawStr(char)
         str = "Blocked"
     elseif ParadiseZ.isSafeZone(pl) then
         str = "Protected"
+    elseif ParadiseZ.isRadZone(pl) then
+        str = "Radiation"
     elseif ParadiseZ.isRegularZone(pl) then
         str = "Zone"
     end
@@ -104,6 +109,9 @@ function ParadiseZ.doDrawZone()
         PvP = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"),
         Blocked = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
         Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
+        Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
+
+
     }
 
     local colors = {
@@ -114,6 +122,8 @@ function ParadiseZ.doDrawZone()
         PvP = { r = 0.9, g = 0.2, b = 0.2 },
         Blocked = { r = 0.13, g = 0.13, b = 0.13 },
         Protected = { r = 0.84, g = 0.76, b = 0.67 },
+        Radiation = { r = 1, g = 1, b = 1 },
+
     }
 
     local texture = textures[str]

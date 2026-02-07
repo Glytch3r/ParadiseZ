@@ -89,7 +89,7 @@ Events.OnGameStart.Add(function()
         if ParadiseZ.isSafePlorSq(self.character, sq) then
             return
         end
-        ParadiseZ.ISBuildCursorMousecreate(self, x, y, z, north, sprite)
+        return ParadiseZ.ISBuildCursorMousecreate(self, x, y, z, north, sprite)
         --self:hideTooltip();
         --self:onSquareSelected(getWorld():getCell():getGridSquare(x, y, z))
     end
@@ -97,9 +97,6 @@ Events.OnGameStart.Add(function()
 
     ParadiseZ.ISBuildMenucanBuild = ISBuildMenu.canBuild
     function ISBuildMenu.canBuild(plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
-        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
-            return ParadiseZ.ISBuildMenucanBuild(self, plankNb, nailsNb, hingeNb, doorknobNb, baredWireNb, carpentrySkill, option, player)
-        end
         local tooltip = ParadiseZ.ISBuildMenucanBuild(
             plankNb,
             nailsNb,
@@ -121,7 +118,7 @@ Events.OnGameStart.Add(function()
         end
 
         local sq = pl:getSquare()
-        if ParadiseZ.isSafePlorSq(pl, sq) then
+        if ParadiseZ.isSafePlorSq(pl, sq) and not (SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm()) then
             option.onSelect = nil
             option.notAvailable = true
 
@@ -195,19 +192,6 @@ Events.OnGameStart.Add(function()
         return ParadiseZ.ISDestroyCursorcanDestroy(self, obj)
     end
     
-    ParadiseZ.ISMoveablesActionisValid = ISMoveablesAction.isValid
-    function ISMoveablesAction:isValid()
-        if SandboxVars.ParadiseZ.isSafeAllowActions and ParadiseZ.isAdm() then 
-            return ParadiseZ.ISMoveablesActionisValid(self)
-        end
-        if ParadiseZ.isAdm() or not self.moveProps or (self.mode and not (self.mode == "scrap" or self.mode == "pickup")) then
-            return ParadiseZ.ISMoveablesActionisValid(self)
-        end
-        if ParadiseZ.isSafePlorSq(self.character, self.square) then 
-            return false
-        end
-        return ParadiseZ.ISMoveablesActionisValid(self)
-    end
 end)
 -----------------------            ---------------------------
 function ParadiseZ.hookSafety()

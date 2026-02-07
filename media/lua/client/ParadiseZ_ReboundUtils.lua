@@ -3,7 +3,8 @@ ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.forceExitCar()
     if not SandboxVars.ParadiseZ.ReboundExitsCar then return end
-
+    ISVehicleMenu.onExit(getPlayer())
+    --[[ 
     local pl = getPlayer()
     if not pl then return end
     local car = pl:getVehicle()
@@ -17,7 +18,7 @@ function ParadiseZ.forceExitCar()
     
     pl:PlayAnim("Idle")
     triggerEvent("OnExitVehicle", pl)
-    car:updateHasExtendOffsetForExitEnd(pl)
+    car:updateHasExtendOffsetForExitEnd(pl) ]]
 end
 
 
@@ -34,7 +35,7 @@ function ParadiseZ.tp(pl, x, y, z)
     end
 	
     if SandboxVars.ParadiseZ.ReboundSystem then
-            ParadiseZ.forceExitCar()
+        ParadiseZ.forceExitCar()
         
         if luautils.stringStarts(getCore():getVersion(), "42") then
             pl:teleportTo(tonumber(x), tonumber(y), tonumber(z))

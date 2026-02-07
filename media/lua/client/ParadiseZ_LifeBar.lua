@@ -4,7 +4,7 @@ LifeBarUI = LifeBarUI or {}
 LifeBarUI.panel = nil
 LifeBarUI.visible = true
 LifeBarUI.maxValue = 100
-LifeBarUI.flashDecayRate = 1.8
+LifeBarUI.flashDecayRate = LifeBarUI.flashDecayRate or SandboxVars.ParadiseZ.HitFlashDecay or 1.8
 
 LifeBarUI.UI = ISPanel:derive("LifeBarUI_UI")
 

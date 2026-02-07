@@ -35,9 +35,14 @@ function doSledge(obj)
         end
     end
 end
+
+
 Events.OnGameStart.Add(function()
     local hook = ISMoveablesAction.isValid
     function ISMoveablesAction:isValid()
+        if ParadiseZ.isSafePlorSq(self.character, self.square) then 
+            return false
+        end
         if isAdmin() or not self.mode or not self.moveProps then
             return hook(self)
         end
@@ -52,13 +57,6 @@ Events.OnGameStart.Add(function()
         return hook(self)
     end
 
-    local sledgeHook = ISDestroyCursor.canDestroy
-    function ISDestroyCursor:canDestroy(obj)
-        if not isAdmin() and obj and ParadiseZ.isCantSledge(obj) then
-            return false
-        end
-        return sledgeHook(self, obj)
-    end
 end)
 
 function ParadiseZ.setCantSledge(obj, bool)
