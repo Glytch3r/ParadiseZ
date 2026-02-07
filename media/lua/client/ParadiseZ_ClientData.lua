@@ -56,7 +56,7 @@ function ParadiseZ.ClientSync(module, command, args)
             ParadiseZ.ZoneData[k] = v
         end
 
-        ParadiseZ.ZoneData["Power Station"] = {
+        ParadiseZ.ZoneData["Monmouth County Power Station"] = {
             name = "Monmouth County Power Station",
             x1 = 11809,
             y1 = 7876,

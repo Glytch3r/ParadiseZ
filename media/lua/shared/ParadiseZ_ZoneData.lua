@@ -220,7 +220,7 @@ ParadiseZ.ZoneDataBackup = {
         isRad = false,
 
     },  
-    ["Power Station"] = {
+    ["Monmouth County Power Station"] = {
         name = "Monmouth County Power Station",
         x1 = 11809,
         y1 = 7876,
