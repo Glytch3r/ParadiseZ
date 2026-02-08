@@ -2,9 +2,9 @@
 ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.forceExitCar()
-    if not SandboxVars.ParadiseZ.ReboundExitsCar then return end
-    ISVehicleMenu.onExit(getPlayer())
-    --[[ 
+  --[[   if not SandboxVars.ParadiseZ.ReboundExitsCar then return end
+    ISVehicleMenu.onExit(getPlayer()) ]]
+    
     local pl = getPlayer()
     if not pl then return end
     local car = pl:getVehicle()
@@ -18,7 +18,7 @@ function ParadiseZ.forceExitCar()
     
     pl:PlayAnim("Idle")
     triggerEvent("OnExitVehicle", pl)
-    car:updateHasExtendOffsetForExitEnd(pl) ]]
+    car:updateHasExtendOffsetForExitEnd(pl)
 end
 
 

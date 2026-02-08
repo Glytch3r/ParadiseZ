@@ -340,9 +340,9 @@ function ParadiseZ.reboundHandler(pl)
             end
         else        
             if ParadiseZ.isXYZoneInner(plX, plY, name) and ParadiseZ.isRestricted(sq, pl) then
-                ParadiseZ.doRebound(pl)
-                local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
-                if sq then ParadiseZ.addTempMarker(sq) end
+                ParadiseZ.doRebound(pl, false)
+        --[[         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
+                if sq then ParadiseZ.addTempMarker(sq) end ]]
             end
         end
     end
