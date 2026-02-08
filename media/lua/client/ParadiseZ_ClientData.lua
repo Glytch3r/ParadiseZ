@@ -74,12 +74,12 @@ function ParadiseZ.ClientSync(module, command, args)
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()
 		end
-    elseif command == "Utility" and args.data then
+  --[[   elseif command == "Utility" and args.data then
         for k, _ in pairs(ParadiseZ.UtilityData) do ParadiseZ.UtilityData[k] = nil end
 
         for k, v in pairs(args.data) do
             ParadiseZ.UtilityData[k] = v
-        end
+        end ]]
     elseif command == "Gift" and args.user then        
         ParadiseZ_Gift[args.user] = true
     end
@@ -90,7 +90,7 @@ function ParadiseZ.DataInit()
     if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
     if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
     if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
-    ParadiseZ.UtilityData = ModData.getOrCreate("ParadiseZ_UtilityData");
+    --ParadiseZ.UtilityData = ModData.getOrCreate("ParadiseZ_UtilityData");
     ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData");
 	ParadiseZ_Gift = ModData.getOrCreate("ParadiseZ_Gift")
 
@@ -106,10 +106,10 @@ function ParadiseZ.RecieveData(key, data)
         if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
         ModData.add("ParadiseZ_ZoneData", data) 
         ParadiseZ.ZoneData = data
-    elseif key == "ParadiseZ_UtilityData" then
+--[[     elseif key == "ParadiseZ_UtilityData" then
         if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
         ModData.add("ParadiseZ_UtilityData", data) 
-        ParadiseZ.UtilityData = data
+        ParadiseZ.UtilityData = data ]]
     elseif key == "ParadiseZ_Gift" then
         if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
         ModData.add("ParadiseZ_Gift", data) 
