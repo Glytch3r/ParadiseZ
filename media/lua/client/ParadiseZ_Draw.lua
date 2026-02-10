@@ -94,13 +94,22 @@ function ParadiseZ.getReboundInfo()
     return "\nREBOUND: \n" .. tostring(round(rebound.x)) .. ", " .. tostring(round(rebound.y)) .. ", " .. tostring(rebound.z)
 end
 
+ParadiseZ.lastZone = nil
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
+    ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
+    local currentZone = ParadiseZ.getZoneName(pl)
+    if ParadiseZ.lastZone ~= currentZone then
+        ISChat.instance.servermsgTimer = 9000
+        ISChat.instance.servermsg = tostring(currentZone)
+        ParadiseZ.lastZone = currentZone
+    end
+
+    
 
     local str = ParadiseZ.getDrawStr(pl)
-
     local textures = {
         HQ = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
         Outside = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
@@ -110,10 +119,27 @@ function ParadiseZ.doDrawZone()
         Blocked = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
         Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
         Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
+--[[ 
+        Blaze = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"),
+        Frost = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"),
 
+        Bomb = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"),
+        MineField = getTexture("media/textures/zone/ParadiseZ_Zone_MineField.png"),
+        NoCamp = getTexture("media/textures/zone/ParadiseZ_Zone_NoCamp.png"),
+        NoFire = getTexture("media/textures/zone/ParadiseZ_Zone_NoFire.png"),
 
+        Cage = getTexture("media/textures/zone/ParadiseZ_Zone_Cage.png"),
+        Party = getTexture("media/textures/zone/ParadiseZ_Zone_Party.png"),
+        Rally = getTexture("media/textures/zone/ParadiseZ_Zone_Rally.png"),
+        Special = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"),
+        Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
+
+        Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
+ ]]
+--[[ melee
+unliammo
+ ]]
     }
-
     local colors = {
         HQ = { r = 0, g = 0, b = 1 },
         Outside = { r = 1, g = 0.4, b = 0 },
@@ -123,6 +149,23 @@ function ParadiseZ.doDrawZone()
         Blocked = { r = 0.13, g = 0.13, b = 0.13 },
         Protected = { r = 0.84, g = 0.76, b = 0.67 },
         Radiation = { r = 1, g = 1, b = 1 },
+--[[ 
+        Blaze = { r = 1, g = 0, b = 0 },
+        Frost = { r = 0.5, g = 0.4, b = 1 },
+
+        Bomb = { r = 1, g = 0, b = 0 },
+        MineField = { r = 1, g = 0, b = 0 },
+        NoCamp = { r = 0.7, g = 0.7, b = 0.7 },
+        NoFire = { r = 0.8, g = 0.8, b = 0.8 },
+
+        Cage = { r = 0.7, g = 0.7, b = 0.7 },
+        Party = { r = 1, g = 1, b = 0.6 },
+        Rally = { r = 0, g = 1, b = 0 },
+        Special = { r = 0.9, g = 0.4, b = 0.9 },
+        Trade = { r = 0, g = 1, b = 0 },
+
+        Sprint = { r = 1, g = 0.7, b = 0.7 },
+ ]]
 
     }
 
@@ -133,17 +176,13 @@ function ParadiseZ.doDrawZone()
     local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
     local reboundInfo
-
     if isAdm or not isShowInfo then
         reboundInfo = ParadiseZ.getReboundInfo() or ""
     end
-
     getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
-
     if reboundInfo and reboundInfo ~= "" then
         getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
     end
-
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end

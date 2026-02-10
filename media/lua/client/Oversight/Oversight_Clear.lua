@@ -228,7 +228,6 @@ function ParadiseZ.DespawnCars(pl)
     local s = count ~= 1 and 's' or ''
     pl:addLineChatElement("Removed "..tostring(count)..' Vehicle'..s)
 end
-
 function ParadiseZ.DespawnPlants(pl)
     pl = pl or getPlayer() 
     if not pl then return end

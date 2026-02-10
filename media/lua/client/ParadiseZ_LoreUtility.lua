@@ -19,9 +19,59 @@
 ----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
 -----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
 ----------------------------------------------------------------
---[[ 
-ParadiseZ = ParadiseZ or {}
 
+ParadiseZ = ParadiseZ or {}
+function ParadiseZ.runSpawnCycle(x, y, z, clearX, clearY, clearZ, clearRadius, fixedSpawn, startFit, fits, mult)
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+
+    local t = mult
+    local toSpawn = fixedSpawn
+    local count = 0
+
+    getSoundManager():PlayWorldSound('ZombieSurprisedPlayer', sq, 0, 5, 5, false)
+    ParadiseZ.spawnZedEvent(x, y, z, startFit, toSpawn)
+
+    for i = 1, #fits do
+        ParadiseZ.pause(t - 120, function()
+            ParadiseZ.delZeds(clearX, clearY, clearZ, clearRadius)
+            count = ParadiseZ.countDead(clearX, clearY, clearZ, clearRadius)
+            ParadiseZ.pause(2, function()
+                ParadiseZ.delBodies(clearX, clearY, clearZ, clearRadius)
+            end)
+        end)
+
+        local sub = fixedSpawn - count
+        toSpawn = fixedSpawn + sub
+        local fit = fits[i]
+
+        ParadiseZ.pause(t, function()
+            getSoundManager():PlayWorldSound('ZombieSurprisedPlayer', sq, 0, 5, 5, false)
+            ParadiseZ.spawnZedEvent(x, y, z, fit, toSpawn)
+        end)
+
+        t = t + mult
+        count = 0
+    end
+end
+
+function ParadiseZ.triggerGauntlet()
+    ParadiseZ.runSpawnCycle(
+        8311, 6002, 0,
+        8299, 6021, 0, 30,
+        200,
+        "Doctor",
+        {
+            "Farmer",
+            "Cyclist",
+            "Bedroom",
+            "Bathrobe",
+            "Camper",
+        },
+        480
+    )
+end
+--[[ 
+-----------------------            ---------------------------
 function ParadiseZ.addTip(pl, context, opt, optTip, desc, iconPath)
 	local tip = ISWorldObjectContextMenu.addToolTip()
 	tip.description = tostring(desc) or ""

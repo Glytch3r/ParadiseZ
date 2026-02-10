@@ -74,56 +74,6 @@ function ParadiseZ.isXYZoneInner(x, y, name, margin)
 end
 
 
-
-
-
-
-
---[[ 
-
-
-
--- inside whole zone
-function ParadiseZ.isXYInsideZone(x, y, name)
-    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return false end
-
-    local x, y, z = ParadiseZ.parseCoords()
-    if not (x and y and z) then return false end
-
-    if not x1 then return false end
-    return x >= x1 and x <= x2 and y >= y1 and y <= y2
-end
-
--- 3 tiles of any edges
-function ParadiseZ.isXYZoneOuter(x, y, name)
-    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-
-    if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return false end
-
-    if x <= x1 + 2 or x >= x2 - 2 then return true end
-    if y <= y1 + 2 or y >= y2 - 2 then return true end
-    return false
-end
-
--- inside zone NOT within 3 tiles of any edge
-function ParadiseZ.isXYZoneInner(x, y, name)
-    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    
-   -- if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return false end
-
-    if x <= x1 + 2 then return false end
-    if x >= x2 - 2 then return false end
-    if y <= y1 + 2 then return false end
-    if y >= y2 - 2 then return false end
-    return true
-end
- ]]
 -----------------------            ---------------------------
 
 function ParadiseZ.saveRebound(pl, name)

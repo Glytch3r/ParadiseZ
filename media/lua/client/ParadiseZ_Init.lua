@@ -14,3 +14,23 @@ end
 -----------------------            ---------------------------
 Events.OnInitGlobalModData.Add(ParadiseZ.initOptions)
 
+function ParadiseZ.isKosZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isKos == true
+end
+function ParadiseZ.isPvEZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isPvE == true
+end
+function ParadiseZ.isSafeZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isSafe == true
+end
+function ParadiseZ.isBlockedZoneByName(name)
+    local z = ParadiseZ.ZoneData[name]
+    if not z then return false end
+    return z.isBlocked == true
+end

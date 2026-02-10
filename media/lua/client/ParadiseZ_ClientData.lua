@@ -87,14 +87,14 @@ end
 Events.OnServerCommand.Add(ParadiseZ.ClientSync)
 
 function ParadiseZ.DataInit()
-    if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
+    --if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
     if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
     if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
     --ParadiseZ.UtilityData = ModData.getOrCreate("ParadiseZ_UtilityData");
     ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData");
 	ParadiseZ_Gift = ModData.getOrCreate("ParadiseZ_Gift")
 
-    ModData.request("ParadiseZ_UtilityData");
+    --ModData.request("ParadiseZ_UtilityData");
     ModData.request("ParadiseZ_ZoneData");
     ModData.request("ParadiseZ_Gift");
 end

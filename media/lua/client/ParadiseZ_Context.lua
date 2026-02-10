@@ -21,6 +21,23 @@ function ParadiseZ.pause(seconds, callback)
     Events.OnTick.Add(tick)
 end
 
+ParadiseZ.soundDbg = false
+function ParadiseZ.dbgSoundHandler(x, y, z, radius, volume, source)
+    if ParadiseZ.soundDbg then
+        local pl = getPlayer()
+        local msg = tostring(source)
+        msg = msg .."\nx: "..tostring(round(x)).." y: "..tostring(round(y)) .." z: "..tostring(y)
+        msg = msg .."\nradius: "..tostring(radius)
+        msg = msg .."\nvolume: "..tostring(volume)
+        msg = msg .."\ndistance: "..tostring(round(pl:DistTo(x, y)))
+        msg = msg .."\ndirection: "..tostring(getSoundDir(pl:getX(), pl:getY(), x, y))
+        pl:setHaloNote(tostring(msg),111,133,232,900)
+
+        ParadiseZ.addTempMarker(source:getSquare())
+    end
+end
+Events.OnWorldSound.Add(ParadiseZ.dbgSoundHandler)
+
 function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
@@ -58,6 +75,8 @@ function ParadiseZ.context(plNum, context, worldobjects)
     end
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
+    addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
+
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
     addSafeOption(opt, "ReApply Gun Params", function() 
         if isClient() then 
@@ -88,11 +107,47 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
     addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
     addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")
-    addSafeOption(opt, "Prevent Zed Attacks: "..tostring(ParadiseZ.isOnOrOff(pl:isZombiesDontAttack())), function() pl:setZombiesDontAttack(not pl:isZombiesDontAttack()) end, "media/ui/Paradise/StopZedContextIcon.png")
     addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
     addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
     addSafeOption(opt, "Thunder", function() sendClientCommand(pl, "ParadiseZ", "thunder", { })  end, "media/ui/LootableMaps/map_lightning.png")
+    -----------------------            ---------------------------
+    
+    local zSub = opt:addOption("Z")
+    if zSub then
+        zSub.iconTexture = getTexture("media/ui/LootableMaps/map_z.png")
+        local zbopt = ISContextMenu:getNew(context)
+        if zbopt then context:addSubMenu(zSub, zbopt) end
+        local zRad = SandboxVars.ParadiseZ.ClearRadius or 15
+       
+        addSafeOption(zbopt, "Prevent Zed Attacks: "..tostring(ParadiseZ.isOnOrOff(pl:isZombiesDontAttack())), function() 
+            pl:setZombiesDontAttack(not pl:isZombiesDontAttack()) 
+        end, "media/ui/Paradise/StopZedContextIcon.png")
 
+        addSafeOption(zbopt, "Kill Zeds", function() 
+            ParadiseZ.killZeds(nil, nil, nil, zRad)
+        end, "media/ui/LootableMaps/map_cross.png")
+
+        addSafeOption(zbopt, "Count Dead", function() 
+            ParadiseZ.countDead(nil, nil, nil, zRad)
+        end, "media/ui/LootableMaps/map_question.png")
+
+        addSafeOption(zbopt, "Count Zed", function() 
+            ParadiseZ.countZed(nil, nil, nil, zRad)
+        end, "media/ui/LootableMaps/map_skull.png")
+
+        addSafeOption(zbopt, "Delete Corpse", function() 
+            ParadiseZ.delBodies(nil, nil, nil, zRad)
+        end, "media/ui/LootableMaps/map_cross.png")
+
+        addSafeOption(zbopt, "Delete Zeds", function() 
+            ParadiseZ.delZeds(nil, nil, nil, zRad)
+        end, "media/ui/LootableMaps/map_facedead.png")
+
+
+
+
+    end
+    -----------------------            ---------------------------
     local subMenu = "Clear: "
     local Sub = opt:addOption(subMenu)
     if Sub then

@@ -54,12 +54,13 @@ function ParadiseZ.tp(pl, x, y, z)
 end
 
 function ParadiseZ.carTp(pl, vehicle)
-    if not vehicle or not player then return end
-    --if SandboxVars.ParadiseZ.ReboundExitsCar then return end
-
+    if not vehicle or not pl then return end
 
     local lx, ly, lz = ParadiseZ.getZoneEdge(pl)
-    if not lx or not ly or not lz then return end
+    if not lx or not ly or not lz then 
+        ParadiseZ.forceExitCar()
+        return 
+    end
 
     local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
     local dx, dy = cx - lx, cy - ly
@@ -132,6 +133,8 @@ function ParadiseZ.getClosestReboundPoint(origin, margin)
     return ox, oy, oz
 end
 
+--[[ 
+
 function ParadiseZ.findReboundPoint(pl, originSq, outward)
     outward = outward or 4
     if not pl or not originSq then return nil end
@@ -162,6 +165,7 @@ end
 -----------------------            ---------------------------
 
 -----------------------            ---------------------------
+
 function ParadiseZ.getClosestSafeZone(pl)
     pl = pl or getPlayer()
     if not pl then return nil end
@@ -231,32 +235,14 @@ function ParadiseZ.getClosestSafeEdge(pl)
 
     return closestEdge.x, closestEdge.y, closestEdge.z
 end
-
+ ]]
 -----------------------            ---------------------------
 
 -----------------------            ---------------------------
-function ParadiseZ.isKosZoneByName(name)
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    return z.isKos == true
-end
-function ParadiseZ.isPvEZoneByName(name)
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    return z.isPvE == true
-end
-function ParadiseZ.isSafeZoneByName(name)
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    return z.isSafe == true
-end
-function ParadiseZ.isBlockedZoneByName(name)
-    local z = ParadiseZ.ZoneData[name]
-    if not z then return false end
-    return z.isBlocked == true
-end
 
 -----------------------            ---------------------------
+--[[ 
+
 function ParadiseZ.localData(pl, str, default, val)
     local md = pl:getModData()
     local key = tostring(str)
@@ -275,7 +261,6 @@ function ParadiseZ.localData(pl, str, default, val)
 end
 
 -----------------------            ---------------------------
-
 function ParadiseZ.getReboundDestination(px, py, x1, y1, x2, y2, outward)
     outward = outward or 4
     if not px or not py then return nil end
@@ -347,7 +332,7 @@ function ParadiseZ.getClosestEdgeDir(px, py, x1, y1, x2, y2)
 
     return dir
 end
-
+ ]]
 ----------
 --[[ 
 function ParadiseZ.isBadTeleportPos(pl, x, y, z)
