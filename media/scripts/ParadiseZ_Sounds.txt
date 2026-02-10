@@ -39,6 +39,31 @@ module Base
         } 
     }
 
+    sound  ParadiseZ_Event_Start
+    { 
+        category = Object, 
+        clip {
+            file = media/sound/ParadiseZ_Event_Start.ogg, 
+            distanceMax = 80, 
+            is3D = true,
+            volume = 0.5,
+            maxGain = 1, 
+            maxInstancesPerEmitter = 1, 
+        } 
+    }
+
+    sound  ParadiseZ_Event_End 
+    { 
+        category = Object, 
+        clip {
+            file = media/sound/ParadiseZ_Event_End.ogg, 
+            distanceMax = 80, 
+            is3D = true,
+            volume = 0.5,
+            maxGain = 1, 
+            maxInstancesPerEmitter = 1, 
+        } 
+    }
 
 
 }

@@ -27,7 +27,8 @@ function ParadiseZ.getRandOutfit()
 	if #pool == 0 then return nil end
 
 	local fit = pool[ZombRand(#pool) + 1]
-	ParadiseZ.echo(tostring(fit))
+	--ParadiseZ.echo(tostring(fit))
+	--print(tostring(fit))
 	return tostring(fit)
 end
 
@@ -158,7 +159,7 @@ function ParadiseZ.countDead(x, y, z, radius)
 			end
 		end
 	end
-	ParadiseZ.echo(tostring(count))
+	ParadiseZ.echo('CorpseCount: '..tostring(count))
 	return count
 end
 function ParadiseZ.delBodies(x, y, z, radius)
@@ -195,48 +196,104 @@ function ParadiseZ.delBodies(x, y, z, radius)
 		end
 	end
 end
+
 -----------------------            ---------------------------
-
-
-function ParadiseZ.runSpawnCycle(x, y, z, duration, rest, population, rounds, rad)
-
-	local pl = getPlayer()
-	rad = rad or 15
-	x = x or pl:getX()
-	y = y or pl:getY()
-	z = z or pl:getZ()
-
-	
-	local sq = getCell():getGridSquare(sx, sy, z)
-
-	local sec = duration * 60
-	local rest = rest * 60
-	local wave = population / rounds
-	local toSpawn = wave
-	population = population - wave
-	local roundTime = sec+rest/rounds
-	local interval = sec+rest/rounds
-
-	getSoundManager():PlayWorldSound('ZombieSurprisedPlayer', sq, 0, 5, 5, false)
-
-	ParadiseZ.spawnZedEvent(x, y, z, nil, wave)
-	for i = 1, rounds do
-
-		ParadiseZ.spawnZedEvent(x, y, z, nil, toSpawn)
-		
-		ParadiseZ.pause(roundTime, function()
-			ParadiseZ.delZeds(x, y, z, rad)
-			local remnants = ParadiseZ.countDead(x, y, z, rad)
-			toSpawn = wave + wave - remnants
-		end)
-		local breakTime = roundTime + rest
-		ParadiseZ.pause(breakTime, function()
-			ParadiseZ.delBodies(x, y, z, rad)
-		end)
-		roundTime = breakTime + interval
-
-	end
+--ParadiseZ.delay = nil
+function ParadiseZ.delay(seconds, callback)
+    local start = getTimestampMs()
+    local duration = seconds * 1000
+    local executed = false
+    local function dTick()
+        if executed then return end
+        local now = getTimestampMs()
+        if now - start >= duration then
+            executed = true
+            Events.OnTick.Remove(dTick)
+            if callback then callback() end
+        end
+    end
+    Events.OnTick.Add(dTick)
 end
+
+--ParadiseZ.runSpawnCycle = nil
+function ParadiseZ.runSpawnCycle(x, y, z, duration, rest, population, rounds, rad)
+    local pl = getPlayer()
+    rad = rad or 15
+    x = x or pl:getX()
+    y = y or pl:getY()
+    z = z or pl:getZ()
+    local sq = getCell():getOrCreateGridSquare(x, y, z) 
+    local sec = duration * 60    
+    local wave = population / rounds
+    local toSpawn = round(wave)
+    local roundTime = sec/rounds
+    local count = 0
+    
+    function ParadiseZ.runRound(i)
+        if i > rounds then return end
+        
+        toSpawn = math.floor(toSpawn)
+        local sq = getCell():getOrCreateGridSquare(x, y, z) 
+        getSoundManager():PlayWorldSound('ParadiseZ_Event_Start', sq, 0, 5, 5, false)
+        
+        ParadiseZ.spawnZedEvent(x, y, z, nil, toSpawn)
+        
+        ParadiseZ.delay(roundTime, function()
+            ParadiseZ.delZeds(x, y, z, rad)
+            local corpse = ParadiseZ.countDead(x, y, z, rad)
+            count = count + corpse
+            ParadiseZ.echo('\nROUND:  '..i..' [ '..count..' / '..population..' ]\nSpawned: '..toSpawn..'\nCorpses: '..corpse)
+            toSpawn = math.floor(wave + (toSpawn - corpse))
+            
+            ParadiseZ.delay(rest, function()
+                ParadiseZ.delBodies(x, y, z, rad)
+                getSoundManager():PlayWorldSound('ParadiseZ_Event_End', sq, 0, 5, 5, false)
+                
+                if i < rounds then
+                    ParadiseZ.runRound(i + 1)
+                end
+            end)
+        end)
+    end
+    
+    ParadiseZ.runRound(1)
+end
+
+	--[[ 
+		ParadiseZ.pause(roundTime-rest, function()
+			print(roundTime)
+
+		getSoundManager():PlayWorldSound('ZombieSurprisedPlayer', sq, 0, 5, 5, false)
+			stage = stage + 1
+			ParadiseZ.spawnZedEvent(x, y, z, nil, round(toSpawn))
+			
+			ParadiseZ.delZeds(x, y, z, rad)
+			local corpse = ParadiseZ.countDead(x, y, z, rad)
+			toSpawn = round(wave + (toSpawn - corpse))
+
+
+			ParadiseZ.echo('stage '..tostring(stage)..'\ntoSpawn '..tostring(toSpawn))
+
+			ParadiseZ.pause(rest, function()
+				ParadiseZ.echo('break')
+
+				ParadiseZ.delBodies(x, y, z, rad)
+			end)
+
+		end)
+ ]]
+
+
+
+--[[ 
+
+local duration = 1
+local rest = 5
+local population = 30
+local rounds = 3
+ParadiseZ.runSpawnCycle(nil,nil,nil, duration, rest, population, rounds, 60) 
+
+]]
 
 --[[ 
 
