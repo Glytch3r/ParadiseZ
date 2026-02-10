@@ -120,6 +120,8 @@ function ParadiseZ.doDrawZone()
         Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
         Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
 --[[ 
+        Hunt  = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"),
+
         Blaze = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"),
         Frost = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"),
 
@@ -163,6 +165,7 @@ unliammo
         Rally = { r = 0, g = 1, b = 0 },
         Special = { r = 0.9, g = 0.4, b = 0.9 },
         Trade = { r = 0, g = 1, b = 0 },
+        Hunt = { r = 1, g = 0.7, b = 0.7 },
 
         Sprint = { r = 1, g = 0.7, b = 0.7 },
  ]]
