@@ -642,7 +642,7 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o.filterMap = {}
     o.moveWithMouse = true
     o.childEditor = nil
-    o.bgTexture = getTexture("media/ui/paradise/bg.png")
+    --o.bgTexture = getTexture("media/ui/paradise/bg.png")
     ParadiseZ.ZoneEditorWindow.instance = o
     o:setResizable(true)
     return o
