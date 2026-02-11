@@ -118,29 +118,22 @@ function ParadiseZ.doDrawZone()
         PvP = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"),
         Blocked = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
         Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
-        Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
---[[ 
-        Hunt  = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"),
 
+        Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
+        Hunt  = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"),
         Blaze = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"),
         Frost = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"),
-
         Bomb = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"),
         MineField = getTexture("media/textures/zone/ParadiseZ_Zone_MineField.png"),
         NoCamp = getTexture("media/textures/zone/ParadiseZ_Zone_NoCamp.png"),
         NoFire = getTexture("media/textures/zone/ParadiseZ_Zone_NoFire.png"),
-
         Cage = getTexture("media/textures/zone/ParadiseZ_Zone_Cage.png"),
         Party = getTexture("media/textures/zone/ParadiseZ_Zone_Party.png"),
         Rally = getTexture("media/textures/zone/ParadiseZ_Zone_Rally.png"),
         Special = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"),
         Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
-
         Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
- ]]
---[[ melee
-unliammo
- ]]
+
     }
     local colors = {
         HQ = { r = 0, g = 0, b = 1 },
@@ -150,25 +143,22 @@ unliammo
         PvP = { r = 0.9, g = 0.2, b = 0.2 },
         Blocked = { r = 0.13, g = 0.13, b = 0.13 },
         Protected = { r = 0.84, g = 0.76, b = 0.67 },
+
         Radiation = { r = 1, g = 1, b = 1 },
---[[ 
+
+        Hunt = { r = 0.26, g = 0.21, b = 0.14 },
         Blaze = { r = 1, g = 0, b = 0 },
         Frost = { r = 0.5, g = 0.4, b = 1 },
-
         Bomb = { r = 1, g = 0, b = 0 },
         MineField = { r = 1, g = 0, b = 0 },
         NoCamp = { r = 0.7, g = 0.7, b = 0.7 },
         NoFire = { r = 0.8, g = 0.8, b = 0.8 },
-
         Cage = { r = 0.7, g = 0.7, b = 0.7 },
         Party = { r = 1, g = 1, b = 0.6 },
         Rally = { r = 0, g = 1, b = 0 },
         Special = { r = 0.9, g = 0.4, b = 0.9 },
         Trade = { r = 0, g = 1, b = 0 },
-        Hunt = { r = 1, g = 0.7, b = 0.7 },
-
         Sprint = { r = 1, g = 0.7, b = 0.7 },
- ]]
 
     }
 

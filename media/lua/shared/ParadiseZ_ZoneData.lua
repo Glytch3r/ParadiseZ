@@ -207,18 +207,25 @@ ParadiseZ.ZoneDataBackup = {
         isBlocked = false,
         isRad = false,
     },
+
     ["Monmouth County Power Station"] = {
         name = "Monmouth County Power Station",
         x1 = 11809,
         y1 = 7876,
         x2 = 11870,
         y2 = 7943,
+        isKos = false,
+        isPvE = false,
+        isSafe = false,
+        isBlocked = false,
+        isRad = true,
+    },
+--[[ 
         isKos = SandboxVars.ParadiseZ.RadZoneisKos or false,
         isPvE = SandboxVars.ParadiseZ.RadZoneisPvE or false,
         isSafe = SandboxVars.ParadiseZ.RadZoneisSafe or false,
-        isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
-        isRad = true,
-    },
+        isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false, ]]
+
     ["Muldraugh"] = {
         name = "Muldraugh",
         x1 = 10559,

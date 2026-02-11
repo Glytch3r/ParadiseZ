@@ -116,10 +116,9 @@ function ParadiseZ.countZed(x, y, z, radius)
     x = x or pl:getX()
     y = y or pl:getY()
     z = z or pl:getZ()
-    local cell = getCell()
     for xDelta = -radius, radius do
         for yDelta = -radius, radius do
-            local sq = cell:getGridSquare(x + xDelta, y + yDelta, z)
+            local sq = getCell():getGridSquare(x + xDelta, y + yDelta, z)
             if sq then
                 for i = sq:getMovingObjects():size(), 1, -1 do
                     local zed = sq:getMovingObjects():get(i - 1)
@@ -143,11 +142,10 @@ function ParadiseZ.countDead(x, y, z, radius)
 	local r = radius + 1
 	local count = 0
 
-	local cell = getCell()
 	for sx = x - r, x + r + 1 do
 		for sy = y - r, y + r + 1 do
 			if IsoUtils.DistanceTo(x, y, sx + 0.5, sy + 0.5) <= r then
-				local sq = cell:getGridSquare(sx, sy, z)
+				local sq = getCell():getGridSquare(sx, sy, z)
 				if sq then
 					local list = sq:getStaticMovingObjects()
 					for i = 0, list:size() - 1 do
@@ -174,11 +172,10 @@ function ParadiseZ.delBodies(x, y, z, radius)
 		SendCommandToServer(string.format("/removezombies -x %d -y %d -z %d -radius %d -clear true", x, y, z, r))
 		return
 	end
-	local cell = getCell()
 	for sx = x - r, x + r + 1 do
 		for sy = y - r, y + r + 1 do
 			if IsoUtils.DistanceTo(x, y, sx + 0.5, sy + 0.5) <= r then
-				local sq = cell:getGridSquare(sx, sy, z)
+				local sq = getCell():getGridSquare(sx, sy, z)
 				if sq then
 					local list = sq:getStaticMovingObjects()
 					local bodies = {}

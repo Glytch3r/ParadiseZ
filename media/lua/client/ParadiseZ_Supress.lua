@@ -29,7 +29,7 @@ Events.OnCreatePlayer.Add(function()
     
 -----------------------            ---------------------------
     HF_PointBlank = HF_PointBlank or {}
-
+    HF_PointBlank.SETTINGS = HF_PointBlank.SETTINGS or {}
 
     HF_PointBlank.SETTINGS.DEBUG = false;
     HF_PointBlank.SETTINGS.bAreLogMessagesEnabled = false;

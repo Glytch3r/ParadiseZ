@@ -20,6 +20,7 @@
 
 MapSymbolDefinitions.getInstance():addTexture("PvE", "media/ui/LootableMaps/PvE_symbol.png")
 MapSymbolDefinitions.getInstance():addTexture("Jim", "media/ui/LootableMaps/Jim_symbol.png")
+MapSymbolDefinitions.getInstance():addTexture("TheRange", "media/ui/LootableMaps/TheRange_symbol.png")
 
 
 --[[_____________________________________________________________________________________________________________________________
