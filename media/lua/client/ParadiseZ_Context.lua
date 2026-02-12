@@ -41,7 +41,23 @@ Events.OnWorldSound.Add(ParadiseZ.dbgSoundHandler)
 function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
-    if string.lower(pl:getAccessLevel()) ~= "admin" then return end
+
+    local function addSafeOption(menu, text, callback, icon)
+        if not menu then return end
+        local optTip = menu:addOption(text, worldobjects, function()
+            if callback then callback() end
+            if context and context.hideAndChildren then context:hideAndChildren() end
+        end)
+        if optTip and icon then
+            optTip.iconTexture = getTexture(icon)
+        end
+    end
+
+    if string.lower(pl:getAccessLevel()) ~= "admin" then 
+        addSafeOption(context, "Paradise Zone Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
+        
+        return 
+    end
     --Events.OnPlayerUpdate.Remove(ParadiseZ.highlightSqHandler)
     ParadiseZ.closeModal()
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
@@ -62,17 +78,8 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local opt = ISContextMenu:getNew(context)
     if not opt then return end
     context:addSubMenu(Main, opt)
+    
 
-    local function addSafeOption(menu, text, callback, icon)
-        if not menu then return end
-        local optTip = menu:addOption(text, worldobjects, function()
-            if callback then callback() end
-            if context and context.hideAndChildren then context:hideAndChildren() end
-        end)
-        if optTip and icon then
-            optTip.iconTexture = getTexture(icon)
-        end
-    end
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")

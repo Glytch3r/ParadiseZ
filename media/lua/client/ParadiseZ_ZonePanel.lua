@@ -631,7 +631,11 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     local o = ISCollapsableWindow:new(x, y, width, height)
     setmetatable(o, self)
     self.__index = self
-    o.title = "Glytch3r's    ParadiseZ    Zone    Editor"
+    local tStr = "Glytch3r's    ParadiseZ    Zone    Editor"
+    if string.lower(getPlayer():getAccessLevel()) ~= "admin" then
+        tStr = "Glytch3r's    ParadiseZ    Zone    Directory"
+    end
+    o.title = tStr
     o.resizable = true
     o.minimumWidth = 900
     o.minimumHeight = 400
@@ -699,109 +703,113 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local pl = getPlayer()
     local zone = selected and selected.item
     if not zone then return end
-    
-    if button.internal == "POINT1" then
-        zone.x1 = round(pl:getX())
-        zone.y1 = round(pl:getY())
-        self.shouldSync = true
-    elseif button.internal == "POINT2" then
-        zone.x2 = round(pl:getX())
-        zone.y2 = round(pl:getY())
-        self.shouldSync = true
-    elseif button.internal == "PVP" then
-        zone.isKos = not zone.isKos
-        self.shouldSync = true
-    elseif button.internal == "NONPVP" then
-        zone.isPvE = not zone.isPvE
-        self.shouldSync = true
-    elseif button.internal == "PROTECTED" then
-        zone.isSafe = not zone.isSafe
-        self.shouldSync = true
-    elseif button.internal == "BLOCKED" then
-        zone.isBlocked = not zone.isBlocked
-        self.shouldSync = true
-    elseif button.internal == "RADIATION" then
-        zone.isRad = not zone.isRad
-        self.shouldSync = true
-    elseif button.internal == "HUNT" then
-        zone.isHunt = not zone.isHunt
-        self.shouldSync = true
-    elseif button.internal == "BLAZE" then
-        zone.isBlaze = not zone.isBlaze
-        self.shouldSync = true
-    elseif button.internal == "FROST" then
-        zone.isFrost = not zone.isFrost
-        self.shouldSync = true
-    elseif button.internal == "BOMB" then
-        zone.isBomb = not zone.isBomb
-        self.shouldSync = true
-    elseif button.internal == "MINEFIELD" then
-        zone.isMine = not zone.isMine
-        self.shouldSync = true
-    elseif button.internal == "NOCAMP" then
-        zone.isNoCamp = not zone.isNoCamp
-        self.shouldSync = true
-    elseif button.internal == "NOFIRE" then
-        zone.isNoFire = not zone.isNoFire
-        self.shouldSync = true
-    elseif button.internal == "CAGE" then
-        zone.isCage = not zone.isCage
-        self.shouldSync = true
-    elseif button.internal == "PARTY" then
-        zone.isParty = not zone.isParty
-        self.shouldSync = true
-    elseif button.internal == "RALLY" then
-        zone.isRally = not zone.isRally
-        self.shouldSync = true
-    elseif button.internal == "SPECIAL" then
-        zone.isSpecial = not zone.isSpecial
-        self.shouldSync = true
-    elseif button.internal == "TRADE" then
-        zone.isTrade = not zone.isTrade
-        self.shouldSync = true
-    elseif button.internal == "SPRINT" then
-        zone.isSprint = not zone.isSprint
-        self.shouldSync = true
-    elseif button.internal == "TP" then
-        local midX = math.floor((zone.x1 + zone.x2) / 2)
-        local midY = math.floor((zone.y1 + zone.y2) / 2)
-        ParadiseZ.tp(pl, midX, midY, 0)
-        --**
-        self.btnTeleport:setImage(TP_TEX_ON)
-        timer:Simple(1, function()
-            self.btnTeleport:setImage(TP_TEX_OFF)
-        end)
-    elseif button.internal == "DELETE" then
-        self.ZoneData[tostring(zone.name)] = nil
-        self.shouldSync = true
-        self.datas.fullList = nil
-        self.datas:clear()
-        for name, z in pairs(self.ZoneData) do
-            self.datas:addItem(z.name, z)
-        end
-        table.sort(self.datas.items, function(a, b)
-            if not a or not b or not a.item or not b.item then return false end
-            return a.item.name < b.item.name
-        end)
-        self.btnDelete:setImage(delete_TEX_ON)
-        timer:Simple(1, function()
-            self.btnDelete:setImage(delete_TEX_OFF)
-        end)
+    if string.lower(pl:getAccessLevel()) == "admin" then
+        
+        if button.internal == "POINT1" then
+            zone.x1 = round(pl:getX())
+            zone.y1 = round(pl:getY())
+            self.shouldSync = true
+        elseif button.internal == "POINT2" then
+            zone.x2 = round(pl:getX())
+            zone.y2 = round(pl:getY())
+            self.shouldSync = true
+        elseif button.internal == "PVP" then
+            zone.isKos = not zone.isKos
+            self.shouldSync = true
+        elseif button.internal == "NONPVP" then
+            zone.isPvE = not zone.isPvE
+            self.shouldSync = true
+        elseif button.internal == "PROTECTED" then
+            zone.isSafe = not zone.isSafe
+            self.shouldSync = true
+        elseif button.internal == "BLOCKED" then
+            zone.isBlocked = not zone.isBlocked
+            self.shouldSync = true
+        elseif button.internal == "RADIATION" then
+            zone.isRad = not zone.isRad
+            self.shouldSync = true
+        elseif button.internal == "HUNT" then
+            zone.isHunt = not zone.isHunt
+            self.shouldSync = true
+        elseif button.internal == "BLAZE" then
+            zone.isBlaze = not zone.isBlaze
+            self.shouldSync = true
+        elseif button.internal == "FROST" then
+            zone.isFrost = not zone.isFrost
+            self.shouldSync = true
+        elseif button.internal == "BOMB" then
+            zone.isBomb = not zone.isBomb
+            self.shouldSync = true
+        elseif button.internal == "MINEFIELD" then
+            zone.isMine = not zone.isMine
+            self.shouldSync = true
+        elseif button.internal == "NOCAMP" then
+            zone.isNoCamp = not zone.isNoCamp
+            self.shouldSync = true
+        elseif button.internal == "NOFIRE" then
+            zone.isNoFire = not zone.isNoFire
+            self.shouldSync = true
+        elseif button.internal == "CAGE" then
+            zone.isCage = not zone.isCage
+            self.shouldSync = true
+        elseif button.internal == "PARTY" then
+            zone.isParty = not zone.isParty
+            self.shouldSync = true
+        elseif button.internal == "RALLY" then
+            zone.isRally = not zone.isRally
+            self.shouldSync = true
+        elseif button.internal == "SPECIAL" then
+            zone.isSpecial = not zone.isSpecial
+            self.shouldSync = true
+        elseif button.internal == "TRADE" then
+            zone.isTrade = not zone.isTrade
+            self.shouldSync = true
+        elseif button.internal == "SPRINT" then
+            zone.isSprint = not zone.isSprint
+            self.shouldSync = true
+        elseif button.internal == "TP" then
+            local midX = math.floor((zone.x1 + zone.x2) / 2)
+            local midY = math.floor((zone.y1 + zone.y2) / 2)
+            ParadiseZ.tp(pl, midX, midY, 0)
+            --**
+            self.btnTeleport:setImage(TP_TEX_ON)
+            timer:Simple(1, function()
+                self.btnTeleport:setImage(TP_TEX_OFF)
+            end)
+        elseif button.internal == "DELETE" then
+            self.ZoneData[tostring(zone.name)] = nil
+            self.shouldSync = true
+            self.datas.fullList = nil
+            self.datas:clear()
+            for name, z in pairs(self.ZoneData) do
+                self.datas:addItem(z.name, z)
+            end
+            table.sort(self.datas.items, function(a, b)
+                if not a or not b or not a.item or not b.item then return false end
+                return a.item.name < b.item.name
+            end)
+            self.btnDelete:setImage(delete_TEX_ON)
+            timer:Simple(1, function()
+                self.btnDelete:setImage(delete_TEX_OFF)
+            end)
 
-    elseif button.internal == "RESET" then
-        self.ZoneData = ParadiseZ.ZoneDataBackup
-        ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
-        ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-        self.shouldSync = false
-        self:refreshList()
-        self.btnReset:setImage(reset_TEX_ON)
-        timer:Simple(1, function()
-            self.btnReset:setImage(reset_TEX_OFF)
+        elseif button.internal == "RESET" then
+            self.ZoneData = ParadiseZ.ZoneDataBackup
+            ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
+            ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
+            self.shouldSync = false
+            self:refreshList()
+            self.btnReset:setImage(reset_TEX_ON)
+            timer:Simple(1, function()
+                self.btnReset:setImage(reset_TEX_OFF)
+            end)
+        end
+        timer:Simple(1.2, function()
+            self:update()
         end)
+    else
+        pl:setHaloNote(tostring('The Panel Buttons are for Admins ONLY'), 150,250,150,900) 
     end
-    timer:Simple(1.2, function()
-        self:update()
-    end)
 end
 function ParadiseZ.ZoneEditorWindow:update()
     ISCollapsableWindow.update(self)
@@ -1142,18 +1150,20 @@ function ParadiseZ.ZoneEditorPopupPanel:onCancel(button)
 end
 
 function ParadiseZ.ZoneEditorWindow:onEditZone(item)
-    if not self.childEditor then
-        local zone = (item and item.item) and item.item or item
-        if not zone then return end
-        local w = 650
-        local h = 258
-        local x = (getCore():getScreenWidth() - w) / 2 + 330
-        local y = (getCore():getScreenHeight() - h) / 2 - 60
-        ParadiseZ.PopupPanel = ParadiseZ.ZoneEditorPopupPanel:new(x, y, w, h, zone, self)
-        ParadiseZ.PopupPanel.isNew = false
-        ParadiseZ.PopupPanel:initialise()
-        ParadiseZ.PopupPanel:addToUIManager()
-        self.childEditor = ParadiseZ.PopupPanel
+    if string.lower(getPlayer():getAccessLevel()) == "admin" then
+        if not self.childEditor then
+            local zone = (item and item.item) and item.item or item
+            if not zone then return end
+            local w = 650
+            local h = 258
+            local x = (getCore():getScreenWidth() - w) / 2 + 330
+            local y = (getCore():getScreenHeight() - h) / 2 - 60
+            ParadiseZ.PopupPanel = ParadiseZ.ZoneEditorPopupPanel:new(x, y, w, h, zone, self)
+            ParadiseZ.PopupPanel.isNew = false
+            ParadiseZ.PopupPanel:initialise()
+            ParadiseZ.PopupPanel:addToUIManager()
+            self.childEditor = ParadiseZ.PopupPanel
+        end
     end
 end
 
