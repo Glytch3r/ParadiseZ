@@ -196,7 +196,7 @@ option ParadiseZ.RadSuitList {
 
 option ParadiseZ.RadiationBorderSize
 {
-	type = double,	 min = 0.00,  max = 100,  default 15,
+	type = double,	 min = 0.00,  max = 100,  default = 15,
 	page = ParadiseZ, translation = ParadiseZ_RadiationBorderSize,
 }
 
