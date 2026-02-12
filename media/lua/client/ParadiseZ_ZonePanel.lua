@@ -27,7 +27,9 @@ local add_TEX = getTexture("media/ui/Paradise/add.png")
 local bg_TEX = getTexture("media/ui/Paradise/bg.png")
 local delete_TEX_ON = getTexture("media/ui/Paradise/delete.png")
 local delete_TEX_OFF = getTexture("media/ui/Paradise/delete_off.png")
-local TP_TEX_ON = getTexture("media/ui/Paradise/TP.png")
+
+local TP_TEX = getTexture("media/ui/Paradise/TP.png")
+local TP_TEX_ON = getTexture("media/ui/Paradise/TP_on.png")
 local TP_TEX_OFF = getTexture("media/ui/Paradise/TP_off.png")
 
 ParadiseZ.flagTextures = {
@@ -762,6 +764,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
         local midX = math.floor((zone.x1 + zone.x2) / 2)
         local midY = math.floor((zone.y1 + zone.y2) / 2)
         ParadiseZ.tp(pl, midX, midY, 0)
+        --**
         self.btnTeleport:setImage(TP_TEX_ON)
         timer:Simple(1, function()
             self.btnTeleport:setImage(TP_TEX_OFF)
@@ -778,6 +781,11 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             if not a or not b or not a.item or not b.item then return false end
             return a.item.name < b.item.name
         end)
+        self.btnDelete:setImage(delete_TEX_ON)
+        timer:Simple(1, function()
+            self.btnDelete:setImage(delete_TEX_OFF)
+        end)
+
     elseif button.internal == "RESET" then
         self.ZoneData = ParadiseZ.ZoneDataBackup
         ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
@@ -789,9 +797,10 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.btnReset:setImage(reset_TEX_OFF)
         end)
     end
+    timer:Simple(1, function()
+        self:update()
+    end)
 end
-
-
 function ParadiseZ.ZoneEditorWindow:update()
     ISCollapsableWindow.update(self)
     if ParadiseZ.updated then
@@ -828,6 +837,65 @@ function ParadiseZ.ZoneEditorWindow:update()
     
     self.datas.doDrawItem = self.drawDatas
     
+    local texturePath = "media/textures/zone/"
+    local function getFlagTexture(name, isActive)
+        local suffix = isActive and ".png" or "_off.png"
+        return getTexture(texturePath .. name .. suffix)
+    end
+    
+    if hasSelection and self.datas.items[self.datas.selected] then
+        local zone = self.datas.items[self.datas.selected].item
+        if zone then
+            self.btnPvP:setImage(getFlagTexture("ParadiseZ_Zone_PvP", zone.isKos))
+            self.btnNonPvp:setImage(getFlagTexture("ParadiseZ_Zone_NonPvP", zone.isPvE))
+            self.btnProtected:setImage(getFlagTexture("ParadiseZ_Zone_Protected", zone.isSafe))
+            self.btnBlocked:setImage(getFlagTexture("ParadiseZ_Zone_Blocked", zone.isBlocked))
+            self.btnRadiation:setImage(getFlagTexture("ParadiseZ_Zone_Rad", zone.isRad))
+            self.btnHunt:setImage(getFlagTexture("ParadiseZ_Zone_Hunt", zone.isHunt))
+            self.btnBlaze:setImage(getFlagTexture("ParadiseZ_Zone_Blaze", zone.isBlaze))
+            self.btnFrost:setImage(getFlagTexture("ParadiseZ_Zone_Frost", zone.isFrost))
+            self.btnBomb:setImage(getFlagTexture("ParadiseZ_Zone_Bomb", zone.isBomb))
+            self.btnMineField:setImage(getFlagTexture("ParadiseZ_Zone_MineField", zone.isMine))
+            self.btnNoCamp:setImage(getFlagTexture("ParadiseZ_Zone_NoCamp", zone.isNoCamp))
+            self.btnNoFire:setImage(getFlagTexture("ParadiseZ_Zone_NoFire", zone.isNoFire))
+            self.btnCage:setImage(getFlagTexture("ParadiseZ_Zone_Cage", zone.isCage))
+            self.btnParty:setImage(getFlagTexture("ParadiseZ_Zone_Party", zone.isParty))
+            self.btnRally:setImage(getFlagTexture("ParadiseZ_Zone_Rally", zone.isRally))
+            self.btnSpecial:setImage(getFlagTexture("ParadiseZ_Zone_Special", zone.isSpecial))
+            self.btnTrade:setImage(getFlagTexture("ParadiseZ_Zone_Trade", zone.isTrade))
+            self.btnSprint:setImage(getFlagTexture("ParadiseZ_Zone_Sprint", zone.isSprint))
+
+
+            self.btnDelete:setImage(delete_TEX)
+            self.btnTeleport:setImage(TP_TEX)
+
+        end
+    else
+        self.btnPvP:setImage(getFlagTexture("ParadiseZ_Zone_PvP", false))
+        self.btnNonPvp:setImage(getFlagTexture("ParadiseZ_Zone_NonPvP", false))
+        self.btnProtected:setImage(getFlagTexture("ParadiseZ_Zone_Protected", false))
+        self.btnBlocked:setImage(getFlagTexture("ParadiseZ_Zone_Blocked", false))
+        self.btnRadiation:setImage(getFlagTexture("ParadiseZ_Zone_Rad", false))
+        self.btnHunt:setImage(getFlagTexture("ParadiseZ_Zone_Hunt", false))
+        self.btnBlaze:setImage(getFlagTexture("ParadiseZ_Zone_Blaze", false))
+        self.btnFrost:setImage(getFlagTexture("ParadiseZ_Zone_Frost", false))
+        self.btnBomb:setImage(getFlagTexture("ParadiseZ_Zone_Bomb", false))
+        self.btnMineField:setImage(getFlagTexture("ParadiseZ_Zone_MineField", false))
+        self.btnNoCamp:setImage(getFlagTexture("ParadiseZ_Zone_NoCamp", false))
+        self.btnNoFire:setImage(getFlagTexture("ParadiseZ_Zone_NoFire", false))
+        self.btnCage:setImage(getFlagTexture("ParadiseZ_Zone_Cage", false))
+        self.btnParty:setImage(getFlagTexture("ParadiseZ_Zone_Party", false))
+        self.btnRally:setImage(getFlagTexture("ParadiseZ_Zone_Rally", false))
+        self.btnSpecial:setImage(getFlagTexture("ParadiseZ_Zone_Special", false))
+        self.btnTrade:setImage(getFlagTexture("ParadiseZ_Zone_Trade", false))
+        self.btnSprint:setImage(getFlagTexture("ParadiseZ_Zone_Sprint", false))
+        --**
+        
+        self.btnDelete:setImage(delete_TEX_OFF)
+        self.btnTeleport:setImage(TP_TEX_OFF)
+
+    end
+    
     local syncImg = sync_TEX_OFF
     if self.shouldSync then
         syncImg = sync_TEX_ON
@@ -837,7 +905,6 @@ function ParadiseZ.ZoneEditorWindow:update()
         self.btnSave.blinkImageAlpha = self.shouldSync
     end
 end
-
 function ParadiseZ.ZoneEditorWindow:filterName(widget, zone)
     local txtToCheck = string.lower(zone.name)
     local filterTxt = string.lower(widget:getInternalText())

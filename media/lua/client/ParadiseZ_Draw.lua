@@ -91,7 +91,7 @@ function ParadiseZ.getReboundInfo()
         modData["Rebound"] = rebound
     end
 
-    return "\nREBOUND: \n" .. tostring(round(rebound.x)) .. ", " .. tostring(round(rebound.y)) .. ", " .. tostring(rebound.z)
+    return "\n\nREBOUND: \n" .. tostring(round(rebound.x)) .. ", " .. tostring(round(rebound.y)) .. ", " .. tostring(rebound.z)
 end
 
 ParadiseZ.lastZone = nil
