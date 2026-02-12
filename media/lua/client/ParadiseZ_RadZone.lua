@@ -30,7 +30,6 @@ function ParadiseZ.drawRadiationBorder()
     local sh = getCore():getScreenHeight()
 
     local size = SandboxVars.ParadiseZ.RadiationBorderSize
-
     local r, g, b, a = 0.0, 1.0, 0.0, 0.35
 
     getRenderer():renderRect(0, 0, sw, size, r, g, b, a)

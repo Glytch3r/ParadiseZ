@@ -25,7 +25,9 @@ local reset_TEX_ON = getTexture("media/ui/Paradise/reset_on.png")
 local reset_TEX_OFF = getTexture("media/ui/Paradise/reset_off.png")
 local add_TEX = getTexture("media/ui/Paradise/add.png")
 local bg_TEX = getTexture("media/ui/Paradise/bg.png")
-local delete_TEX_ON = getTexture("media/ui/Paradise/delete.png")
+
+local delete_TEX = getTexture("media/ui/Paradise/delete.png")
+local delete_TEX_ON = getTexture("media/ui/Paradise/delete_on.png")
 local delete_TEX_OFF = getTexture("media/ui/Paradise/delete_off.png")
 
 local TP_TEX = getTexture("media/ui/Paradise/TP.png")
@@ -797,7 +799,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.btnReset:setImage(reset_TEX_OFF)
         end)
     end
-    timer:Simple(1, function()
+    timer:Simple(1.2, function()
         self:update()
     end)
 end
