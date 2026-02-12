@@ -21,39 +21,57 @@ ParadiseZ = ParadiseZ or {}
 
 -----------------------            ---------------------------
 
+function ParadiseZ.drawRadiationBorder()
+    local pl = getPlayer()
+    if not pl then return end
+    if not ParadiseZ.isRadZone(pl) then return end
+
+    local sw = getCore():getScreenWidth()
+    local sh = getCore():getScreenHeight()
+
+    local size = SandboxVars.ParadiseZ.RadiationBorderSize
+
+    local r, g, b, a = 0.0, 1.0, 0.0, 0.35
+
+    getRenderer():renderRect(0, 0, sw, size, r, g, b, a)
+    getRenderer():renderRect(0, sh - size, sw, size, r, g, b, a)
+    getRenderer():renderRect(0, 0, size, sh, r, g, b, a)
+    getRenderer():renderRect(sw - size, 0, size, sh, r, g, b, a)
+end
+
+Events.OnPostUIDraw.Remove(ParadiseZ.drawRadiationBorder)
+Events.OnPostUIDraw.Add(ParadiseZ.drawRadiationBorder)
+-----------------------               ---------------------------
+
+function ParadiseZ.getSuitList()
+    local strList = SandboxVars.ParadiseZ.RadSuitList
+
+    if not strList or strList == "" then
+        local defaultSuit = {
+            "TheyKnew.MysteriousHazmat",
+            "Base.HazmatSuit",
+            "Base.Hat_NBCmask"
+        }
+        return defaultSuit
+    end
+    local t = {}
+    for item in string.gmatch(strList, "[^;]+") do
+        table.insert(items, item)
+    end
+    return t
+end
+
 Events.OnCreatePlayer.Add(function()
-    local suit = {
-        "TheyKnew.MysteriousHazmat",
-        "Base.HazmatSuit",
-        "Base.Hat_NBCmask"
-    }
-
+    local suit = ParadiseZ.getSuitList()
+    
     local param = "isRadSuit = TRUE"
-
+    
     for i = 1, #suit do
         local item = ScriptManager.instance:getItem(suit[i])
         if item then
             item:DoParam(param)
         end
     end
---[[ 
-    if ParadiseZ.Zones  then
-        if not ParadiseZ.Zones["Monmouth Power Station"] then
-            ParadiseZ.Zones["Monmouth Power Station"] = {
-                name = "Monmouth Power Station",
-                x1 = 11809,
-                y1 = 7876,
-                x2 = 11870,
-                y2 = 7943,
-                isKos = false,
-                isPvE = false,
-                isSafe = false,
-                isBlocked = false,
-                isRad = true,
-            }
-        end
-    end ]]
-
 end)
 --[[ 
 Monmouth Power Station
@@ -61,6 +79,7 @@ X 11809-11870
 Y 7876-7943
 
  ]]
+
 function ParadiseZ.isRadZone(plOrSq)
     local sq
     if instanceof(plOrSq, "IsoGridSquare") then
@@ -80,19 +99,26 @@ function ParadiseZ.isRadZone(plOrSq)
 
     return zone.isRad == true
 end
+
 function ParadiseZ.isWearingRadSuit()
-	local checker = false
-	local items = getPlayer():getWornItems()
+    local pl = getPlayer()
+    if not pl then return false end
+    local items = pl:getWornItems()
     for i = 0, items:size() - 1 do
         local item = items:getItemByIndex(i)
-        if item:getModData()['isRadSuit'] ~= nil then
-            checker = true
-            break
+        if item and item:getModData()['isRadSuit'] ~= nil then
+            local vis = item:getVisual()
+            if vis and vis.getHolesNumber or item:getVisual():getHolesNumber() <= 0 then
+                return true
+            end
         end
     end
-	return checker
+
+    return false
 end
 
+
+-----------------------            ---------------------------
 local ticks = 0
 
 function ParadiseZ.RadZoneHandler(pl)

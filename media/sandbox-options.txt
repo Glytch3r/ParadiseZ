@@ -189,6 +189,18 @@ option ParadiseZ.pvpStaggerChance
 }
 
 
+option ParadiseZ.RadSuitList {
+	type = string, default = TheyKnew.MysteriousHazm;Base.HazmatSuit;Base.Hat_NBCmask,
+	page = ParadiseZ, translation = RadSuitList,
+}
+
+option ParadiseZ.RadiationBorderSize
+{
+	type = double,	 min = 0.00,  max = 100,  default 15,
+	page = ParadiseZ, translation = ParadiseZ_RadiationBorderSize,
+}
+
+
 
 option ParadiseZ.teleportPvpDeath
 {
