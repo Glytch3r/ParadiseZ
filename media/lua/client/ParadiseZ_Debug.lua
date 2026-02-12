@@ -90,6 +90,7 @@ function ParadiseZ.delZeds(x, y, z, radius)
 	z = z or pl:getZ()
 
 	local r = radius + 1
+
 	if isClient() then
 		SendCommandToServer(string.format("/removezombies -x %d -y %d -z %d -radius %d", x, y, z, r))
 		return

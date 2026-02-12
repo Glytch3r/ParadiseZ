@@ -57,6 +57,37 @@ ParadiseZ.flagTextures = {
     Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
     Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
 }
+
+
+function ParadiseZ.ZoneEditorWindow:getFlagsString(zone)
+    local flags = {}
+    if zone.isKos then table.insert(flags, "Kos") end
+    if zone.isPvE then table.insert(flags, "PvE") end
+    if zone.isSafe then table.insert(flags, "Safe") end
+    if zone.isBlocked then table.insert(flags, "Blocked") end
+    if zone.isRad then table.insert(flags, "Rad") end
+
+    if zone.isHunt then table.insert(flags, "Hunt") end
+    if zone.isBlaze then table.insert(flags, "Blaze") end
+    if zone.isFrost then table.insert(flags, "Frost") end
+    if zone.isBomb then table.insert(flags, "Bomb") end
+    if zone.isMine then table.insert(flags, "Mine") end
+    if zone.isNoCamp then table.insert(flags, "NoCamp") end
+    if zone.isNoFire then table.insert(flags, "NoFire") end
+    if zone.isCage then table.insert(flags, "Cage") end
+    if zone.isParty then table.insert(flags, "Party") end
+    if zone.isRally then table.insert(flags, "Rally") end
+    if zone.isSpecial then table.insert(flags, "Special") end
+    if zone.isTrade then table.insert(flags, "Trade") end
+    if zone.isSprint then table.insert(flags, "Sprint") end
+    
+    if #flags == 0 then
+        return ""
+    end
+    return table.concat(flags, ", ")
+end
+
+
 function ParadiseZ.ZoneEditorWindow:createChildren()
     ISCollapsableWindow.createChildren(self)
     
@@ -265,43 +296,8 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnTeleport.borderColor = self.buttonBorderColor
     self:addChild(self.btnTeleport)
     btnX = btnX + btnWid + btnSpacing
-    
-    self.btnSave = ISButton:new(btnX, btnY2, btnWid, btnHgt, "", self, function()
-        print('ParadiseZ.saveZoneData')
-        local zones = {}
-        for i = 1, #self.datas.items do
-            local entry = self.datas.items[i]
-            local z = entry.item
-            zones[entry.text] = {
-                name = entry.text,
-                x1 = z.x1,
-                y1 = z.y1,
-                x2 = z.x2,
-                y2 = z.y2,
-                isKos = z.isKos,
-                isPvE = z.isPvE,
-                isSafe = z.isSafe,
-                isBlocked = z.isBlocked,
-                isRad = z.isRad or false,
-                isHunt = z.isHunt or false,
-                isBlaze = z.isBlaze or false,
-                isFrost = z.isFrost or false,
-                isBomb = z.isBomb or false,
-                isMine = z.isMine or false,
-                isNoCamp = z.isNoCamp or false,
-                isNoFire = z.isNoFire or false,
-                isCage = z.isCage or false,
-                isParty = z.isParty or false,
-                isRally = z.isRally or false,
-                isSpecial = z.isSpecial or false,
-                isTrade = z.isTrade or false,
-                isSprint = z.isSprint or false,
-            }
-        end
-        ParadiseZ.saveZoneData(zones)
-        self:refreshList()
-        self.shouldSync = false
-    end)
+    --**
+    self.btnSave = ISButton:new(btnX, btnY2, btnWid, btnHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
     self.btnSave.internal = "SAVE"
     self.btnSave.tooltip = "SYNC"
     self.btnSave:initialise()
@@ -503,113 +499,17 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self:addChild(self.newZoneY2)
     
     newZoneRowX = newZoneRowX + newZoneEntryWid2 + newZoneSpacing
-    self.btnAdd = ISButton:new(newZoneRowX, newZoneRowY, 125, newZoneEntryHgt, "", self, function()
-        local name = self.newZoneName:getText()
-        if name == "" then
-            name = "New Zone"
-        end
-        
-        ParadiseZ.ZoneData[name] = {
-            name = name,
-            x1 = tonumber(self.newZoneX1:getText()) or round(pl:getX() - 5),
-            y1 = tonumber(self.newZoneY1:getText()) or round(pl:getY() - 5),
-            x2 = tonumber(self.newZoneX2:getText()) or round(pl:getX() + 5),
-            y2 = tonumber(self.newZoneY2:getText()) or round(pl:getY() + 5),
-            isKos = false,
-            isPvE = false,
-            isSafe = false,
-            isBlocked = false,
-            isRad = false,
-            isHunt = false,
-            isBlaze = false,
-            isFrost = false,
-            isBomb = false,
-            isMine = false,
-            isNoCamp = false,
-            isNoFire = false,
-            isCage = false,
-            isParty = false,
-            isRally = false,
-            isSpecial = false,
-            isTrade = false,
-            isSprint = false,
-        }
-        
-        ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
-        self.newZoneName:setText("")
-        self.newZoneX1:setText("")
-        self.newZoneY1:setText("")
-        self.newZoneX2:setText("")
-        self.newZoneY2:setText("")
-        self.shouldSync = false
-        self:refreshList()
-        print('auto synced')
-    end)
+    self.btnAdd = ISButton:new(newZoneRowX, newZoneRowY, 125, newZoneEntryHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
     self.btnAdd.internal = "ADD"
     self.btnAdd:initialise()
     self.btnAdd:instantiate()
     self.btnAdd:setImage(add_TEX)
-    self.btnAdd.enable = true
     self.btnAdd.borderColor = {r = 0.2, g = 0.6, b = 1, a = 0.8}
     self:addChild(self.btnAdd)
     
     self:initList()
 end
 
-function ParadiseZ.ZoneEditorWindow:getFlagsString(zone)
-    local flags = {}
-    if zone.isKos then table.insert(flags, "Kos") end
-    if zone.isPvE then table.insert(flags, "PvE") end
-    if zone.isSafe then table.insert(flags, "Safe") end
-    if zone.isBlocked then table.insert(flags, "Blocked") end
-    if zone.isRad then table.insert(flags, "Rad") end
-    if zone.isHunt then table.insert(flags, "Hunt") end
-    if zone.isBlaze then table.insert(flags, "Blaze") end
-    if zone.isFrost then table.insert(flags, "Frost") end
-    if zone.isBomb then table.insert(flags, "Bomb") end
-    if zone.isMine then table.insert(flags, "Mine") end
-    if zone.isNoCamp then table.insert(flags, "NoCamp") end
-    if zone.isNoFire then table.insert(flags, "NoFire") end
-    if zone.isCage then table.insert(flags, "Cage") end
-    if zone.isParty then table.insert(flags, "Party") end
-    if zone.isRally then table.insert(flags, "Rally") end
-    if zone.isSpecial then table.insert(flags, "Special") end
-    if zone.isTrade then table.insert(flags, "Trade") end
-    if zone.isSprint then table.insert(flags, "Sprint") end
-    
-    if #flags == 0 then
-        return ""
-    end
-    return table.concat(flags, ", ")
-end
-
-
-function ParadiseZ.ZoneEditorWindow:getFlagsString(zone)
-    local flags = {}
-    if zone.isKos then table.insert(flags, "Kos") end
-    if zone.isPvE then table.insert(flags, "PvE") end
-    if zone.isSafe then table.insert(flags, "Safe") end
-    if zone.isBlocked then table.insert(flags, "Blocked") end
-    if zone.isRad then table.insert(flags, "Rad") end
-    if zone.isHunt then table.insert(flags, "Hunt") end
-    if zone.isBlaze then table.insert(flags, "Blaze") end
-    if zone.isFrost then table.insert(flags, "Frost") end
-    if zone.isBomb then table.insert(flags, "Bomb") end
-    if zone.isMine then table.insert(flags, "Mine") end
-    if zone.isNoCamp then table.insert(flags, "NoCamp") end
-    if zone.isNoFire then table.insert(flags, "NoFire") end
-    if zone.isCage then table.insert(flags, "Cage") end
-    if zone.isParty then table.insert(flags, "Party") end
-    if zone.isRally then table.insert(flags, "Rally") end
-    if zone.isSpecial then table.insert(flags, "Special") end
-    if zone.isTrade then table.insert(flags, "Trade") end
-    if zone.isSprint then table.insert(flags, "Sprint") end
-    
-    if #flags == 0 then
-        return ""
-    end
-    return table.concat(flags, ", ")
-end
 
 function ParadiseZ.ZoneEditorWindow:filterFlags(widget, zone)
     local filterTxt = string.lower(widget:getInternalText())
@@ -704,8 +604,89 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local zone = selected and selected.item
     if not zone then return end
     if string.lower(pl:getAccessLevel()) == "admin" then
-        
-        if button.internal == "POINT1" then
+
+        if button.internal == "ADD" then
+
+            local name = self.newZoneName:getText()
+            if name == "" then
+                name = "New Zone"
+            end
+            
+            ParadiseZ.ZoneData[name] = {
+                name = name,
+                x1 = tonumber(self.newZoneX1:getText()) or round(pl:getX() - 5),
+                y1 = tonumber(self.newZoneY1:getText()) or round(pl:getY() - 5),
+                x2 = tonumber(self.newZoneX2:getText()) or round(pl:getX() + 5),
+                y2 = tonumber(self.newZoneY2:getText()) or round(pl:getY() + 5),
+                isKos = false,
+                isPvE = false,
+                isSafe = false,
+                isBlocked = false,
+                isRad = false,
+                isHunt = false,
+                isBlaze = false,
+                isFrost = false,
+                isBomb = false,
+                isMine = false,
+                isNoCamp = false,
+                isNoFire = false,
+                isCage = false,
+                isParty = false,
+                isRally = false,
+                isSpecial = false,
+                isTrade = false,
+                isSprint = false,
+            }
+            
+            ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
+            self.newZoneName:setText("")
+            self.newZoneX1:setText("")
+            self.newZoneY1:setText("")
+            self.newZoneX2:setText("")
+            self.newZoneY2:setText("")
+            self.shouldSync = false
+            self:refreshList()
+            print('auto synced')
+    
+
+        elseif button.internal == "SAVE" then
+            
+            print('ParadiseZ.saveZoneData')
+            local zones = {}
+            for i = 1, #self.datas.items do
+                local entry = self.datas.items[i]
+                local z = entry.item
+                zones[entry.text] = {
+                    name = entry.text,
+                    x1 = z.x1,
+                    y1 = z.y1,
+                    x2 = z.x2,
+                    y2 = z.y2,
+                    isKos = z.isKos,
+                    isPvE = z.isPvE,
+                    isSafe = z.isSafe,
+                    isBlocked = z.isBlocked,
+                    isRad = z.isRad or false,
+                    isHunt = z.isHunt or false,
+                    isBlaze = z.isBlaze or false,
+                    isFrost = z.isFrost or false,
+                    isBomb = z.isBomb or false,
+                    isMine = z.isMine or false,
+                    isNoCamp = z.isNoCamp or false,
+                    isNoFire = z.isNoFire or false,
+                    isCage = z.isCage or false,
+                    isParty = z.isParty or false,
+                    isRally = z.isRally or false,
+                    isSpecial = z.isSpecial or false,
+                    isTrade = z.isTrade or false,
+                    isSprint = z.isSprint or false,
+                }
+            end
+            ParadiseZ.saveZoneData(zones)
+            self:refreshList()
+            self.shouldSync = false
+
+        elseif button.internal == "POINT1" then
             zone.x1 = round(pl:getX())
             zone.y1 = round(pl:getY())
             self.shouldSync = true

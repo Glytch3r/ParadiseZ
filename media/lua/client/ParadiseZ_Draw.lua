@@ -3,22 +3,17 @@ ParadiseZ = ParadiseZ or {}
 
 ParadiseZ.showZoneInfo = true
 
-
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
-
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
     if not (x and y) then return end
-
     local zoneName = name
     if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr) and ParadiseZ.isXYZoneOuter(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
-
     local info = { zoneName }
-
     if ParadiseZ.isKosZone(pl) then
         table.insert(info, "KosZone")
     end
@@ -28,12 +23,52 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isBlockedZone(pl) then
         table.insert(info, "Blocked")
     end    
+    if ParadiseZ.isSafeZone(pl) then
+        table.insert(info, "Protected")
+    end
     if ParadiseZ.isRadZone(pl) then
         table.insert(info, "Radiation")
     end
-
+    if ParadiseZ.isHuntZone(pl) then
+        table.insert(info, "Hunt")
+    end
+    if ParadiseZ.isBlazeZone(pl) then
+        table.insert(info, "Blaze")
+    end
+    if ParadiseZ.isFrostZone(pl) then
+        table.insert(info, "Frost")
+    end
+    if ParadiseZ.isBombZone(pl) then
+        table.insert(info, "Bomb")
+    end
+    if ParadiseZ.isMineZone(pl) then
+        table.insert(info, "MineField")
+    end
+    if ParadiseZ.isNoCampZone(pl) then
+        table.insert(info, "NoCamp")
+    end
+    if ParadiseZ.isNoFireZone(pl) then
+        table.insert(info, "NoFire")
+    end
+    if ParadiseZ.isCageZone(pl) then
+        table.insert(info, "Cage")
+    end
+    if ParadiseZ.isPartyZone(pl) then
+        table.insert(info, "Party")
+    end
+    if ParadiseZ.isRallyZone(pl) then
+        table.insert(info, "Rally")
+    end
+    if ParadiseZ.isSpecialZone(pl) then
+        table.insert(info, "Special")
+    end
+    if ParadiseZ.isTradeZone(pl) then
+        table.insert(info, "Trade")
+    end
+    if ParadiseZ.isSprintZone(pl) then
+        table.insert(info, "Sprint")
+    end
     table.insert(info, "X:" .. tostring(round(x)) .. "    Y:" .. tostring(round(y)))
-
     return table.concat(info, "\n")
 end
 
@@ -41,10 +76,8 @@ function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
     local pl = ParadiseZ.getPl(char)
     if not pl then return end
-
     local sq = pl:getCurrentSquare()
     if not sq then return end
-
     local str
     if ParadiseZ.isPartOfSH(sq) then
         str = "HQ"
@@ -60,10 +93,35 @@ function ParadiseZ.getDrawStr(char)
         str = "Protected"
     elseif ParadiseZ.isRadZone(pl) then
         str = "Radiation"
+    elseif ParadiseZ.isHuntZone(pl) then
+        str = "Hunt"
+    elseif ParadiseZ.isBlazeZone(pl) then
+        str = "Blaze"
+    elseif ParadiseZ.isFrostZone(pl) then
+        str = "Frost"
+    elseif ParadiseZ.isBombZone(pl) then
+        str = "Bomb"
+    elseif ParadiseZ.isMineZone(pl) then
+        str = "MineField"
+    elseif ParadiseZ.isNoCampZone(pl) then
+        str = "NoCamp"
+    elseif ParadiseZ.isNoFireZone(pl) then
+        str = "NoFire"
+    elseif ParadiseZ.isCageZone(pl) then
+        str = "Cage"
+    elseif ParadiseZ.isPartyZone(pl) then
+        str = "Party"
+    elseif ParadiseZ.isRallyZone(pl) then
+        str = "Rally"
+    elseif ParadiseZ.isSpecialZone(pl) then
+        str = "Special"
+    elseif ParadiseZ.isTradeZone(pl) then
+        str = "Trade"
+    elseif ParadiseZ.isSprintZone(pl) then
+        str = "Sprint"
     elseif ParadiseZ.isRegularZone(pl) then
         str = "Zone"
     end
-
     return str or ""
 end
 
