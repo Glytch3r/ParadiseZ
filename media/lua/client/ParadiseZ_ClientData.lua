@@ -56,7 +56,7 @@ function ParadiseZ.ClientSync(module, command, args)
             ParadiseZ.ZoneData[k] = v
         end
 
-        ParadiseZ.ZoneData["Monmouth County Power Station"] = {
+    --[[     ParadiseZ.ZoneData["Monmouth County Power Station"] = {
             name = "Monmouth County Power Station",
             x1 = 11809,
             y1 = 7876,
@@ -68,7 +68,7 @@ function ParadiseZ.ClientSync(module, command, args)
             isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
             isRad = true,
         }
-
+ ]]
 
         print("ParadiseZ: Client synced.")
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then

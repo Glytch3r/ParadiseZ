@@ -18,7 +18,7 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
             ParadiseZ.ZoneData[k] = v
         end
 
-
+--[[ 
         ParadiseZ.ZoneData["Monmouth County Power Station"] = {
             name = "Monmouth County Power Station",
             x1 = 11809,
@@ -31,7 +31,7 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
             isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
             isRad = true,
         }
-
+ ]]
 
         ModData.transmit("ParadiseZ_ZoneData")
         sendServerCommand("ParadiseZ", "Sync", { data = args.data })

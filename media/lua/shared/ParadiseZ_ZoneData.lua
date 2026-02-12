@@ -2,6 +2,7 @@
 ParadiseZ = ParadiseZ or {}
 -----------------------            ---------------------------
 -- print(ParadiseZ.ZoneData["Louisville"].isBlocked)
+
 ParadiseZ.ZoneDataBackup = {
     ["Bedford Falls"] = {
         name = "Bedford Falls",
@@ -220,11 +221,6 @@ ParadiseZ.ZoneDataBackup = {
         isBlocked = false,
         isRad = true,
     },
---[[ 
-        isKos = SandboxVars.ParadiseZ.RadZoneisKos or false,
-        isPvE = SandboxVars.ParadiseZ.RadZoneisPvE or false,
-        isSafe = SandboxVars.ParadiseZ.RadZoneisSafe or false,
-        isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false, ]]
 
     ["Muldraugh"] = {
         name = "Muldraugh",
