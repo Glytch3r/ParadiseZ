@@ -28,7 +28,7 @@ function ParadiseZ.drawRadiationBorder()
 
     local sw = getCore():getScreenWidth()
     local sh = getCore():getScreenHeight()
-
+     
     local size = SandboxVars.ParadiseZ.RadiationBorderSize
     local r, g, b, a = 0.0, 1.0, 0.0, 0.35
 
@@ -41,30 +41,20 @@ end
 Events.OnPostUIDraw.Remove(ParadiseZ.drawRadiationBorder)
 Events.OnPostUIDraw.Add(ParadiseZ.drawRadiationBorder)
 -----------------------               ---------------------------
-
 function ParadiseZ.getSuitList()
-    local strList = SandboxVars.ParadiseZ.RadSuitList
+    local strList = SandboxVars.ParadiseZ.RadSuitList or "TheyKnew.MysteriousHazmat;Base.HazmatSuit;Base.Hat_NBCmask"
 
-    if not strList or strList == "" then
-        local defaultSuit = {
-            "TheyKnew.MysteriousHazmat",
-            "Base.HazmatSuit",
-            "Base.Hat_NBCmask"
-        }
-        return defaultSuit
-    end
     local t = {}
     for item in string.gmatch(strList, "[^;]+") do
-        table.insert(items, item)
+        table.insert(t, item)
     end
     return t
 end
 
 Events.OnCreatePlayer.Add(function()
     local suit = ParadiseZ.getSuitList()
-    
     local param = "isRadSuit = TRUE"
-    
+
     for i = 1, #suit do
         local item = ScriptManager.instance:getItem(suit[i])
         if item then
@@ -72,6 +62,7 @@ Events.OnCreatePlayer.Add(function()
         end
     end
 end)
+
 --[[ 
 Monmouth Power Station
 X 11809-11870
