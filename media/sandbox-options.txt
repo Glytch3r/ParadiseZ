@@ -248,7 +248,7 @@ option ParadiseZ.RadZoneDmg
 
 
 option ParadiseZ.TheRangeStaff {
-	type = string, default = Zecony;Dajulu;Glytch3r,
+	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,
 	page = ParadiseZ, translation = TheRangeStaff,
 }
 
