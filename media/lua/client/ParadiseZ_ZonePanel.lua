@@ -21,6 +21,7 @@ local Point1_TEX = getTexture("media/ui/Paradise/Point1.png")
 local Point2_TEX = getTexture("media/ui/Paradise/Point2.png")
 local sync_TEX_ON = getTexture("media/ui/Paradise/sync_on.png")
 local sync_TEX_OFF = getTexture("media/ui/Paradise/sync.png")
+local reset_TEX = getTexture("media/ui/Paradise/reset.png")
 local reset_TEX_ON = getTexture("media/ui/Paradise/reset_on.png")
 local reset_TEX_OFF = getTexture("media/ui/Paradise/reset_off.png")
 local add_TEX = getTexture("media/ui/Paradise/add.png")
@@ -168,8 +169,8 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnReset.tooltip = "RESET"
     self.btnReset:initialise()
     self.btnReset:instantiate()
-    self.btnReset:setImage(reset_TEX_OFF)
-    self.btnReset.enable = false
+    self.btnReset:setImage(reset_TEX)
+    self.btnReset.enable = true
     self.btnReset.borderColor = self.buttonBorderColor
     self:addChild(self.btnReset)
     btnX = btnX + btnWid + btnSpacing
@@ -555,7 +556,6 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o:setResizable(true)
     return o
 end
-
 function ParadiseZ.ZoneEditorWindow:prerender()
     ISCollapsableWindow.prerender(self)
     self.bgTexture = bg_TEX
@@ -563,6 +563,86 @@ function ParadiseZ.ZoneEditorWindow:prerender()
         self.bgX = (self.width / 2) - (self.bgTexture:getWidth() / 2)
         self.bgY = 25
         self:drawTexture(self.bgTexture, self.bgX, self.bgY + 20, 1, 1, 1, 1, 0.3)
+    end
+
+    if self._lastW ~= self.width or self._lastH ~= self.height then
+        self._lastW = self.width
+        self._lastH = self.height
+
+        local contentX = 10
+        local contentW = self.width - MARGIN * 2
+        local titleBarHgt = self:titleBarHeight()
+        local contentY = titleBarHgt + MARGIN + 5
+        local listY = contentY + FONT_HGT_SMALL + MARGIN + 2
+        local btnHgt = 32
+        local btnSpacing = 4
+        local entryHgt = FONT_HGT_MEDIUM + 4
+        local bottomHgt = (btnHgt + 4) * 2 + FONT_HGT_LARGE + MARGIN + entryHgt * 2 + MARGIN * 3
+        local listH = self.height - listY - bottomHgt - MARGIN
+
+        self.datas:setWidth(contentW)
+        self.datas:setHeight(listH)
+
+        local btnY = self.datas:getBottom() + MARGIN
+        local btnY2 = btnY + btnHgt + btnSpacing
+        local btnWid = 160
+        local btnSWid = 32
+
+        local row1 = {
+            self.btnPoint1, self.btnDelete, self.btnReset,
+            self.btnRadiation, self.btnHunt, self.btnBlaze, self.btnFrost,
+            self.btnBomb, self.btnMineField, self.btnPvP, self.btnNonPvp, self.btnProtected
+        }
+        local row1Widths = {btnWid, btnWid, btnWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
+
+        local x = contentX
+        for i, btn in ipairs(row1) do
+            btn:setY(btnY)
+            btn:setX(x)
+            x = x + row1Widths[i] + btnSpacing
+        end
+
+        local row2 = {
+            self.btnPoint2, self.btnTeleport, self.btnSave,
+            self.btnNoCamp, self.btnNoFire, self.btnCage, self.btnParty,
+            self.btnRally, self.btnSpecial, self.btnTrade, self.btnSprint, self.btnBlocked
+        }
+        local row2Widths = {btnWid, btnWid, btnWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
+
+        x = contentX
+        for i, btn in ipairs(row2) do
+            btn:setY(btnY2)
+            btn:setX(x)
+            x = x + row2Widths[i] + btnSpacing
+        end
+
+        local filterY = btnY2 + btnHgt + MARGIN - 7
+        self.filtersLabel:setY(filterY)
+
+        local entryY = filterY + FONT_HGT_LARGE
+        x = contentX
+        for i, entry in ipairs(self.filter) do
+            entry:setY(entryY)
+            entry:setX(x)
+            local size
+            if i == #self.datas.columns then
+                size = contentW - (x - contentX)
+            else
+                size = self.datas.columns[i + 1].size - self.datas.columns[i].size
+            end
+            entry:setWidth(size - 5)
+            x = x + size
+        end
+
+        local newZoneEntryHgt = math.max(25, FONT_HGT_SMALL + 6)
+        local newZoneRowY = self.height - MARGIN - newZoneEntryHgt - 13
+        self.newZoneLabel:setY(newZoneRowY - MARGIN - 10)
+        self.newZoneName:setY(newZoneRowY)
+        self.newZoneX1:setY(newZoneRowY)
+        self.newZoneY1:setY(newZoneRowY)
+        self.newZoneX2:setY(newZoneRowY)
+        self.newZoneY2:setY(newZoneRowY)
+        self.btnAdd:setY(newZoneRowY)
     end
 end
 
@@ -602,11 +682,24 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
     local zone = selected and selected.item
-    if not zone then return end
+    --if not zone then return end
     if string.lower(pl:getAccessLevel()) == "admin" then
+        if button.internal == "RESET" then
+            self.ZoneData = ParadiseZ.ZoneDataBackup
+            ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
+            ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
+            self.shouldSync = false
+            self:refreshList()
+            self.btnReset:setImage(reset_TEX_ON)
+            timer:Simple(1, function()
+                self.btnReset:setImage(reset_TEX_OFF)
+            end)
+            timer:Simple(1.2, function()
+                self.btnReset:setImage(reset_TEX)
+            end)
+        end
 
         if button.internal == "ADD" then
-
             local name = self.newZoneName:getText()
             if name == "" then
                 name = "New Zone"
@@ -686,104 +779,97 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self:refreshList()
             self.shouldSync = false
 
-        elseif button.internal == "POINT1" then
-            zone.x1 = round(pl:getX())
-            zone.y1 = round(pl:getY())
-            self.shouldSync = true
-        elseif button.internal == "POINT2" then
-            zone.x2 = round(pl:getX())
-            zone.y2 = round(pl:getY())
-            self.shouldSync = true
-        elseif button.internal == "PVP" then
-            zone.isKos = not zone.isKos
-            self.shouldSync = true
-        elseif button.internal == "NONPVP" then
-            zone.isPvE = not zone.isPvE
-            self.shouldSync = true
-        elseif button.internal == "PROTECTED" then
-            zone.isSafe = not zone.isSafe
-            self.shouldSync = true
-        elseif button.internal == "BLOCKED" then
-            zone.isBlocked = not zone.isBlocked
-            self.shouldSync = true
-        elseif button.internal == "RADIATION" then
-            zone.isRad = not zone.isRad
-            self.shouldSync = true
-        elseif button.internal == "HUNT" then
-            zone.isHunt = not zone.isHunt
-            self.shouldSync = true
-        elseif button.internal == "BLAZE" then
-            zone.isBlaze = not zone.isBlaze
-            self.shouldSync = true
-        elseif button.internal == "FROST" then
-            zone.isFrost = not zone.isFrost
-            self.shouldSync = true
-        elseif button.internal == "BOMB" then
-            zone.isBomb = not zone.isBomb
-            self.shouldSync = true
-        elseif button.internal == "MINEFIELD" then
-            zone.isMine = not zone.isMine
-            self.shouldSync = true
-        elseif button.internal == "NOCAMP" then
-            zone.isNoCamp = not zone.isNoCamp
-            self.shouldSync = true
-        elseif button.internal == "NOFIRE" then
-            zone.isNoFire = not zone.isNoFire
-            self.shouldSync = true
-        elseif button.internal == "CAGE" then
-            zone.isCage = not zone.isCage
-            self.shouldSync = true
-        elseif button.internal == "PARTY" then
-            zone.isParty = not zone.isParty
-            self.shouldSync = true
-        elseif button.internal == "RALLY" then
-            zone.isRally = not zone.isRally
-            self.shouldSync = true
-        elseif button.internal == "SPECIAL" then
-            zone.isSpecial = not zone.isSpecial
-            self.shouldSync = true
-        elseif button.internal == "TRADE" then
-            zone.isTrade = not zone.isTrade
-            self.shouldSync = true
-        elseif button.internal == "SPRINT" then
-            zone.isSprint = not zone.isSprint
-            self.shouldSync = true
-        elseif button.internal == "TP" then
-            local midX = math.floor((zone.x1 + zone.x2) / 2)
-            local midY = math.floor((zone.y1 + zone.y2) / 2)
-            ParadiseZ.tp(pl, midX, midY, 0)
-            --**
-            self.btnTeleport:setImage(TP_TEX_ON)
-            timer:Simple(1, function()
-                self.btnTeleport:setImage(TP_TEX_OFF)
-            end)
-        elseif button.internal == "DELETE" then
-            self.ZoneData[tostring(zone.name)] = nil
-            self.shouldSync = true
-            self.datas.fullList = nil
-            self.datas:clear()
-            for name, z in pairs(self.ZoneData) do
-                self.datas:addItem(z.name, z)
-            end
-            table.sort(self.datas.items, function(a, b)
-                if not a or not b or not a.item or not b.item then return false end
-                return a.item.name < b.item.name
-            end)
-            self.btnDelete:setImage(delete_TEX_ON)
-            timer:Simple(1, function()
-                self.btnDelete:setImage(delete_TEX_OFF)
-            end)
+        end
 
-        elseif button.internal == "RESET" then
-            self.ZoneData = ParadiseZ.ZoneDataBackup
-            ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
-            ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-            self.shouldSync = false
-            self:refreshList()
-            self.btnReset:setImage(reset_TEX_ON)
-            timer:Simple(1, function()
-                self.btnReset:setImage(reset_TEX_OFF)
-            end)
+        if zone then
+            if button.internal == "POINT1" then
+                zone.x1 = round(pl:getX())
+                zone.y1 = round(pl:getY())
+                self.shouldSync = true
+            elseif button.internal == "POINT2" then
+                zone.x2 = round(pl:getX())
+                zone.y2 = round(pl:getY())
+                self.shouldSync = true
+            elseif button.internal == "PVP" then
+                zone.isKos = not zone.isKos
+                self.shouldSync = true
+            elseif button.internal == "NONPVP" then
+                zone.isPvE = not zone.isPvE
+                self.shouldSync = true
+            elseif button.internal == "PROTECTED" then
+                zone.isSafe = not zone.isSafe
+                self.shouldSync = true
+            elseif button.internal == "BLOCKED" then
+                zone.isBlocked = not zone.isBlocked
+                self.shouldSync = true
+            elseif button.internal == "RADIATION" then
+                zone.isRad = not zone.isRad
+                self.shouldSync = true
+            elseif button.internal == "HUNT" then
+                zone.isHunt = not zone.isHunt
+                self.shouldSync = true
+            elseif button.internal == "BLAZE" then
+                zone.isBlaze = not zone.isBlaze
+                self.shouldSync = true
+            elseif button.internal == "FROST" then
+                zone.isFrost = not zone.isFrost
+                self.shouldSync = true
+            elseif button.internal == "BOMB" then
+                zone.isBomb = not zone.isBomb
+                self.shouldSync = true
+            elseif button.internal == "MINEFIELD" then
+                zone.isMine = not zone.isMine
+                self.shouldSync = true
+            elseif button.internal == "NOCAMP" then
+                zone.isNoCamp = not zone.isNoCamp
+                self.shouldSync = true
+            elseif button.internal == "NOFIRE" then
+                zone.isNoFire = not zone.isNoFire
+                self.shouldSync = true
+            elseif button.internal == "CAGE" then
+                zone.isCage = not zone.isCage
+                self.shouldSync = true
+            elseif button.internal == "PARTY" then
+                zone.isParty = not zone.isParty
+                self.shouldSync = true
+            elseif button.internal == "RALLY" then
+                zone.isRally = not zone.isRally
+                self.shouldSync = true
+            elseif button.internal == "SPECIAL" then
+                zone.isSpecial = not zone.isSpecial
+                self.shouldSync = true
+            elseif button.internal == "TRADE" then
+                zone.isTrade = not zone.isTrade
+                self.shouldSync = true
+            elseif button.internal == "SPRINT" then
+                zone.isSprint = not zone.isSprint
+                self.shouldSync = true
+            elseif button.internal == "TP" then
+                local midX = math.floor((zone.x1 + zone.x2) / 2)
+                local midY = math.floor((zone.y1 + zone.y2) / 2)
+                ParadiseZ.tp(pl, midX, midY, 0)
+                --**
+                self.btnTeleport:setImage(TP_TEX_ON)
+                timer:Simple(1, function()
+                    self.btnTeleport:setImage(TP_TEX_OFF)
+                end)
+            elseif button.internal == "DELETE" then
+                self.ZoneData[tostring(zone.name)] = nil
+                self.shouldSync = true
+                self.datas.fullList = nil
+                self.datas:clear()
+                for name, z in pairs(self.ZoneData) do
+                    self.datas:addItem(z.name, z)
+                end
+                table.sort(self.datas.items, function(a, b)
+                    if not a or not b or not a.item or not b.item then return false end
+                    return a.item.name < b.item.name
+                end)
+                self.btnDelete:setImage(delete_TEX_ON)
+                timer:Simple(1, function()
+                    self.btnDelete:setImage(delete_TEX_OFF)
+                end)
+            end
         end
         timer:Simple(1.2, function()
             self:update()
@@ -807,7 +893,7 @@ function ParadiseZ.ZoneEditorWindow:update()
     self.btnNonPvp.enable = hasSelection
     self.btnProtected.enable = hasSelection
     self.btnBlocked.enable = hasSelection
-    self.btnReset.enable = hasSelection
+    self.btnReset.enable = true
     self.btnDelete.enable = hasSelection
     self.btnTeleport.enable = hasSelection
     self.btnSave.enable = true

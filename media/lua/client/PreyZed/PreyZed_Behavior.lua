@@ -78,28 +78,52 @@ end
 
 function PreyZed.Behavior(zed)
     if not zed then return end
-    local isGold = PreyZed.isParasiteGold(zed)
+    local isPrey = PreyZed.isPrey(zed)
     local pl = getPlayer() 
     local targ = zed:getTarget() 
-    if isGold then   
-        if PreyZed.isClosestPl(pl, zed) and pl then         
+    if isPrey then   
+        if PreyZed.isClosestPl(pl, zed) and pl then   
             if targ and zed:isTargetVisible() then 
-                zed:setUseless(true)
-                if zed:getModData()['ParasiteGold_Move'] == nil then                  
-                    zed:getModData()['ParasiteGold_Move'] = true
-                    PreyZed.moveRandLoc(zed)  
-                    timer:Simple(15, function() 
-                        zed:getModData()['ParasiteGold_Move'] = nil     
-                        zed:setUseless(false)
-                    end)
+                if PreyZed.isAimedAt(pl, zed) then
+                   	zed:setFakeDead(true) 
+                    zed:setUseless(true)
+                    zed:setCanWalk(false)
+                else
+                    zed:setCanWalk(true)
+                    zed:setUseless(true)
+                    if zed:getModData()['Prey_Move'] == nil then                  
+                        zed:getModData()['Prey_Move'] = true
+                        PreyZed.moveRandLoc(zed)  
+                        timer:Simple(15, function() 
+                            zed:getModData()['Prey_Move'] = nil     
+                            zed:setUseless(false)
+                        end)
+                    end
                 end
-            else
-                if zed:isUseless() then
-                    zed:setUseless(false)
-                end
-            end        
-        end
+            end
+        else
+            if zed:isUseless() then
+                zed:setCanWalk(true)
+                zed:setUseless(false)
+            end
+        end   
     end
 end
 Events.OnZombieUpdate.Remove(PreyZed.Behavior)
 Events.OnZombieUpdate.Add(PreyZed.Behavior)
+
+
+
+function PreyZed.isAimedAt(pl, zed)
+    if not zed then return end
+    pl = pl or getPlayer()
+    local dir = (pl:getDirectionAngle() + 360) % 360
+    local x, y = pl:getX(), pl:getY()
+    local dx = zed:getX() - x
+    local dy = zed:getY() - y
+    local targDir = (math.deg(math.atan2(dy, dx)) + 360) % 360
+    local diff = (targDir - dir + 360) % 360
+    local fov = 90
+    local div = 9 --2
+    return (diff <= fov / div or diff >= 360 - fov / div) and pl:isAiming()
+end

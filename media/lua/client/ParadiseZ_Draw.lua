@@ -6,71 +6,43 @@ ParadiseZ.showZoneInfo = true
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
+
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
     if not (x and y) then return end
+
     local zoneName = name
-    if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr) and ParadiseZ.isXYZoneOuter(x, y, name) then
+    if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr)
+        and ParadiseZ.isXYZoneOuter(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
+
     local info = { zoneName }
-    if ParadiseZ.isKosZone(pl) then
-        table.insert(info, "KosZone")
-    end
-    if ParadiseZ.isPveZone(pl) then
-        table.insert(info, "PvE")
-    end
-    if ParadiseZ.isBlockedZone(pl) then
-        table.insert(info, "Blocked")
-    end    
-    if ParadiseZ.isSafeZone(pl) then
-        table.insert(info, "Protected")
-    end
-    if ParadiseZ.isRadZone(pl) then
-        table.insert(info, "Radiation")
-    end
-    if ParadiseZ.isHuntZone(pl) then
-        table.insert(info, "Hunt")
-    end
-    if ParadiseZ.isBlazeZone(pl) then
-        table.insert(info, "Blaze")
-    end
-    if ParadiseZ.isFrostZone(pl) then
-        table.insert(info, "Frost")
-    end
-    if ParadiseZ.isBombZone(pl) then
-        table.insert(info, "Bomb")
-    end
-    if ParadiseZ.isMineZone(pl) then
-        table.insert(info, "MineField")
-    end
-    if ParadiseZ.isNoCampZone(pl) then
-        table.insert(info, "NoCamp")
-    end
-    if ParadiseZ.isNoFireZone(pl) then
-        table.insert(info, "NoFire")
-    end
-    if ParadiseZ.isCageZone(pl) then
-        table.insert(info, "Cage")
-    end
-    if ParadiseZ.isPartyZone(pl) then
-        table.insert(info, "Party")
-    end
-    if ParadiseZ.isRallyZone(pl) then
-        table.insert(info, "Rally")
-    end
-    if ParadiseZ.isSpecialZone(pl) then
-        table.insert(info, "Special")
-    end
-    if ParadiseZ.isTradeZone(pl) then
-        table.insert(info, "Trade")
-    end
-    if ParadiseZ.isSprintZone(pl) then
-        table.insert(info, "Sprint")
-    end
+
+    if ParadiseZ.isKosZone(pl) then table.insert(info, "KosZone") end
+    if ParadiseZ.isPveZone(pl) then table.insert(info, "PvE") end
+    if ParadiseZ.isBlockedZone(pl) then table.insert(info, "Blocked") end
+    if ParadiseZ.isSafeZone(pl) then table.insert(info, "Protected") end
+    if ParadiseZ.isRadZone(pl) then table.insert(info, "Radiation") end
+    if ParadiseZ.isHuntZone(pl) then table.insert(info, "Hunt") end
+    if ParadiseZ.isBlazeZone(pl) then table.insert(info, "Blaze") end
+    if ParadiseZ.isFrostZone(pl) then table.insert(info, "Frost") end
+    if ParadiseZ.isBombZone(pl) then table.insert(info, "Bomb") end
+    if ParadiseZ.isMineZone(pl) then table.insert(info, "MineField") end
+    if ParadiseZ.isNoCampZone(pl) then table.insert(info, "NoCamp") end
+    if ParadiseZ.isNoFireZone(pl) then table.insert(info, "NoFire") end
+    if ParadiseZ.isCageZone(pl) then table.insert(info, "Cage") end
+    if ParadiseZ.isPartyZone(pl) then table.insert(info, "Party") end
+    if ParadiseZ.isRallyZone(pl) then table.insert(info, "Rally") end
+    if ParadiseZ.isSpecialZone(pl) then table.insert(info, "Special") end
+    if ParadiseZ.isTradeZone(pl) then table.insert(info, "Trade") end
+    if ParadiseZ.isSprintZone(pl) then table.insert(info, "Sprint") end
+
     table.insert(info, "X:" .. tostring(round(x)) .. "    Y:" .. tostring(round(y)))
+
     return table.concat(info, "\n")
 end
+
 
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
@@ -78,61 +50,65 @@ function ParadiseZ.getDrawStr(char)
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end
-    local str
+
+    local zoneKey
+
     if ParadiseZ.isPartOfSH(sq) then
-        str = "HQ"
+        zoneKey = "HQ"
     elseif ParadiseZ.isOutside(pl) then
-        str = tostring(SandboxVars.ParadiseZ.OutsideStr)
+        zoneKey = tostring(SandboxVars.ParadiseZ.OutsideStr)
     elseif ParadiseZ.isKosZone(pl) then
-        str = "PvP"
+        zoneKey = "PvP"
     elseif ParadiseZ.isPveZone(pl) then
-        str = "NonPvp"
+        zoneKey = "NonPvp"
     elseif ParadiseZ.isBlockedZone(pl) then
-        str = "Blocked"
+        zoneKey = "Blocked"
     elseif ParadiseZ.isSafeZone(pl) then
-        str = "Protected"
+        zoneKey = "Protected"
     elseif ParadiseZ.isRadZone(pl) then
-        str = "Radiation"
+        zoneKey = "Radiation"
     elseif ParadiseZ.isHuntZone(pl) then
-        str = "Hunt"
+        zoneKey = "Hunt"
     elseif ParadiseZ.isBlazeZone(pl) then
-        str = "Blaze"
+        zoneKey = "Blaze"
     elseif ParadiseZ.isFrostZone(pl) then
-        str = "Frost"
+        zoneKey = "Frost"
     elseif ParadiseZ.isBombZone(pl) then
-        str = "Bomb"
+        zoneKey = "Bomb"
     elseif ParadiseZ.isMineZone(pl) then
-        str = "MineField"
+        zoneKey = "MineField"
     elseif ParadiseZ.isNoCampZone(pl) then
-        str = "NoCamp"
+        zoneKey = "NoCamp"
     elseif ParadiseZ.isNoFireZone(pl) then
-        str = "NoFire"
+        zoneKey = "NoFire"
     elseif ParadiseZ.isCageZone(pl) then
-        str = "Cage"
+        zoneKey = "Cage"
     elseif ParadiseZ.isPartyZone(pl) then
-        str = "Party"
+        zoneKey = "Party"
     elseif ParadiseZ.isRallyZone(pl) then
-        str = "Rally"
+        zoneKey = "Rally"
     elseif ParadiseZ.isSpecialZone(pl) then
-        str = "Special"
+        zoneKey = "Special"
     elseif ParadiseZ.isTradeZone(pl) then
-        str = "Trade"
+        zoneKey = "Trade"
     elseif ParadiseZ.isSprintZone(pl) then
-        str = "Sprint"
+        zoneKey = "Sprint"
     elseif ParadiseZ.isRegularZone(pl) then
-        str = "Zone"
+        zoneKey = "Zone"
     end
-    return str or ""
+
+    zoneKey = zoneKey or ""
+
+    local reboundText = ""
+    local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo
+
+    if getCore():getDebug() or not isShowInfo then
+        reboundText = ParadiseZ.getReboundInfo() or ""
+    end
+
+    return zoneKey, reboundText
 end
 
-function ParadiseZ.getReboundData()
-    local data = getPlayer():getModData()
-    local rebound = data["Rebound"]
-    if not rebound or not rebound.name then return "" end
-    local x, y, z = rebound.x, rebound.y, rebound.z
-    if not (x and y and z) then return "" end
-    return "Rebound:" .. tostring(rebound.name) .. "\nCoord:   X " .. tostring(round(x)) .. "   ,   Y " .. tostring(round(y))
-end
 
 function ParadiseZ.getReboundInfo()
     local pl = getPlayer()
@@ -149,25 +125,30 @@ function ParadiseZ.getReboundInfo()
         modData["Rebound"] = rebound
     end
 
-    return "\n\nREBOUND: \n" .. tostring(round(rebound.x)) .. ", " .. tostring(round(rebound.y)) .. ", " .. tostring(rebound.z)
+    return "\n\nREBOUND:\n"
+        .. tostring(round(rebound.x)) .. ", "
+        .. tostring(round(rebound.y)) .. ", "
+        .. tostring(rebound.z)
 end
+
 
 ParadiseZ.lastZone = nil
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
+
     ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
     local currentZone = ParadiseZ.getZoneName(pl)
+
     if ParadiseZ.lastZone ~= currentZone then
         ISChat.instance.servermsgTimer = 9000
         ISChat.instance.servermsg = tostring(currentZone)
         ParadiseZ.lastZone = currentZone
     end
 
-    
+    local zoneKey, reboundText = ParadiseZ.getDrawStr(pl)
 
-    local str = ParadiseZ.getDrawStr(pl)
     local textures = {
         HQ = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
         Outside = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
@@ -176,9 +157,8 @@ function ParadiseZ.doDrawZone()
         PvP = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"),
         Blocked = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"),
         Protected = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"),
-
         Radiation = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"),
-        Hunt  = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"),
+        Hunt = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"),
         Blaze = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"),
         Frost = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"),
         Bomb = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"),
@@ -191,8 +171,8 @@ function ParadiseZ.doDrawZone()
         Special = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"),
         Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
         Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
-
     }
+
     local colors = {
         HQ = { r = 0, g = 0, b = 1 },
         Outside = { r = 1, g = 0.4, b = 0 },
@@ -201,10 +181,8 @@ function ParadiseZ.doDrawZone()
         PvP = { r = 0.9, g = 0.2, b = 0.2 },
         Blocked = { r = 0.13, g = 0.13, b = 0.13 },
         Protected = { r = 0.84, g = 0.76, b = 0.67 },
-
         Radiation = { r = 1, g = 1, b = 1 },
-
-        Hunt = { r = 0.26, g = 0.21, b = 0.14 },
+        Hunt = { r = 1, g = 0, b = 0 },
         Blaze = { r = 1, g = 0, b = 0 },
         Frost = { r = 0.5, g = 0.4, b = 1 },
         Bomb = { r = 1, g = 0, b = 0 },
@@ -217,27 +195,35 @@ function ParadiseZ.doDrawZone()
         Special = { r = 0.9, g = 0.4, b = 0.9 },
         Trade = { r = 0, g = 1, b = 0 },
         Sprint = { r = 1, g = 0.7, b = 0.7 },
-
     }
 
-    local texture = textures[str]
-    local color = colors[str] or { r = 1, g = 1, b = 1 }
+    local texture = textures[zoneKey]
+    local color = colors[zoneKey] or { r = 1, g = 1, b = 1 }
+
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-    local alpha = (not str or str == "") and (isAdm and 0.1 or 0) or 0.8
-    local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo
+    local alpha = (not zoneKey or zoneKey == "") and (isAdm and 0.1 or 0) or 0.8
+
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
-    local reboundInfo
-    if isAdm or not isShowInfo then
-        reboundInfo = ParadiseZ.getReboundInfo() or ""
+
+    if zoneKey == "Hunt" then
+        local modData = pl:getModData()
+        local credits = modData and modData.HuntCredits or 0
+        zoneInfo = zoneInfo .. "\nCredits Remaining: " .. tostring(credits)
     end
-    getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
-    if reboundInfo and reboundInfo ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, 140, reboundInfo, color.r, color.g, color.b, alpha)
+
+    getTextManager():DrawString(UIFont.Medium, 68, 100,
+        zoneInfo, color.r, color.g, color.b, alpha)
+
+    if reboundText and reboundText ~= "" then
+        getTextManager():DrawString(UIFont.Small, 68, 160,
+            reboundText, color.r, color.g, color.b, alpha)
     end
+
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
 end
+
 
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)

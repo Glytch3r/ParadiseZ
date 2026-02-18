@@ -42,20 +42,14 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
 
-    local function addSafeOption(menu, text, callback, icon)
-        if not menu then return end
-        local optTip = menu:addOption(text, worldobjects, function()
-            if callback then callback() end
-            if context and context.hideAndChildren then context:hideAndChildren() end
-        end)
-        if optTip and icon then
-            optTip.iconTexture = getTexture(icon)
-        end
-    end
 
     if string.lower(pl:getAccessLevel()) ~= "admin" then 
-        addSafeOption(context, "Paradise Zone Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
-        
+        local optTip = context:addOption( "Paradise Zone Panel", worldobjects, function()
+            ParadiseZ.editor(true); 
+            getSoundManager():playUISound("UIActivateMainMenuItem") 
+            getSoundManager():playUISound("UIActivateMainMenuItem")
+            context:hideAndChildren()
+        end)        
         return 
     end
     --Events.OnPlayerUpdate.Remove(ParadiseZ.highlightSqHandler)
@@ -79,6 +73,16 @@ function ParadiseZ.context(plNum, context, worldobjects)
     if not opt then return end
     context:addSubMenu(Main, opt)
     
+    local function addSafeOption(menu, text, callback, icon)
+        if not menu then return end
+        local optTip = menu:addOption(text, worldobjects, function()
+            if callback then callback() end
+            if context and context.hideAndChildren then context:hideAndChildren() end
+        end)
+        if optTip and icon then
+            optTip.iconTexture = getTexture(icon)
+        end
+    end
 
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")

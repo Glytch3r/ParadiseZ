@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="PreyZed_default.xml">
-	<m_Name>KnifeDeath</m_Name>
+	<m_Name>PreyZed_KnifeDeath</m_Name>
 	<m_AnimName>Zombie_HitDeath_Knife01</m_AnimName>
 
 	<m_Conditions>

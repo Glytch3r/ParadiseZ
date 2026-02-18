@@ -290,7 +290,7 @@ function ParadiseZ.reboundHandler(pl)
                 if sq then ParadiseZ.addTempMarker(sq) end
             end
         else        
-            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or not TheRange.canHunt(pl))then
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and not TheRange.canHunt(pl)))then
                 ParadiseZ.doRebound(pl, false)
             end
         end

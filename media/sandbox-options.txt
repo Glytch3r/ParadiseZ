@@ -245,3 +245,16 @@ option ParadiseZ.RadZoneDmg
 	type = double,	 min = 0.00,  max = 100,  default = 0.02,
 	page = ParadiseZ, translation = ParadiseZ_RadZoneDmg,
 }
+
+
+option ParadiseZ.TheRangeStaff {
+	type = string, default = Zecony;Dajulu;Glytch3r,
+	page = ParadiseZ, translation = TheRangeStaff,
+}
+
+
+option ParadiseZ.TheRangePointsPerKill {
+	type = double,	 min = 0.00,  max = 999999999,  default = 3,
+	page = ParadiseZ, translation = TheRangePointsPerKill,
+}
+

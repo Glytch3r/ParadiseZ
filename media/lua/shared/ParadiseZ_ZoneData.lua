@@ -2,7 +2,6 @@
 ParadiseZ = ParadiseZ or {}
 -----------------------            ---------------------------
 -- print(ParadiseZ.ZoneData["Louisville"].isBlocked)
-
 ParadiseZ.ZoneDataBackup = {
     ["Bedford Falls"] = {
         name = "Bedford Falls",
