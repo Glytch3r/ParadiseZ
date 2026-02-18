@@ -2,7 +2,7 @@
 
 module ParadiseZ {
     imports { Base }
-    /* getPlayer():getInventory():AddItem('ParadiseZ.PiggyBank') */
+    /* getPlayer():getInventory():AddItem('ParadiseZ.TheRangeCard') */
 	item PiggyBank
 	{
 		DisplayName	     = Piggy Bank,
@@ -15,5 +15,25 @@ module ParadiseZ {
         
 	    DisplayCategory  = Material,
 		Type	         = Normal,
+	}
+	
+    item TheRangeCard
+    {
+        DisplayCategory = Junk,
+        Weight	=	0.1,
+        Type	=	Normal,
+        DisplayName	=	The Range Membership Card,
+        Icon	=	TheRangeCard,
+		WorldStaticModel = TheRangeCard,
+		CardOwner = None,
+		CardCredits = 0,
+		CardPoints = 0,
+
+    }
+	model TheRangeCard
+	{
+		mesh = WorldItems/CreditCard,
+		texture = WorldItems/TheRangeCard,
+		scale = 0.6,
 	}
 }

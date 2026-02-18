@@ -1,4 +1,5 @@
 ParadiseZ = ParadiseZ or {}
+TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 function ParadiseZ.initializeRebound(pl)
@@ -289,10 +290,8 @@ function ParadiseZ.reboundHandler(pl)
                 if sq then ParadiseZ.addTempMarker(sq) end
             end
         else        
-            if ParadiseZ.isXYZoneInner(plX, plY, name) and ParadiseZ.isRestricted(sq, pl) then
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or not TheRange.canHunt(pl))then
                 ParadiseZ.doRebound(pl, false)
-        --[[         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
-                if sq then ParadiseZ.addTempMarker(sq) end ]]
             end
         end
     end

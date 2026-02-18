@@ -1,0 +1,105 @@
+
+
+--[[██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+   ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+  ░▒▓█▓▒░          ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+  ░▒▓█▓▒▒▓███▓▒░   ░▒▓█▓▒░         ░▒▓██████▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█████████▓▒░     ░▒▓███▓▒░     ░▒▓███████▓▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒▓▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░
+   ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
+|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
+|                        				 Custom  PZ  Mod  Developer  for  Hire													  |
+|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
+|                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
+|                       		                                    														 	  |
+|                       	Discord:    glytch3r															      |
+|                       		                                    														 	  |
+|                       	Support:    https://ko-fi.com/glytch3r														    	  |
+|_______________________________________________________________________________________________________________________________-]]
+--[[_____________________________________________________________________________________________________________________________
+   ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒▓▒░
+  ░▒▓█▓▒▒▓███▓▒░   ░▒▓█▓▒░         ░▒▓██████▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█████████▓▒░     ░▒▓███▓▒░     ░▒▓███████▓▒░
+  ░▒▓█▓▒░          ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+   ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
+█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+
+PreyZed = PreyZed or {}
+
+function PreyZed.moveRandLoc(zed)
+    local TravelLimit = 15
+    local x, y, z = round(zed:getX()),  round(zed:getY()),  zed:getZ() or 0
+    x = ZombRand(x - TravelLimit, x + TravelLimit)
+    y = ZombRand(y - TravelLimit, y + TravelLimit)
+    local sq = getCell():getOrCreateGridSquare(x, y, z) 
+    if sq then
+        PreyZed.moveToXYZ(zed, x, y, z)   
+    else
+        PreyZed.moveRandLoc(zed)
+    end
+end
+function PreyZed.moveToXYZ(zed, x, y, z)
+    if not zed then return end
+    local sq = getCell():getGridSquare(x, y, z)
+    if sq then
+        if PreyZed.isWithinRange(zed, sq, 2) then
+            return sq
+        else
+            zed:pathToLocation(sq:getX(), sq:getY(), sq:getZ())
+            if not sq:TreatAsSolidFloor() and sq:getZ() == zed:getSquare():getZ() then
+                zed:setVariable("bPathfind", false)
+                zed:setVariable("bMoving", true)
+            end
+        end
+    end
+end
+
+function PreyZed.checkDist(pl, sq)
+	local dist = pl:DistTo(sq:getX(), sq:getY())
+    return math.floor(dist)
+end
+
+function PreyZed.isWithinRange(targ, sq, range)
+	local dist = targ:DistTo(sq:getX(), sq:getY())
+    return dist <= range
+end
+
+function PreyZed.isClosestPl(pl, zed)
+    local plDist = PreyZed.checkDist(pl, zed)
+    local compare = round(zed:distToNearestCamCharacter())
+    if plDist == compare then
+        return true
+	end
+	return false
+end
+
+function PreyZed.Behavior(zed)
+    if not zed then return end
+    local isGold = PreyZed.isParasiteGold(zed)
+    local pl = getPlayer() 
+    local targ = zed:getTarget() 
+    if isGold then   
+        if PreyZed.isClosestPl(pl, zed) and pl then         
+            if targ and zed:isTargetVisible() then 
+                zed:setUseless(true)
+                if zed:getModData()['ParasiteGold_Move'] == nil then                  
+                    zed:getModData()['ParasiteGold_Move'] = true
+                    PreyZed.moveRandLoc(zed)  
+                    timer:Simple(15, function() 
+                        zed:getModData()['ParasiteGold_Move'] = nil     
+                        zed:setUseless(false)
+                    end)
+                end
+            else
+                if zed:isUseless() then
+                    zed:setUseless(false)
+                end
+            end        
+        end
+    end
+end
+Events.OnZombieUpdate.Remove(PreyZed.Behavior)
+Events.OnZombieUpdate.Add(PreyZed.Behavior)

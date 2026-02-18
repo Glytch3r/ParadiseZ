@@ -84,6 +84,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
 
+
+
+
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
     addSafeOption(opt, "ReApply Gun Params", function() 
         if isClient() then 
@@ -111,6 +114,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
             disabled.toolTip = tooltip
         end
     end
+    addSafeOption(opt, "Spawn TheRange Membership Card", function() pl:getInventory():AddItem('ParadiseZ.TheRangeCard') end, "media/textures/TheRange.png")
 
     addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
     addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")

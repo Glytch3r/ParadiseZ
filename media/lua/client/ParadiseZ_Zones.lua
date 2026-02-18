@@ -44,6 +44,25 @@ function ParadiseZ.isRegularZone(pl)
 end
  ]]
 -----------------------            ---------------------------
+function ParadiseZ.isHuntZone(pl)
+    local targ = ParadiseZ.getPl(pl)
+    if not targ then return false end
+    local zoneName = ParadiseZ.getZoneName(targ)
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
+    local zone = ParadiseZ.ZoneData[zoneName]
+    if not zone then return false end
+    return zone.isHunt == true
+end
+
+function ParadiseZ.isHuntZoneSq(sq)
+    if not sq then return false end   
+    local zoneName = ParadiseZ.getZoneName(sq)
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
+    local zone = ParadiseZ.ZoneData[zoneName]
+    if not zone then return false end
+    return zone.isHunt == true
+end
+-----------------------            ---------------------------
 
 function ParadiseZ.isPveZone(pl)
     local targ = ParadiseZ.getPl(pl)
@@ -104,15 +123,6 @@ function ParadiseZ.isRegularZone(pl)
     return true
 end
 
-function ParadiseZ.isHuntZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isHunt == true
-end
 
 function ParadiseZ.isBlazeZone(pl)
     local targ = ParadiseZ.getPl(pl)

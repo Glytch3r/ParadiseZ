@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animNode x_extends="PreyZed_defaultStaggerBack.xml">
+	<m_Name>PreyZed_small</m_Name>
+	<m_AnimName>HitReactionShot</m_AnimName>
+
+	<m_Conditions>
+		<m_Name>isPrey</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+
+	<m_BlendOutTime>0.40</m_BlendOutTime>
+	<m_Conditions>
+		<m_Type>LESS</m_Type>
+	</m_Conditions>
+	<m_Conditions>
+		<m_Name>bKnockedDown</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>false</m_BoolValue>
+	</m_Conditions>
+</animNode>
