@@ -74,9 +74,16 @@ function PreyZed.skinHandler(zed)
             end
         end
     end
-    local curSkin = tostring(vis:getSkinTextureName())
+
+    local curSkin = nil
+    if vis.getSkinTexture then 
+        curSkin = vis:getSkinTexture()
+    elseif zed.getSkinTexture  then
+        curSkin = zed:getSkinTexture() 
+    end
+
+    local skin
     if curSkin then
-        local skin
         if zed:isFemale() then
             skin = (PreyZed.SkinList_F and PreyZed.SkinList_F[curSkin]) or "FemaleBody01"
         else
