@@ -39,6 +39,14 @@ Commands.ParadiseZ.thunder = function(player, args)
     sendServerCommand('ParadiseZ', 'thunder', {id = playerId})
 end
 
+
+
+Commands.ParadiseZ.syncBurst = function(player, args)
+  local playerId = player:getOnlineID();
+    sendServerCommand("ParadiseZ", "syncBurst",  {id = playerId, x = args.x, y = args.y,  z = args.z, dir = args.dir})
+end
+
+
 Events.OnClientCommand.Add(function(module, command, player, args)
 	if Commands[module] and Commands[module][command] then
 	    Commands[module][command](player, args)

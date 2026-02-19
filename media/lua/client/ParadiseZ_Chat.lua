@@ -52,7 +52,7 @@ function ParadiseZ.chatCmd(cmd)
 
     local dbg = getCore():getDebug()
     if cmd == "/stuck" then
-    
+        
         ParadiseZ.reboundCountdown(true)
 
       --[[   --ISWorldObjectContextMenu.onTeleport()    

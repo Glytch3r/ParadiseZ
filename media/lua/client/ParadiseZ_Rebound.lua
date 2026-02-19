@@ -170,7 +170,7 @@ function ParadiseZ.parseExileCoords()
     return tx, ty, tz
 end
 
-
+--[[ 
 function ParadiseZ.doExile(pl)
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -193,8 +193,27 @@ function ParadiseZ.doExile(pl)
         pl:setLz(z)
     end
    
-end
+end ]]
 
+
+function ParadiseZ.doExile(pl)
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
+    
+    local x, y, z = ParadiseZ.parseExileCoords() 
+    if not x or not y or not z then return end
+    
+    local car = pl:getVehicle()
+    if car then
+        ISVehicleMenu.onExit(pl)
+        return
+    end
+    
+    ParadiseZ.tp(pl, x, y, z)
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+    if sq then ParadiseZ.addTempMarker(sq) end
+end
 
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)

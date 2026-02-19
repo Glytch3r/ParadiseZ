@@ -1,6 +1,6 @@
 
+require "lua_timers"
 ParadiseZ = ParadiseZ or {}
-
 local Commands = {};
 Commands.ParadiseZ = {};
 
@@ -106,6 +106,14 @@ end
 Events.OnScoreboardUpdate.Add(ParadiseZ.ScareCrow)
 Events.OnClothingUpdated.Add(ParadiseZ.ScareCrow)
 
+
+Commands.ParadiseZ.syncBurst = function(args)
+    local source = getPlayer();
+    local player = getPlayerByOnlineID(args.id)
+    ParadiseZ.doBurst(args.x, args.y, args.z, args.dir)
+    local sq = getCell():getOrCreateGridSquare(args.x, args.y, args.z)            
+
+end
 Commands.ParadiseZ.isScareCrow = function(args)
     local source = getPlayer();
     local player = getPlayerByOnlineID(args.id)

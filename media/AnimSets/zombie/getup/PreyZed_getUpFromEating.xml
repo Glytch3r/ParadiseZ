@@ -2,7 +2,7 @@
 <animNode>
 	<m_Name>PreyZed_getUpFromEating</m_Name>
 	<m_SpeedScale>0.80</m_SpeedScale>
-	<m_AnimName>Zombie_EatingToIdle</m_AnimName>
+	<m_AnimName>Bob_ScrambleFloorToIdle</m_AnimName>
 
 	<m_Conditions>
 		<m_Name>isPrey</m_Name>

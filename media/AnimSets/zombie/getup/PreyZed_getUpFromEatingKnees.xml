@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="PreyZed_getUpFromEating.xml">
 	<m_Name>PreyZed_getUpFromEatingKnees</m_Name>
-	<m_AnimName>Zombie_OnKnees_ToIdle</m_AnimName>
+	<m_AnimName>Bob_ScrambleFloorToIdle</m_AnimName>
 
 	<m_Conditions>
 		<m_Name>isPrey</m_Name>
