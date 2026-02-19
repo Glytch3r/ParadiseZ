@@ -189,9 +189,10 @@ option ParadiseZ.pvpStaggerChance
 }
 
 
-option ParadiseZ.RadSuitList {
+option ParadiseZ.RadSuitList 
+{
 	type = string, default = TheyKnew.MysteriousHazm;Base.HazmatSuit;Base.Hat_NBCmask,
-	page = ParadiseZ, translation = RadSuitList,
+	page = ParadiseZ, translation = ParadiseZ_RadSuitList,
 }
 
 option ParadiseZ.RadiationBorderSize
@@ -249,12 +250,12 @@ option ParadiseZ.RadZoneDmg
 
 option ParadiseZ.TheRangeStaff {
 	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,
-	page = ParadiseZ, translation = TheRangeStaff,
+	page = ParadiseZ, translation = ParadiseZ_TheRangeStaff,
 }
 
 
 option ParadiseZ.TheRangePointsPerKill {
 	type = double,	 min = 0.00,  max = 999999999,  default = 3,
-	page = ParadiseZ, translation = TheRangePointsPerKill,
+	page = ParadiseZ, translation = ParadiseZ_TheRangePointsPerKill,
 }
 

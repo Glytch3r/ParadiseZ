@@ -134,7 +134,7 @@ function ParadiseZ.doRebound(pl, isChat)
     
     local car = pl:getVehicle()
     if car then
-        ParadiseZ.carTp(pl, car)
+        ParadiseZ.carTp(pl, car, x, y, z)
         return
     end
     
@@ -297,8 +297,11 @@ function ParadiseZ.reboundHandler(pl)
     ticks = ticks + 1
     if ticks % 3 == 0 then        
         if not pl then return end
+        if not pl:isAlive() then return end
+
         local plX, plY = ParadiseZ.getXY(pl) 
         if not plX or not plY then return end
+
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
         if not sq then return end 
         local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 

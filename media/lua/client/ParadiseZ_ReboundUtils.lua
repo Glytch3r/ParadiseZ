@@ -53,10 +53,10 @@ function ParadiseZ.tp(pl, x, y, z)
     end
 end
 
-function ParadiseZ.carTp(pl, vehicle)
+function ParadiseZ.carTp(pl, car, x, y, z)
     if not vehicle or not pl then return end
-
-    local lx, ly, lz = ParadiseZ.getZoneEdge(pl)
+    
+    local lx, ly, lz =  x, y, z
     if not lx or not ly or not lz then 
         ParadiseZ.forceExitCar()
         return 

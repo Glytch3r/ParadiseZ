@@ -848,7 +848,6 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                 local midX = math.floor((zone.x1 + zone.x2) / 2)
                 local midY = math.floor((zone.y1 + zone.y2) / 2)
                 ParadiseZ.tp(pl, midX, midY, 0)
-                --**
                 self.btnTeleport:setImage(TP_TEX_ON)
                 timer:Simple(1, function()
                     self.btnTeleport:setImage(TP_TEX_OFF)
@@ -878,6 +877,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
         pl:setHaloNote(tostring('The Panel Buttons are for Admins ONLY'), 150,250,150,900) 
     end
 end
+
 function ParadiseZ.ZoneEditorWindow:update()
     ISCollapsableWindow.update(self)
     if ParadiseZ.updated then
@@ -1242,6 +1242,25 @@ function ParadiseZ.ZoneEditorPopupPanel:close()
     self:removeFromUIManager()
     self.childEditor = nil
 end
+
+function ParadiseZ.editor(activate)
+    if ParadiseZ.ZoneEditorWindow.instance then
+        ParadiseZ.ZoneEditorWindow.instance:close()
+        ParadiseZ.ZoneEditorWindow.instance = nil
+    end
+    if activate then
+        local width = 970--1200
+        local height = 400--568
+        local x = (getCore():getScreenWidth() - width) / 2 + 150
+        local y = (getCore():getScreenHeight() - height) / 2
+        local editor = ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
+        editor:initialise()
+        editor:addToUIManager()
+    end
+end
+
+
+
 
 function ParadiseZ.editor(activate)
     if ParadiseZ.ZoneEditorWindow.instance then

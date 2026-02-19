@@ -83,7 +83,8 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         md.LifeBarFlash = 0.4
         
         if md.LifePoints <= 0 then
-            if SandboxVars.ParadiseZ.teleportPvpDeath then
+            if SandboxVars.ParadiseZ.teleportPvpDeath and not targ:isTeleporting() then
+           
                 ParadiseZ.doExile(targ)
             else               
                 targ:Kill(char)
