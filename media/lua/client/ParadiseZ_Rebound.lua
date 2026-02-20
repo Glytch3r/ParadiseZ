@@ -2,6 +2,95 @@ ParadiseZ = ParadiseZ or {}
 TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
+-----------------------            ---------------------------
+
+function ParadiseZ.doExile(pl)
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
+    
+    local x, y, z = ParadiseZ.parseExileCoords() 
+    if not x or not y or not z then return end
+ --[[    
+    local car = pl:getVehicle()
+    if car then
+        ParadiseZ.forceExitCar()
+        --ISVehicleMenu.onExit(pl)
+        return
+    end
+     ]]
+    ParadiseZ.tp(pl, x, y, z)
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+    if sq then ParadiseZ.addTempMarker(sq) end
+end
+
+
+function ParadiseZ.carTp(pl, car, x, y, z)
+    if not vehicle or not pl then return end
+    
+    local lx, ly, lz =  x, y, z
+    if not lx or not ly or not lz then 
+        ParadiseZ.forceExitCar()
+        return 
+    end
+
+    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
+    local dx, dy = cx - lx, cy - ly
+    local len = math.sqrt(dx * dx + dy * dy)
+    if len == 0 then return end
+
+    dx, dy = dx / len, dy / len
+    local dist = 5
+    local px, py = dx * dist, dy * dist
+
+    local fieldCount = getNumClassFields(vehicle)
+    local transField
+    local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
+
+    for i = 0, fieldCount - 1 do
+        local field = getClassField(vehicle, i)
+        if tostring(field) == fieldName then
+            transField = field
+            break
+        end
+    end
+    if not transField then return end
+
+    local v_transform = getClassFieldVal(vehicle, transField)
+    local w_transform = vehicle:getWorldTransform(v_transform)
+    local origin_field = getClassField(w_transform, 1)
+    local origin = getClassFieldVal(w_transform, origin_field)
+    origin:set(origin:x() - px, origin:y() - py, origin:z())
+    vehicle:setWorldTransform(w_transform)
+
+    if isClient() then
+        pcall(vehicle.update, vehicle)
+        pcall(vehicle.updateControls, vehicle)
+        pcall(vehicle.updateBulletStats, vehicle)
+        pcall(vehicle.updatePhysics, vehicle)
+        pcall(vehicle.updatePhysicsNetwork, vehicle)
+    end
+end
+
+function ParadiseZ.doRebound(pl, isChat)
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
+    
+    local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
+    if not x or not y or not z then return end
+    
+    local car = pl:getVehicle()
+    if car then
+        ParadiseZ.carTp(pl, car, x, y, z)
+        return
+    end
+    
+    ParadiseZ.tp(pl, x, y, z)
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+    if sq then ParadiseZ.addTempMarker(sq) end
+end
+-----------------------            ---------------------------
 function ParadiseZ.initializeRebound(pl)
     pl = pl or getPlayer()
     if not pl then return end
@@ -124,25 +213,6 @@ function ParadiseZ.getLastCoord(pl, isChat)
     return ParadiseZ.getFallbackCoord()
 end
 
-function ParadiseZ.doRebound(pl, isChat)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
-    pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    
-    local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
-    if not x or not y or not z then return end
-    
-    local car = pl:getVehicle()
-    if car then
-        ParadiseZ.carTp(pl, car, x, y, z)
-        return
-    end
-    
-    ParadiseZ.tp(pl, x, y, z)
-    local sq = getCell():getOrCreateGridSquare(x, y, z)
-    if sq then ParadiseZ.addTempMarker(sq) end
-end
-
 
 function ParadiseZ.reboundCountdown(isChat)
     local pl = getPlayer() 
@@ -195,25 +265,6 @@ function ParadiseZ.doExile(pl)
    
 end ]]
 
-
-function ParadiseZ.doExile(pl)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
-    pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    
-    local x, y, z = ParadiseZ.parseExileCoords() 
-    if not x or not y or not z then return end
-    
-    local car = pl:getVehicle()
-    if car then
-        ISVehicleMenu.onExit(pl)
-        return
-    end
-    
-    ParadiseZ.tp(pl, x, y, z)
-    local sq = getCell():getOrCreateGridSquare(x, y, z)
-    if sq then ParadiseZ.addTempMarker(sq) end
-end
 
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)

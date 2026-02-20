@@ -59,7 +59,6 @@ ParadiseZ.flagTextures = {
     Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
 }
 
-
 function ParadiseZ.ZoneEditorWindow:getFlagsString(zone)
     local flags = {}
     if zone.isKos then table.insert(flags, "Kos") end
@@ -847,11 +846,15 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             elseif button.internal == "TP" then
                 local midX = math.floor((zone.x1 + zone.x2) / 2)
                 local midY = math.floor((zone.y1 + zone.y2) / 2)
+                ParadiseZ.saveRebound(pl, nil)
                 ParadiseZ.tp(pl, midX, midY, 0)
                 self.btnTeleport:setImage(TP_TEX_ON)
                 timer:Simple(1, function()
                     self.btnTeleport:setImage(TP_TEX_OFF)
                 end)
+
+
+
             elseif button.internal == "DELETE" then
                 self.ZoneData[tostring(zone.name)] = nil
                 self.shouldSync = true

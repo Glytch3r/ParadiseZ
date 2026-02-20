@@ -9,7 +9,7 @@ function ParadiseZ.forceExitCar()
     if not pl then return end
     local car = pl:getVehicle()
     if not car then return end
-
+    
     local seat = car:getSeat(pl)
     car:exit(pl)
     if seat then
@@ -35,7 +35,7 @@ function ParadiseZ.tp(pl, x, y, z)
     end
 	
     if SandboxVars.ParadiseZ.ReboundSystem then
-        ParadiseZ.forceExitCar()
+        --ParadiseZ.forceExitCar()
         
         if luautils.stringStarts(getCore():getVersion(), "42") then
             pl:teleportTo(tonumber(x), tonumber(y), tonumber(z))
@@ -53,52 +53,6 @@ function ParadiseZ.tp(pl, x, y, z)
     end
 end
 
-function ParadiseZ.carTp(pl, car, x, y, z)
-    if not vehicle or not pl then return end
-    
-    local lx, ly, lz =  x, y, z
-    if not lx or not ly or not lz then 
-        ParadiseZ.forceExitCar()
-        return 
-    end
-
-    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
-    local dx, dy = cx - lx, cy - ly
-    local len = math.sqrt(dx * dx + dy * dy)
-    if len == 0 then return end
-
-    dx, dy = dx / len, dy / len
-    local dist = 5
-    local px, py = dx * dist, dy * dist
-
-    local fieldCount = getNumClassFields(vehicle)
-    local transField
-    local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
-
-    for i = 0, fieldCount - 1 do
-        local field = getClassField(vehicle, i)
-        if tostring(field) == fieldName then
-            transField = field
-            break
-        end
-    end
-    if not transField then return end
-
-    local v_transform = getClassFieldVal(vehicle, transField)
-    local w_transform = vehicle:getWorldTransform(v_transform)
-    local origin_field = getClassField(w_transform, 1)
-    local origin = getClassFieldVal(w_transform, origin_field)
-    origin:set(origin:x() - px, origin:y() - py, origin:z())
-    vehicle:setWorldTransform(w_transform)
-
-    if isClient() then
-        pcall(vehicle.update, vehicle)
-        pcall(vehicle.updateControls, vehicle)
-        pcall(vehicle.updateBulletStats, vehicle)
-        pcall(vehicle.updatePhysics, vehicle)
-        pcall(vehicle.updatePhysicsNetwork, vehicle)
-    end
-end
 
 function ParadiseZ.getClosestReboundPoint(origin, margin)
     margin = margin or 4
