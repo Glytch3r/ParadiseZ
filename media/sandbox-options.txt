@@ -66,18 +66,6 @@ option ParadiseZ.AdminOnlyZoneInfo
 	page = ParadiseZ, translation = ParadiseZ_AdminOnlyZoneInfo,
 }
 
-option ParadiseZ.VanillaNonPvpZone
-{
-	type = boolean, default = false,
-	page = ParadiseZ, translation = ParadiseZ_VanillaNonPvpZone,
-}
-
-
-option ParadiseZ.ExileCoords 
-{
-	type = string, default = 11641;8324;0, 
-	page = ParadiseZ, translation = ParadiseZ_ExileCoords,
-}
 
 option ParadiseZ.Coords 
 {
@@ -89,103 +77,6 @@ option ParadiseZ.ShowPvETag
 {
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ShowPvETag,
-}
-
-
-
-
-option ParadiseZ.AngleFalloff
-{
-	type = boolean, default = true,
-	page = ParadiseZ, translation = ParadiseZ_AngleFalloff,
-}
-
-option ParadiseZ.GunUpdater
-{
-	type = boolean, default = true,
-	page = ParadiseZ, translation = ParadiseZ_GunUpdater,
-}
-
-option ParadiseZ.GunVersionKey
-{
-	type = string, default = adfawfq3,
-	page = ParadiseZ, translation = ParadiseZ_GunVersionKey,
-}
-option ParadiseZ.GunTooltip
-{
-	type = string, default = Updated Paradise Server Gun,
-	page = ParadiseZ, translation = ParadiseZ_GunTooltip,
-}
-
-option ParadiseZ.ShotgunList {
-	type = string, default = Base.Shotgun;Base.Spas12;Base.Spas12Folded;Base.ShotgunSemi;Base.Shotgun2;Base.ShotgunSawnoff;Base.ShotgunSawnoffNoStock;Base.DoubleBarrelShotgun;Base.DoubleBarrelShotgunSawnoff;Base.DoubleBarrelShotgunSawnoffNoStock;SpoonEngineerStuff.ScrappyBlunderbuss;Base.AssaultRifleMasterkeyShotgun;Base.M2400_Shotgun,
-	page = ParadiseZ, translation = ParadiseZ_ShotgunList,
-}
-
-
-
-option ParadiseZ.PerkModifierShotgun
-{
-	type = string, default = 0.002,
-	page = ParadiseZ, translation = ParadiseZ_PerkModifierShotgun,
-}
-option ParadiseZ.PerkModifierRifle
-{
-	type = string,  default = 0.001,
-	page = ParadiseZ, translation = ParadiseZ_PerkModifierRifle,
-}
-
-option ParadiseZ.PerkModifierPistol
-{
-	type = string,  default = 0.001,
-	page = ParadiseZ, translation = ParadiseZ_PerkModifierPistol,
-}
-
-
-option ParadiseZ.MinAngleShotgun
-{
-	type = double,	 min = 0.00,  max = 100,  default = 0.99,
-	page = ParadiseZ, translation = ParadiseZ_MinAngleShotgun,
-}
-
-option ParadiseZ.MinAngleRifle
-{
-	type = double,	 min = 0.00,  max = 100,  default = 0.999,
-	page = ParadiseZ, translation = ParadiseZ_MinAngleRifle,
-}
-
-option ParadiseZ.MinAnglePistol
-{
-	type = double,	 min = 0.00,  max = 100,  default = 0.999,
-	page = ParadiseZ, translation = ParadiseZ_MinAnglePistol,
-}
-
-
-option ParadiseZ.LifeBarRecovery
-{
-	type = string, default =  0.005,
-	page = ParadiseZ, translation = ParadiseZ_LifeBarRecovery,
-}
-option ParadiseZ.HitFlashDecay
-{
-	type = double,	 min = 0.000,  max = 5,  default = 1.8,
-	page = ParadiseZ, translation = ParadiseZ_HitFlashDecay,
-}
-option ParadiseZ.ThunderFlashDecay
-{
-	type = double,	 min = 0.000,  max = 5,  default = 0.4,
-	page = ParadiseZ, translation = ParadiseZ_ThunderFlashDecay,
-}
-option ParadiseZ.pvpDmgMult
-{
-	type = double,	 min = 0.00,  max = 100,  default = 5,
-	page = ParadiseZ, translation = ParadiseZ_pvpDmgMult,
-}
-
-option ParadiseZ.pvpStaggerChance
-{
-	type = double,	 min = 0.00,  max = 100,  default = 40,
-	page = ParadiseZ, translation = ParadiseZ_pvpStaggerChance,
 }
 
 
@@ -203,44 +94,6 @@ option ParadiseZ.RadiationBorderSize
 
 
 
-option ParadiseZ.teleportPvpDeath
-{
-	type = boolean, default = true,
-	page = ParadiseZ, translation = ParadiseZ_teleportPvpDeath,
-}
-
-
-option ParadiseZ.ShotgunPvpDmg
-{
-	type = double,	 min = 0.00,  max = 100,  default = 25,
-	page = ParadiseZ, translation = ParadiseZ_ShotgunPvpDmg,
-}
-
-option ParadiseZ.RiflePvpDmg
-{
-	type = double,	 min = 0.00,  max = 100,  default = 20,
-	page = ParadiseZ, translation = ParadiseZ_RiflePvpDmg,
-}
-
-option ParadiseZ.PistolPvpDmg
-{
-	type = double,	 min = 0.00,  max = 100,  default = 15,
-	page = ParadiseZ, translation = ParadiseZ_PistolPvpDmg,
-}
-
-option ParadiseZ.MeleePvpDmg
-{
-	type = double,	 min = 0.00,  max = 100,  default = 10,
-	page = ParadiseZ, translation = ParadiseZ_UnarmedPvpDmg,
-}
-
-
-option ParadiseZ.TicketTimestampType
-{
-    type = enum,    numValues = 3,    default = 3,
-    page = ParadiseZ,    translation = ParadiseZ_TicketTimestampType,
-	valueTranslation = ParadiseZ_TicketTimestampType,
-}
 option ParadiseZ.RadZoneDmg
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.02,
@@ -257,5 +110,158 @@ option ParadiseZ.TheRangeStaff {
 option ParadiseZ.TheRangePointsPerKill {
 	type = double,	 min = 0.00,  max = 999999999,  default = 3,
 	page = ParadiseZ, translation = ParadiseZ_TheRangePointsPerKill,
+}
+
+
+option ParadiseZ.ThunderFlashDecay
+{
+	type = double,	 min = 0.000,  max = 5,  default = 0.4,
+	page = ParadiseZ, translation = ParadiseZ_ThunderFlashDecay,
+}
+
+
+
+
+
+
+option ParadiseZpvp.VanillaNonPvpZone
+{
+	type = boolean, default = false,
+	page = ParadiseZpvp, translation = ParadiseZpvp_VanillaNonPvpZone,
+}
+
+option ParadiseZpvp.ExileCoords 
+{
+	type = string, default = 11641;8324;0, 
+	page = ParadiseZpvp, translation = ParadiseZpvp_ExileCoords,
+}
+
+
+
+option ParadiseZpvp.HitFlashDecay
+{
+	type = double,	 min = 0.000,  max = 5,  default = 1.8,
+	page = ParadiseZpvp, translation = ParadiseZpvp_HitFlashDecay,
+}
+
+option ParadiseZpvp.LifeBarRecovery
+{
+	type = string, default =  0.005,
+	page = ParadiseZpvp, translation = ParadiseZpvp_LifeBarRecovery,
+}
+
+
+option ParadiseZpvp.teleportPvpDeath
+{
+	type = boolean, default = true,
+	page = ParadiseZpvp, translation = ParadiseZpvp_teleportPvpDeath,
+}
+
+
+
+option ParadiseZpvp.pvpDmgMult
+{
+	type = double,	 min = 0.00,  max = 100,  default = 5,
+	page = ParadiseZpvp, translation = ParadiseZpvp_pvpDmgMult,
+}
+
+option ParadiseZpvp.pvpStaggerChance
+{
+	type = double,	 min = 0.00,  max = 100,  default = 40,
+	page = ParadiseZpvp, translation = ParadiseZpvp_pvpStaggerChance,
+}
+
+
+option ParadiseZpvp.AngleFalloff
+{
+	type = boolean, default = true,
+	page = ParadiseZpvp, translation = ParadiseZpvp_AngleFalloff,
+}
+
+option ParadiseZpvp.GunUpdater
+{
+	type = boolean, default = true,
+	page = ParadiseZpvp, translation = ParadiseZpvp_GunUpdater,
+}
+
+option ParadiseZpvp.GunVersionKey
+{
+	type = string, default = adfawfq3,
+	page = ParadiseZpvp, translation = ParadiseZpvp_GunVersionKey,
+}
+option ParadiseZpvp.GunTooltip
+{
+	type = string, default = Updated Paradise Server Gun,
+	page = ParadiseZpvp, translation = ParadiseZpvp_GunTooltip,
+}
+
+option ParadiseZpvp.ShotgunList 
+{
+	type = string, default = Base.Shotgun;Base.Spas12;Base.Spas12Folded;Base.ShotgunSemi;Base.Shotgun2;Base.ShotgunSawnoff;Base.ShotgunSawnoffNoStock;Base.DoubleBarrelShotgun;Base.DoubleBarrelShotgunSawnoff;Base.DoubleBarrelShotgunSawnoffNoStock;SpoonEngineerStuff.ScrappyBlunderbuss;Base.AssaultRifleMasterkeyShotgun;Base.M2400_Shotgun,
+	page = ParadiseZpvp, translation = ParadiseZpvp_ShotgunList,
+}
+
+
+
+option ParadiseZpvp.PerkModifierShotgun
+{
+	type = string, default = 0.002,
+	page = ParadiseZpvp, translation = ParadiseZpvp_PerkModifierShotgun,
+}
+option ParadiseZpvp.PerkModifierRifle
+{
+	type = string,  default = 0.001,
+	page = ParadiseZpvp, translation = ParadiseZpvp_PerkModifierRifle,
+}
+
+option ParadiseZpvp.PerkModifierPistol
+{
+	type = string,  default = 0.001,
+	page = ParadiseZpvp, translation = ParadiseZpvp_PerkModifierPistol,
+}
+
+
+option ParadiseZpvp.MinAngleShotgun
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.99,
+	page = ParadiseZpvp, translation = ParadiseZpvp_MinAngleShotgun,
+}
+
+option ParadiseZpvp.MinAngleRifle
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.999,
+	page = ParadiseZpvp, translation = ParadiseZpvp_MinAngleRifle,
+}
+
+option ParadiseZpvp.MinAnglePistol
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.999,
+	page = ParadiseZpvp, translation = ParadiseZpvp_MinAnglePistol,
+}
+
+
+
+option ParadiseZpvp.ShotgunPvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 25,
+	page = ParadiseZpvp, translation = ParadiseZpvp_ShotgunPvpDmg,
+}
+
+option ParadiseZpvp.RiflePvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 20,
+	page = ParadiseZpvp, translation = ParadiseZpvp_RiflePvpDmg,
+}
+
+option ParadiseZpvp.PistolPvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 15,
+	page = ParadiseZpvp, translation = ParadiseZpvp_PistolPvpDmg,
+}
+
+option ParadiseZpvp.MeleePvpDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 10,
+	page = ParadiseZpvp, translation = ParadiseZpvp_UnarmedPvpDmg,
 }
 

@@ -38,7 +38,7 @@ ParadiseZ.defaultShotguns = {
 }
 
 function ParadiseZ.getShotgunTable()
-    local strList = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.ShotgunList
+    local strList = SandboxVars.ParadiseZ and SandboxVars.ParadiseZpvp.ShotgunList
     if not strList or strList == "" then
         return ParadiseZ.defaultShotguns
     end
@@ -63,17 +63,17 @@ function ParadiseZ.resolveGunParams(scriptItem, fType, shotgunTable)
     if scriptItem.getSwingAnim and scriptItem:getSwingAnim() == "Rifle" then
         if shotgunTable[fType] then
             class = "Shotgun"
-            perk = tonumber(SandboxVars.ParadiseZ.PerkModifierShotgun)  or 0.002
-            minAngle = SandboxVars.ParadiseZ.MinAngleShotgun
+            perk = tonumber(SandboxVars.ParadiseZpvp.PerkModifierShotgun)  or 0.002
+            minAngle = SandboxVars.ParadiseZpvp.MinAngleShotgun
         else
             class = "Rifle"
-            perk = tonumber(SandboxVars.ParadiseZ.PerkModifierRifle)  or 0.001
-            minAngle = SandboxVars.ParadiseZ.MinAngleRifle
+            perk = tonumber(SandboxVars.ParadiseZpvp.PerkModifierRifle)  or 0.001
+            minAngle = SandboxVars.ParadiseZpvp.MinAngleRifle
         end
     else
         class = "Pistol"
-        perk = tonumber(SandboxVars.ParadiseZ.PerkModifierPistol) or 0.001
-        minAngle = SandboxVars.ParadiseZ.MinAnglePistol
+        perk = tonumber(SandboxVars.ParadiseZpvp.PerkModifierPistol) or 0.001
+        minAngle = SandboxVars.ParadiseZpvp.MinAnglePistol
     end
 
     return class, perk, minAngle
@@ -85,9 +85,9 @@ function ParadiseZ.applyGunParams(shouldPrint)
     local sm = ScriptManager.instance
     local allItems = sm:getAllItems()
     local shotgunTable = ParadiseZ.getShotgunTable()
-    local angleFalloff = SandboxVars.ParadiseZ.AngleFalloff
-    local gunKey = SandboxVars.ParadiseZ.GunVersionKey
-    local gunTip = SandboxVars.ParadiseZ.GunTooltip or ""
+    local angleFalloff = SandboxVars.ParadiseZpvp.AngleFalloff
+    local gunKey = SandboxVars.ParadiseZpvp.GunVersionKey
+    local gunTip = SandboxVars.ParadiseZpvp.GunTooltip or ""
     local res = ""
 
     for i = 0, allItems:size() - 1 do
@@ -133,9 +133,9 @@ function ParadiseZ.updateExistingGun(item)
 
     local fType = item:getFullType()
     local shotgunTable = ParadiseZ.getShotgunTable()
-    local angleFalloff = SandboxVars.ParadiseZ.AngleFalloff
-    local gunKey = SandboxVars.ParadiseZ.GunVersionKey
-    local gunTip = SandboxVars.ParadiseZ.GunTooltip or ""
+    local angleFalloff = SandboxVars.ParadiseZpvp.AngleFalloff
+    local gunKey = SandboxVars.ParadiseZpvp.GunVersionKey
+    local gunTip = SandboxVars.ParadiseZpvp.GunTooltip or ""
 
     local _, perk, minAngle = ParadiseZ.resolveGunParams(si, fType, shotgunTable)
 
@@ -192,7 +192,7 @@ ParadiseZ.defaultShotguns = {
 }
 
 function ParadiseZ.getShotgunTable()
-    local strList = SandboxVars.ParadiseZ.ShotgunList 
+    local strList = SandboxVars.ParadiseZpvp.ShotgunList 
     local t = {}
     for item in string.gmatch(strList, "[^;]+") do
         t[item] = true
@@ -207,8 +207,8 @@ function ParadiseZ.isFirearm(item)
 end
 
 function ParadiseZ.applyGunParams(shouldPrint)    
-    local GunVersionKey = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.GunVersionKey or 0
-    local GunTooltip = SandboxVars.ParadiseZ and SandboxVars.ParadiseZ.GunTooltip or ""
+    local GunVersionKey = SandboxVars.ParadiseZ and SandboxVars.ParadiseZpvp.GunVersionKey or 0
+    local GunTooltip = SandboxVars.ParadiseZ and SandboxVars.ParadiseZpvp.GunTooltip or ""
     local allItems = getScriptManager():getAllItems()
     local sm = ScriptManager.instance
     local res = ""
@@ -226,17 +226,17 @@ function ParadiseZ.applyGunParams(shouldPrint)
                 if wpn.getSwingAnim and wpn:getSwingAnim() == "Rifle" then
                     if shotgunTable[fType] == true then
                         wpnClass = "Shotgun"
-                        PerkModifier = SandboxVars.ParadiseZ.PerkModifierShotgun 
-                        MinAngle = SandboxVars.ParadiseZ.MinAngleShotgun 
+                        PerkModifier = SandboxVars.ParadiseZpvp.PerkModifierShotgun 
+                        MinAngle = SandboxVars.ParadiseZpvp.MinAngleShotgun 
                     else
                         wpnClass = "Rifle "
-                        PerkModifier = SandboxVars.ParadiseZ.PerkModifierRifle 
-                        MinAngle = SandboxVars.ParadiseZ.MinAngleRifle 
+                        PerkModifier = SandboxVars.ParadiseZpvp.PerkModifierRifle 
+                        MinAngle = SandboxVars.ParadiseZpvp.MinAngleRifle 
                     end    
                 else
                     wpnClass = "Pistol "
-                    PerkModifier = SandboxVars.ParadiseZ.PerkModifierPistol
-                    MinAngle = SandboxVars.ParadiseZ.MinAnglePistol
+                    PerkModifier = SandboxVars.ParadiseZpvp.PerkModifierPistol
+                    MinAngle = SandboxVars.ParadiseZpvp.MinAnglePistol
                 end
             end
             if PerkModifier and MinAngle then
@@ -258,9 +258,9 @@ end)
 
 
 function ParadiseZ.oldGunDespawner()
-    local GunUpdater = SandboxVars.ParadiseZ.GunUpdater
+    local GunUpdater = SandboxVars.ParadiseZpvp.GunUpdater
     if not GunUpdater then return end
-    local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
+    local GunVersionKey = SandboxVars.ParadiseZpvp.GunVersionKey
     local pl = getPlayer()
     if not pl then return end
     
@@ -289,8 +289,8 @@ function ParadiseZ.updateGun(item)
     local fType = item:getFullType()
     if not fType then return end
     
-    local GunTooltip = SandboxVars.ParadiseZ.GunTooltip
-    local curKey = SandboxVars.ParadiseZ.GunVersionKey
+    local GunTooltip = SandboxVars.ParadiseZpvp.GunTooltip
+    local curKey = SandboxVars.ParadiseZpvp.GunVersionKey
     local md = item:getModData()
     local itemKey = md and md.GunVersionKey
     

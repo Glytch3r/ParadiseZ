@@ -16,3 +16,14 @@ function ParadiseZ.getSprName(obj)
     end
     return sprName
 end
+
+function ParadiseZ.checkDist(pl, sq)
+	local dist = pl:DistTo(sq:getX(), sq:getY())
+    return math.floor(dist)
+end
+
+
+function ParadiseZ.isWithinRange(targ, sq, range)
+	local dist = targ:DistTo(sq:getX(), sq:getY())
+    return dist <= range
+end

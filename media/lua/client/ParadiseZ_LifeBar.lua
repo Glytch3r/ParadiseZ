@@ -4,7 +4,7 @@ LifeBarUI = LifeBarUI or {}
 LifeBarUI.panel = nil
 LifeBarUI.visible = true
 LifeBarUI.maxValue = 100
-LifeBarUI.flashDecayRate = LifeBarUI.flashDecayRate or SandboxVars.ParadiseZ.HitFlashDecay or 1.8
+LifeBarUI.flashDecayRate = LifeBarUI.flashDecayRate or SandboxVars.ParadiseZpvp.HitFlashDecay or 1.8
 
 LifeBarUI.UI = ISPanel:derive("LifeBarUI_UI")
 
@@ -37,7 +37,7 @@ function LifeBarUI.UI:render()
     self:drawRect(0, 0, barW, h, 1, col.r, col.g, col.b)
     self:drawRectBorder(0, 0, w, h, 1, 1, 1, 1)
     
-    md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZ.LifeBarRecovery))
+    md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery))
 
     
 end

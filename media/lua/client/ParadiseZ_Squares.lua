@@ -20,7 +20,7 @@ end
 
 function ParadiseZ.isPveZoneFromSquare(sq)
     if not sq then return false end
-    if SandboxVars.ParadiseZ.VanillaNonPvpZone then
+    if SandboxVars.ParadiseZpvp.VanillaNonPvpZone then
         local x = sq:getX()
         local y = sq:getY()
         if x and y and NonPvpZone.getNonPvpZone(x, y) then
@@ -56,7 +56,7 @@ function ParadiseZ.isKosZoneFromSquare(sq)
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
 
-    if SandboxVars.ParadiseZ.VanillaNonPvpZone then
+    if SandboxVars.ParadiseZpvp.VanillaNonPvpZone then
         local x = sq:getX()
         local y = sq:getY()
         if x and y and NonPvpZone.getNonPvpZone(x, y) then
@@ -74,7 +74,7 @@ end
 
 function ParadiseZ.isSafeZoneFromSquare(sq)
     if not sq then return false end
-    if SandboxVars.ParadiseZ.VanillaNonPvpZone then
+    if SandboxVars.ParadiseZpvp.VanillaNonPvpZone then
         local x = sq:getX()
         local y = sq:getY()
         if x and y and NonPvpZone.getNonPvpZone(x, y) then

@@ -19,24 +19,24 @@ function ParadiseZ.getPvpWpnDmg(wpn, char)
 
     wpn = wpn or char:getPrimaryHandItem()
     if not wpn then
-        return SandboxVars.ParadiseZ.MeleePvpDmg or 10
+        return SandboxVars.ParadiseZpvp.MeleePvpDmg or 10
     end
 
     local item = ScriptManager.instance:getItem(wpn:getFullType())
     local isMeleeAttack = char:IsInMeleeAttack()
     if not item or not item:isRanged() or isMeleeAttack then
-        return SandboxVars.ParadiseZ.MeleePvpDmg or 10
+        return SandboxVars.ParadiseZpvp.MeleePvpDmg or 10
     end
 
     if item.getSwingAnim and item:getSwingAnim() == "Rifle" then
         local shotgunTable = ParadiseZ.getShotgunTable()
         if shotgunTable[wpn:getFullType()] then
-            wpnDmg = SandboxVars.ParadiseZ.ShotgunPvpDmg or 25
+            wpnDmg = SandboxVars.ParadiseZpvp.ShotgunPvpDmg or 25
         else
-            wpnDmg = SandboxVars.ParadiseZ.RiflePvpDmg or 20
+            wpnDmg = SandboxVars.ParadiseZpvp.RiflePvpDmg or 20
         end
     else
-        wpnDmg = SandboxVars.ParadiseZ.PistolPvpDmg or 15
+        wpnDmg = SandboxVars.ParadiseZpvp.PistolPvpDmg or 15
     end
 
     return wpnDmg
@@ -72,7 +72,7 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
 
     local isCrit = targ:isCriticalHit() 
     if isCrit then
-        bonus = ZombRand(0, SandboxVars.ParadiseZ.pvpDmgMult + 1)
+        bonus = ZombRand(0, SandboxVars.ParadiseZpvp.pvpDmgMult + 1)
     end
     
     if pvpDmg and targ == getPlayer() then
@@ -83,7 +83,7 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         md.LifeBarFlash = 0.4
         
         if md.LifePoints <= 0 then
-            if SandboxVars.ParadiseZ.teleportPvpDeath and not targ:isTeleporting() then
+            if SandboxVars.ParadiseZpvp.teleportPvpDeath and not targ:isTeleporting() then
            
                 ParadiseZ.doExile(targ)
             else               
@@ -117,7 +117,7 @@ function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
         pvpDmg = false
     end
     
-    dmg = dmg * (SandboxVars.ParadiseZ.pvpDmgMult or 1.6)
+    dmg = dmg * (SandboxVars.ParadiseZpvp.pvpDmgMult or 1.6)
 	if not ParadiseZ.isUnarmed(char) then
         targ:setAvoidDamage(isAvoid)
     end
@@ -131,7 +131,7 @@ function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
             targ:Kill(char)
         else
      
-            local pvpStaggerChance = SandboxVars.ParadiseZ.pvpStaggerChance or 34
+            local pvpStaggerChance = SandboxVars.ParadiseZpvp.pvpStaggerChance or 34
             if pvpStaggerChance and ParadiseZ.doRoll(pvpStaggerChance) then
                 --local pos = targ:getPlayerAttackPosition()
                 targ:setBumpType("pushedbehind")

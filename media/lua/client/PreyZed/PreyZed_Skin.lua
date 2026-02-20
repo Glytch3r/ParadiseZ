@@ -19,11 +19,13 @@ function PreyZed.skinHandler(zed)
     local isPrey = PreyZed.isPrey(zed)
     if not isPrey and md.isPrey == nil then
         md.isPrey = false
-        zed:dressInPersistentOutfit("PreyZed")
-        zed:resetModelNextFrame()
+        if PreyZed.isClosestPl(pl, zed) then
+            zed:dressInPersistentOutfit("PreyZed")
+            zed:resetModelNextFrame()
+        end
         return
     end
-
+    
     if not isPrey then return end
 
     local vis = zed:getHumanVisual()

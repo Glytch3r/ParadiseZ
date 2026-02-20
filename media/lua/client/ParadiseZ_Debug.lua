@@ -561,7 +561,7 @@ function ParadiseZ.testDmg(targ, dmg, pushedDir)
     md.LifePoints = math.max(0, md.LifePoints - dmg)
     md.LifeBarFlash = 0.4
 	
-    local percent = SandboxVars.ParadiseZ.pvpStaggerChance or 34
+    local percent = SandboxVars.ParadiseZpvp.pvpStaggerChance or 34
     if ParadiseZ.doRoll(percent) then
 		pushedDir = pushedDir or 'pushedbehind'
 --[[         targ:setBumpType(pushedDir)

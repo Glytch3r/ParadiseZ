@@ -98,7 +98,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
         else
             ParadiseZ.applyGunParams(getCore():getDebug()) 
         end	
-        local GunVersionKey = SandboxVars.ParadiseZ.GunVersionKey
+        local GunVersionKey = SandboxVars.ParadiseZpvp.GunVersionKey
         pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)     
         getSoundManager():playUISound("UIActivateMainMenuItem")
         context:hideAndChildren()

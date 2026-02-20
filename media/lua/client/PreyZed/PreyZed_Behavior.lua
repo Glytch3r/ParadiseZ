@@ -28,7 +28,7 @@
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
 PreyZed = PreyZed or {}
-
+ParadiseZ = ParadiseZ or {}
 function PreyZed.moveRandLoc(zed)
     local TravelLimit = 15
     local x, y, z = round(zed:getX()),  round(zed:getY()),  zed:getZ() or 0
@@ -45,7 +45,7 @@ function PreyZed.moveToXYZ(zed, x, y, z)
     if not zed then return end
     local sq = getCell():getGridSquare(x, y, z)
     if sq then
-        if PreyZed.isWithinRange(zed, sq, 2) then
+        if ParadiseZ.isWithinRange(zed, sq, 2) then
             return sq
         else
             zed:pathToLocation(sq:getX(), sq:getY(), sq:getZ())
@@ -56,19 +56,8 @@ function PreyZed.moveToXYZ(zed, x, y, z)
         end
     end
 end
-
-function PreyZed.checkDist(pl, sq)
-	local dist = pl:DistTo(sq:getX(), sq:getY())
-    return math.floor(dist)
-end
-
-function PreyZed.isWithinRange(targ, sq, range)
-	local dist = targ:DistTo(sq:getX(), sq:getY())
-    return dist <= range
-end
-
 function PreyZed.isClosestPl(pl, zed)
-    local plDist = PreyZed.checkDist(pl, zed)
+    local plDist = ParadiseZ.checkDist(pl, zed)
     local compare = round(zed:distToNearestCamCharacter())
     if plDist == compare then
         return true

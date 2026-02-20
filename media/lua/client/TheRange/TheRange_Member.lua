@@ -198,7 +198,7 @@ function TheRange.setCredit(card, amount)
     if not md then return end
 
     amount = tonumber(amount) or 0
-    amount = math.max(0, math.min(100, amount))
+    amount = math.max(0, amount)
     md.CardCredits = amount
 end
 
@@ -300,7 +300,7 @@ function TheRange.mergeDuplicateCards(pl)
         if #toRemove == 0 then return end
 
         local md = primary:getModData()
-        md.CardCredits = math.max(0, math.min(100, totalCredit))
+        md.CardCredits = math.max(0, totalCredit)
         md.CardPoints = totalPoints
 
         for _, item in ipairs(toRemove) do

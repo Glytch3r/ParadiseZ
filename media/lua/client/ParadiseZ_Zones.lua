@@ -68,7 +68,7 @@ function ParadiseZ.isPveZone(pl)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
 
-    if SandboxVars.ParadiseZ.VanillaNonPvpZone then
+    if SandboxVars.ParadiseZpvp.VanillaNonPvpZone then
         local x, y = targ:getX(), targ:getY()
         if x and y and NonPvpZone.getNonPvpZone(x, y) then
             return true

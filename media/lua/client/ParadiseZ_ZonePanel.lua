@@ -779,7 +779,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.shouldSync = false
 
         end
-
+        
         if zone then
             if button.internal == "POINT1" then
                 zone.x1 = round(pl:getX())
