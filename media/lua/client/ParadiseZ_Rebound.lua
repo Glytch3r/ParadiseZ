@@ -5,7 +5,7 @@ LuaEventManager.AddEvent("OnZoneCrossed")
 -----------------------            ---------------------------
 
 function ParadiseZ.doExile(pl)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    --if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
     if not pl or not pl:isAlive() then return end
     
@@ -15,8 +15,6 @@ function ParadiseZ.doExile(pl)
     local car = pl:getVehicle()
     if car then
         ParadiseZ.forceExitCar()
-        --ISVehicleMenu.onExit(pl)
-        return
     end
     
     ParadiseZ.tp(pl, x, y, z)
@@ -25,18 +23,22 @@ function ParadiseZ.doExile(pl)
 end
 
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
-    if not vehicle or not pl then return end
-    
+    if not vehicle or not pl then return false end
+
     local lx, ly, lz =  x, y, z
     if not lx or not ly or not lz then 
         ParadiseZ.forceExitCar()
-        return 
+        return false
     end
-
+    local sq = getCell():getOrCreateGridSquare(x, y, z) 
+    if sq and ParadiseZ.checkDist(pl, sq) >= 200  then 
+        ParadiseZ.forceExitCar() 
+        return false
+    end
     local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
     local dx, dy = cx - lx, cy - ly
     local len = math.sqrt(dx * dx + dy * dy)
-    if len == 0 then return end
+    if len == 0 then return false end
 
     dx, dy = dx / len, dy / len
     local dist = 5
@@ -53,7 +55,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
             break
         end
     end
-    if not transField then return end
+    if not transField then return false end
 
     local v_transform = getClassFieldVal(vehicle, transField)
     local w_transform = vehicle:getWorldTransform(v_transform)
@@ -69,57 +71,9 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
         pcall(vehicle.updatePhysics, vehicle)
         pcall(vehicle.updatePhysicsNetwork, vehicle)
     end
+    return true
 end
 
---[[ 
-
-function ParadiseZ.carTp(pl, car, x, y, z)
-    if not vehicle or not pl then return end
-local sq = getCell():getOrCreateGridSquare(x, y,
-    PreyZed.checkDist(pl, sq)
-    local lx, ly, lz =  x, y, z
-    if not lx or not ly or not lz then 
-        ParadiseZ.forceExitCar()
-        return 
-    end
-
-    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
-    local dx, dy = cx - lx, cy - ly
-    local len = math.sqrt(dx * dx + dy * dy)
-    if len == 0 then return end
-
-    dx, dy = dx / len, dy / len
-    local dist = 5
-    local px, py = dx * dist, dy * dist
-
-    local fieldCount = getNumClassFields(vehicle)
-    local transField
-    local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
-
-    for i = 0, fieldCount - 1 do
-        local field = getClassField(vehicle, i)
-        if tostring(field) == fieldName then
-            transField = field
-            break
-        end
-    end
-    if not transField then return end
-
-    local v_transform = getClassFieldVal(vehicle, transField)
-    local w_transform = vehicle:getWorldTransform(v_transform)
-    local origin_field = getClassField(w_transform, 1)
-    local origin = getClassFieldVal(w_transform, origin_field)
-    origin:set(origin:x() - px, origin:y() - py, origin:z())
-    vehicle:setWorldTransform(w_transform)
-
-    if isClient() then
-        pcall(vehicle.update, vehicle)
-        pcall(vehicle.updateControls, vehicle)
-        pcall(vehicle.updateBulletStats, vehicle)
-        pcall(vehicle.updatePhysics, vehicle)
-        pcall(vehicle.updatePhysicsNetwork, vehicle)
-    end
-end ]]
 
 function ParadiseZ.doRebound(pl, isChat)
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
@@ -131,7 +85,7 @@ function ParadiseZ.doRebound(pl, isChat)
     
     local car = pl:getVehicle()
     if car then
-        ParadiseZ.carTp(pl, car, x, y, z)
+        if ParadiseZ.carTp(pl, car, x, y, z) then return end 
     end
     
     ParadiseZ.tp(pl, x, y, z)
@@ -287,31 +241,6 @@ function ParadiseZ.parseExileCoords()
     tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)    
     return tx, ty, tz
 end
-
---[[ 
-function ParadiseZ.doExile(pl)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
-    pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    
-    local car = pl:getVehicle()
-    if car then
-        ISVehicleMenu.onExit(pl)
-    end
-    local x, y, z = ParadiseZ.parseExileCoords()   
-    if not (x and y and z) then return end
-    local sq = getCell():getOrCreateGridSquare(x, y, z)
-    if sq then ParadiseZ.addTempMarker(sq) end
-    pl:setX(x)
-    pl:setY(y)
-    pl:setZ(z)
-    if isClient() then
-        pl:setLx(x)
-        pl:setLy(y)
-        pl:setLz(z)
-    end
-   
-end ]]
 
 
 

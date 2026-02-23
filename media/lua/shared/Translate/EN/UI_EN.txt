@@ -1,7 +1,8 @@
 UI_EN = {
     UI_userpanel_tickets = "Paradise Tickets",
 
-
+    UI_trait_TheRangeStaff = "The Range Staff",
+    UI_trait_TheRangeStaff_desc = "Does not need Credits to enter Hunt Zone",
 
     UI_Intro1 = "From the ashes of the old world we rise",
     UI_Intro2 = "Because greatness is forged in fire",

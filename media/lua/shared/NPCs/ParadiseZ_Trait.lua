@@ -1,6 +1,8 @@
 
 
 Events.OnGameBoot.Add(function()
+	TraitFactory.addTrait("TheRangeStaff", getText("UI_trait_TheRangeStaff"), 0, getText("UI_trait_TheRangeStaff_desc"), true) 
+
 	local traitStr = "PvE"
 	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), -1, getText("UI_trait_"..traitStr.."Desc"), false)
 	TraitFactory.sortList()

@@ -1,0 +1,2 @@
+--[[ local a={targetUsername="Glytch3r",currency="cash_primary",amount=50,accountCurrency="primary",reason="paycheck"}; 
+if sendClientCommand then sendClientCommand("btse_economy","sendPayment",a) else PARP:sendClientCommand("btse_economy","sendPayment",a) end ]]
