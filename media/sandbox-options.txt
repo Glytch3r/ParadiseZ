@@ -114,6 +114,11 @@ option ParadiseZ.TheRangePointsPerKill {
 	type = double,	 min = 0.00,  max = 999999999,  default = 3,
 	page = ParadiseZ, translation = ParadiseZ_TheRangePointsPerKill,
 }
+option ParadiseZ.TheRangeExchangePercent
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.02,
+	page = ParadiseZ, translation = ParadiseZ_TheRangeExchangePercent,
+}
 
 
 option ParadiseZ.ThunderFlashDecay
@@ -121,8 +126,6 @@ option ParadiseZ.ThunderFlashDecay
 	type = double,	 min = 0.000,  max = 5,  default = 0.4,
 	page = ParadiseZ, translation = ParadiseZ_ThunderFlashDecay,
 }
-
-
 
 
 
@@ -138,6 +141,7 @@ option ParadiseZpvp.ExileCoords
 	type = string, default = 11641;8324;0, 
 	page = ParadiseZpvp, translation = ParadiseZpvp_ExileCoords,
 }
+
 
 
 

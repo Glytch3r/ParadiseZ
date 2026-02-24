@@ -16,35 +16,37 @@ function TheRange.getEarnings(obj)
 end
 
 function TheRange.withdraw(amt, obj)
-    
-    local pl = getPlayer() 
-    local user = pl:getUsername() 
-    if not pl then return end
-    if not user then return end
-    if not obj then return end
+    local pl = getPlayer()
+    if not pl or not obj then return end
     if not TheRange.isStaff(pl) then return end
-    if not amt then return end
-    local earnings = TheRange.getEarnings(obj)
-    
-    
+
+    local user = pl:getUsername()
+    if not user then return end
+
+    amt = tonumber(amt)
+    if not amt or amt <= 0 then return end
+
+    local earnings = tonumber(TheRange.getEarnings(obj)) or 0
+    if earnings <= 0 then return end
+    if amt > earnings then amt = earnings end
+
     local arg = {
         targetUsername = user,
-        currency="cash_primary",
-        amount = amt,
+        currency = "cash_primary",
+        amount = math.floor(amt),
         accountCurrency = "primary",
         reason = "paycheck",
     }
-    
-    if sendClientCommand then  
+
+    if sendClientCommand then
         sendClientCommand("btse_economy", "sendPayment", arg)
     elseif PARP then
         PARP:sendClientCommand("btse_economy", "sendPayment", arg)
     end
-    local newBalance = earnings-amt
+
     local md = obj:getModData()
-    md['TheRangeEarnings'] = newBalance
+    md['TheRangeEarnings'] = earnings - amt
     obj:transmitModData()
-    
 end
 
 function TheRange.onQuantityPicked(target, button, value, obj)
@@ -81,10 +83,10 @@ function TheRange.withdrawPrompt(pl, obj)
     modal:addToUIManager()
 end
 -----------------------            ---------------------------
-function TheRange.onPtsPicked(target, button, value, card)
+function TheRange.onPtsPicked(target, button, value, card, obj)
     if button.internal ~= "OK" then return end
     if not value or value <= 0 then return end
-    if not card then return end
+    if not card or not obj then return end
 
     local pl = getPlayer()
     if not pl then return end
@@ -94,10 +96,17 @@ function TheRange.onPtsPicked(target, button, value, card)
     local currentPts = TheRange.getPoints(card)
     if currentPts < value then return end
 
-    local price = SandboxVars.ParadiseZ.TheRangeCreditPrice
-    price = tonumber(price) or 1
+    local price = tonumber(SandboxVars.ParadiseZ.TheRangeCreditPrice) or 1
+    local percent = tonumber(SandboxVars.ParadiseZ.TheRangeExchangePercent) or 0
 
-    local payout = value * price
+    percent = math.max(0, math.min(1, percent))
+
+    local gross = value * price
+    local tax = gross * percent
+    local payout = gross - tax
+
+    payout = math.floor(payout)
+    tax = math.floor(tax)
 
     TheRange.reducePoints(card, value)
 
@@ -114,11 +123,16 @@ function TheRange.onPtsPicked(target, button, value, card)
     elseif PARP then
         PARP:sendClientCommand("btse_economy", "sendPayment", arg)
     end
-end
 
-function TheRange.pointsExchangePrompt(pl)
+    local md = obj:getModData()
+    md['TheRangeEarnings'] = tonumber(md['TheRangeEarnings']) or 0
+    md['TheRangeEarnings'] = md['TheRangeEarnings'] + tax
+    obj:transmitModData()
+end
+function TheRange.pointsExchangePrompt(pl, obj)
     pl = pl or getPlayer()
     if not pl then return end
+    if not obj then return end
 
     local card = TheRange.getMembershipCard(pl)
     if not card then return end
@@ -137,7 +151,8 @@ function TheRange.pointsExchangePrompt(pl)
         TheRange.onPtsPicked,
         pl:getPlayerNum(),
         0,
-        card
+        card,
+        obj
     )
 
     modal:initialise()
