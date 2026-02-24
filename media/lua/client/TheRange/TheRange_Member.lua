@@ -124,7 +124,6 @@ function TheRange.getMembershipCard(pl)
 
     return nil
 end
-
 function TheRange.isMember(pl)
     if not pl then return false end
     local user = pl:getUsername()
