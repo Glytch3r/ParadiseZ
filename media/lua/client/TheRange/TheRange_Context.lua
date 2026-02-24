@@ -70,4 +70,7 @@ function TheRange.context(plNum, context, worldobjects, test)
         end
     end
 end
+Events.OnFillWorldObjectContextMenu.Remove(TheRange.context)
+Events.OnFillWorldObjectContextMenu.Add(TheRange.context)
 -----------------------            ---------------------------
+

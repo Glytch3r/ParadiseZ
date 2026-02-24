@@ -1,9 +1,14 @@
 PreyZed = PreyZed or {}
+ParadiseZ = ParadiseZ or {}
 
 function PreyZed.isPrey(zed)
     local fit = zed:getOutfitName()
-    return fit and fit == 'PreyZed'
+    if fit then
+        return fit == 'PreyZed'
+    end
+    return false
 end
+
 function PreyZed.skinHandler(zed)
     if not zed then return end
     if zed.isReanimatedPlayer and zed:isReanimatedPlayer() then return end
@@ -11,31 +16,22 @@ function PreyZed.skinHandler(zed)
     if not sq then return end
     local md = zed:getModData()
     if not md then return end
-    if md.isPrey == true then return end
+    --if md.isPrey == true then return end
 
-    local inHuntZone = ParadiseZ and ParadiseZ.isHuntZoneSq and ParadiseZ.isHuntZoneSq(sq)
+    local inHuntZone = ParadiseZ.isHuntZoneSq(sq)
     if not inHuntZone then return end
 
-    local isPrey = PreyZed.isPrey(zed)
-    if not isPrey and md.isPrey == nil then
-        md.isPrey = false
-        if PreyZed.isClosestPl(pl, zed) then
-            zed:dressInPersistentOutfit("PreyZed")
-            zed:resetModelNextFrame()
-        end
-        return
+    if not PreyZed.isPrey(zed) then
+        zed:dressInPersistentOutfit("PreyZed")
+        zed:setVariable("isPrey", true)
     end
     
-    if not isPrey then return end
-
     local vis = zed:getHumanVisual()
     local iVis = zed:getItemVisuals()
     local bVis = vis and vis:getBodyVisuals()
     local attachedItems = zed:getAttachedItems()
     if not vis or not iVis or not bVis or not attachedItems then return end
 
-    md.isPrey = true
-    zed:setVariable("isPrey", true)
     zed:clearAttachedItems()
     vis:randomDirt()
     vis:removeBlood()
@@ -69,8 +65,7 @@ function PreyZed.skinHandler(zed)
                 luautils.stringStarts(iType, "Base.ZedDmg_") or
                 luautils.stringStarts(iType, "Base.Wound_") or
                 luautils.stringStarts(iType, "Base.Bandage_") or
-                luautils.stringStarts(iType, "Base.MakeUp_") or
-                luautils.stringStarts(iType, "Base.ParasiteZed")
+                luautils.stringStarts(iType, "Base.MakeUp_")
             ) then
                 vis:removeBodyVisualFromItemType(iType)
             end
@@ -78,14 +73,14 @@ function PreyZed.skinHandler(zed)
     end
 
     local curSkin = nil
-    if vis.getSkinTexture then 
+    if vis.getSkinTexture then
         curSkin = vis:getSkinTexture()
-    elseif zed.getSkinTexture  then
-        curSkin = zed:getSkinTexture() 
+    elseif zed.getSkinTexture then
+        curSkin = zed:getSkinTexture()
     end
 
-    local skin
     if curSkin then
+        local skin
         if zed:isFemale() then
             skin = (PreyZed.SkinList_F and PreyZed.SkinList_F[curSkin]) or "FemaleBody01"
         else
@@ -93,7 +88,9 @@ function PreyZed.skinHandler(zed)
         end
         vis:setSkinTextureName(tostring(skin))
     end
-    zed:resetModelNextFrame()
+
+    zed:resetModel()
+    --md.isPrey = true
 end
 
 Events.OnZombieUpdate.Remove(PreyZed.skinHandler)
