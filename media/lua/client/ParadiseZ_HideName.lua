@@ -60,6 +60,7 @@ function ParadiseZ.hideNameInit(plNum, pl)
         pl:getModData()['HideName']['Forename'] = pl:getDescriptor():getForename()
         pl:getModData()['HideName']['Surname'] = pl:getDescriptor():getSurname()		
     end
+    triggerEvent("OnClothingUpdated", pl)
 end
 
 Events.OnCreatePlayer.Add(function(playerNum, playerObj)
