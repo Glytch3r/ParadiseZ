@@ -79,6 +79,14 @@ function ParadiseZ.resolveGunParams(scriptItem, fType, shotgunTable)
     return class, perk, minAngle
 end
 -----------------------            ---------------------------
+function ParadiseZ.isBalaclava(fType)
+    if not fType then return false end    
+    local tab = {
+        ["Base.Hat_BalaclavaFull"] = true,
+        ["Base.Hat_BalaclavaFace"] = true,
+    }
+    return tab[fType]
+end
 
 
 function ParadiseZ.applyGunParams(shouldPrint)
@@ -93,23 +101,26 @@ function ParadiseZ.applyGunParams(shouldPrint)
     for i = 0, allItems:size() - 1 do
         local item = allItems:get(i)
         local fType = item:getModuleName() .. "." .. item:getName()
-        local wpn = sm:getItem(fType)
-
-        if wpn and wpn:isRanged() then
-            local class, perk, minAngle = ParadiseZ.resolveGunParams(wpn, fType, shotgunTable)
+        item = sm:getItem(fType)
+        if ParadiseZ.isBalaclava(fType) then
+            item:DoParam("BodyLocation = Balaclava")
+            return
+        end
+        if item and item:isRanged() then
+            local class, perk, minAngle = ParadiseZ.resolveGunParams(item, fType, shotgunTable)
 
             if angleFalloff ~= nil then
-                wpn:DoParam("AngleFalloff = " .. tostring(angleFalloff))
+                item:DoParam("AngleFalloff = " .. tostring(angleFalloff))
             end
 
             if perk and minAngle then
-                wpn:DoParam("AimingPerkMinAngleModifier = " .. tostring(perk))
-                wpn:DoParam("MinAngle = " .. tostring(minAngle))
+                item:DoParam("AimingPerkMinAngleModifier = " .. tostring(perk))
+                item:DoParam("MinAngle = " .. tostring(minAngle))
                 if gunKey then
-                    wpn:DoParam("ParadiseGun = " .. tostring(gunKey))
+                    item:DoParam("ParadiseGun = " .. tostring(gunKey))
                 end
                 if gunTip ~= "" and gunKey then
-                    wpn:DoParam("Tooltip = " .. gunTip .. " " .. tostring(gunKey))
+                    item:DoParam("Tooltip = " .. gunTip .. " " .. tostring(gunKey))
                 end
                 res = res .. "\nModified: " .. class .. " : " .. fType
             end

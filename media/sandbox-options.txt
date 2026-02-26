@@ -80,6 +80,13 @@ option ParadiseZ.ShowPvETag
 }
 
 
+option ParadiseZ.HiderList 
+{
+	type = string, default = Base.Hat_BalaclavaFull;Base.Hat_BalaclavaFace;Base.WeldingMask,
+	page = ParadiseZ, translation = ParadiseZ_HiderList,
+}
+
+
 option ParadiseZ.RadSuitList 
 {
 	type = string, default = TheyKnew.MysteriousHazm;Base.HazmatSuit;Base.Hat_NBCmask,

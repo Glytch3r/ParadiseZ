@@ -21,8 +21,7 @@ function ParadiseZ.checkDist(pl, sq)
     if not pl or not sq then return end
     local dx = pl:getX() - sq:getX()
     local dy = pl:getY() - sq:getY()
-    local dist = math.sqrt(dx * dx + dy * dy)
-    return math.floor(dist)
+    return round(math.sqrt(dx * dx + dy * dy))
 end
 
 function ParadiseZ.isWithinRange(targ, sq, range)
