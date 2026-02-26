@@ -253,7 +253,7 @@ function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local minY, maxY = math.min(y1, y2), math.max(y1, y2)
     return px >= minX and px <= maxX and py >= minY and py <= maxY
 end
-
+--[[ 
 function ParadiseZ.getZoneEdge(targUser, name, margin)
     margin = margin or 3
     local targ = ParadiseZ.getPl(targUser)
@@ -281,7 +281,7 @@ function ParadiseZ.getZoneEdge(targUser, name, margin)
         return edgeX, edgeY, pz
     end
     return nil
-end
+end 
 
 function ParadiseZ.isZoneEdge(targUser, name, margin)
     margin = margin or 3
@@ -303,7 +303,7 @@ function ParadiseZ.isZoneEdge(targUser, name, margin)
     return false
 end
 
-
+]]
 function ParadiseZ.isRestricted(sq, pl)
     pl = ParadiseZ.getPl(pl)
     if not pl then return false end

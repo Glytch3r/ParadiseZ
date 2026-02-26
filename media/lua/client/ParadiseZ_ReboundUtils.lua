@@ -41,19 +41,19 @@ function ParadiseZ.tp(pl, x, y, z)
 
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
 
-    ParadiseZ._tpTarget = { x = x, y = y, z = z }
-    ParadiseZ._tpPlayer = pl
-    ParadiseZ._tpTries = 0
+    ParadiseZ.tpTarg = { x = x, y = y, z = z }
+    ParadiseZ.tpPl = pl
+    ParadiseZ.tpTry = 0
 
-    if not ParadiseZ._tpListener then
-        ParadiseZ._tpListener = true
-        Events.OnPlayerUpdate.Add(ParadiseZ._tpValidator)
+    if not ParadiseZ.tpListener then
+        ParadiseZ.tpListener = true
+        Events.OnPlayerUpdate.Add(ParadiseZ.tpCheck)
     end
 
-    ParadiseZ._tpApply(pl, x, y, z)
+    ParadiseZ.doTp(pl, x, y, z)
 end
 
-function ParadiseZ._tpApply(pl, x, y, z)
+function ParadiseZ.doTp(pl, x, y, z)
     if luautils.stringStarts(getCore():getVersion(), "42") then
         pl:teleportTo(x, y, z)
     else
@@ -68,9 +68,9 @@ function ParadiseZ._tpApply(pl, x, y, z)
     end
 end
 
-function ParadiseZ._tpValidator(pl)
-    local data = ParadiseZ._tpTarget
-    local targetPl = ParadiseZ._tpPlayer
+function ParadiseZ.tpCheck(pl)
+    local data = ParadiseZ.tpTarg
+    local targetPl = ParadiseZ.tpPl
 
     if not data or not targetPl or pl ~= targetPl then return end
 
@@ -79,60 +79,28 @@ function ParadiseZ._tpValidator(pl)
     local cz = math.floor(pl:getZ())
 
     if cx ~= data.x or cy ~= data.y or cz ~= data.z then
-        ParadiseZ._tpTries = ParadiseZ._tpTries + 1
+        ParadiseZ.tpTry = ParadiseZ.tpTry + 1
 
-        if ParadiseZ._tpTries <= 10 then
-            ParadiseZ._tpApply(pl, data.x, data.y, data.z)
+        if ParadiseZ.tpTry <= 10 then
+            ParadiseZ.doTp(pl, data.x, data.y, data.z)
         else
-            ParadiseZ._tpCleanup()
+            ParadiseZ.tpCleaner()
         end
     else
-        ParadiseZ._tpCleanup()
+        ParadiseZ.tpCleaner()
     end
 end
 
-function ParadiseZ._tpCleanup()
-    if ParadiseZ._tpListener then
-        Events.OnPlayerUpdate.Remove(ParadiseZ._tpValidator)
-        ParadiseZ._tpListener = nil
+function ParadiseZ.tpCleaner()
+    if ParadiseZ.tpListener then
+        Events.OnPlayerUpdate.Remove(ParadiseZ.tpCheck)
+        ParadiseZ.tpListener = nil
     end
-    ParadiseZ._tpTarget = nil
-    ParadiseZ._tpPlayer = nil
-    ParadiseZ._tpTries = nil
+    ParadiseZ.tpTarg = nil
+    ParadiseZ.tpPl = nil
+    ParadiseZ.tpTry = nil
 end
---[[ 
-function ParadiseZ.tp(pl, x, y, z)
-    pl = pl or getPlayer()
-    if not pl then return end
-    z = z or 0
-    if not (x and y and z) then return end
-
-    local sq = getCell():getOrCreateGridSquare(x, y, z) 
-
-    if getCore():getDebug() then 
-        if sq and not ParadiseZ.isTempMarkerActive() then ParadiseZ.addTempMarker(sq) end
-    end
-	
-    if SandboxVars.ParadiseZ.ReboundSystem then
-        --ParadiseZ.forceExitCar()
-        
-        if luautils.stringStarts(getCore():getVersion(), "42") then
-            pl:teleportTo(tonumber(x), tonumber(y), tonumber(z))
-        else
-            pl:setX(x)
-            pl:setY(y)
-            pl:setZ(z)
-            if isClient() then
-                pl:setLx(x)
-                pl:setLy(y)
-                pl:setLz(z)
-            end
-
-        end 
-    end
-end
-
- ]]
+--[[
 function ParadiseZ.getClosestReboundPoint(origin, margin)
     margin = margin or 4
     local pl = getPlayer()
@@ -165,7 +133,7 @@ function ParadiseZ.getClosestReboundPoint(origin, margin)
 
     return ox, oy, oz
 end
-
+ ]]
 --[[ 
 
 function ParadiseZ.findReboundPoint(pl, originSq, outward)
