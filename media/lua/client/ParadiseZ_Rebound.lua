@@ -3,7 +3,82 @@ TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 -----------------------            ---------------------------
+local ticks = 0
+local reboundCooldown = 0
 
+function ParadiseZ.carTp(pl, vehicle)
+    if not vehicle or not pl then return end
+
+    local lx, ly, lz = ParadiseZ.getZoneEdge(pl)
+    if not lx or not ly or not lz then 
+        ParadiseZ.forceExitCar()
+        return 
+    end
+
+    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
+    local dx, dy = cx - lx, cy - ly
+    local len = math.sqrt(dx * dx + dy * dy)
+    if len == 0 then return end
+
+    dx, dy = dx / len, dy / len
+    local dist = 5
+    local px, py = dx * dist, dy * dist
+
+    local fieldCount = getNumClassFields(vehicle)
+    local transField
+    local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
+
+    for i = 0, fieldCount - 1 do
+        local field = getClassField(vehicle, i)
+        if tostring(field) == fieldName then
+            transField = field
+            break
+        end
+    end
+    if not transField then return end
+
+    local v_transform = getClassFieldVal(vehicle, transField)
+    local w_transform = vehicle:getWorldTransform(v_transform)
+    local origin_field = getClassField(w_transform, 1)
+    local origin = getClassFieldVal(w_transform, origin_field)
+    origin:set(origin:x() - px, origin:y() - py, origin:z())
+    vehicle:setWorldTransform(w_transform)
+
+    if isClient() then
+        pcall(vehicle.update, vehicle)
+        pcall(vehicle.updateControls, vehicle)
+        pcall(vehicle.updateBulletStats, vehicle)
+        pcall(vehicle.updatePhysics, vehicle)
+        pcall(vehicle.updatePhysicsNetwork, vehicle)
+    end
+end
+
+function ParadiseZ.reboundHandler(pl)
+    ticks = ticks + 1
+    if ticks % 3 == 0 then        
+        if not pl then return end
+        if not pl:isAlive() then return end
+        if ticks <= reboundCooldown then return end
+
+        local plX, plY = ParadiseZ.getXY(pl) 
+        if not plX or not plY then return end
+
+        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
+        if not sq then return end 
+        local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
+        if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
+        if ParadiseZ.isXYZoneOuter(plX, plY, name) then
+            ParadiseZ.saveRebound(pl, name)
+            if getCore():getDebug() then 
+                if sq then ParadiseZ.addTempMarker(sq) end
+            end
+        else                         
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl)))) then
+                ParadiseZ.doRebound(pl, false)
+            end
+        end
+    end
+end
 function ParadiseZ.doExile(pl)
     --if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -21,7 +96,7 @@ function ParadiseZ.doExile(pl)
     local sq = getCell():getOrCreateGridSquare(x, y, z)
     if sq then ParadiseZ.addTempMarker(sq) end
 end
-
+--[[ 
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
     if not vehicle or not pl then return false end
 
@@ -74,7 +149,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
     return true
 end
 
-
+ ]]
 function ParadiseZ.doRebound(pl, isChat)
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -320,6 +395,9 @@ function ParadiseZ.isRestricted(sq, pl)
     return false
 end
 
+
+--[[ 
+
 local ticks = 0
 function ParadiseZ.reboundHandler(pl)
     ticks = ticks + 1
@@ -350,3 +428,4 @@ end
 Events.OnPlayerUpdate.Remove(ParadiseZ.reboundHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.reboundHandler)
 
+ ]]
