@@ -27,7 +27,7 @@ function ParadiseZ.carTp(pl, vehicle)
     local fieldCount = getNumClassFields(vehicle)
     local transField
     local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
-
+    
     for i = 0, fieldCount - 1 do
         local field = getClassField(vehicle, i)
         if tostring(field) == fieldName then
@@ -328,7 +328,7 @@ function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local minY, maxY = math.min(y1, y2), math.max(y1, y2)
     return px >= minX and px <= maxX and py >= minY and py <= maxY
 end
---[[ 
+
 function ParadiseZ.getZoneEdge(targUser, name, margin)
     margin = margin or 3
     local targ = ParadiseZ.getPl(targUser)
@@ -357,6 +357,8 @@ function ParadiseZ.getZoneEdge(targUser, name, margin)
     end
     return nil
 end 
+
+--[[ 
 
 function ParadiseZ.isZoneEdge(targUser, name, margin)
     margin = margin or 3
