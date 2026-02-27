@@ -96,6 +96,10 @@ function ParadiseZ.doExile(pl)
     local sq = getCell():getOrCreateGridSquare(x, y, z)
     if sq then ParadiseZ.addTempMarker(sq) end
 end
+
+
+
+
 --[[ 
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
     if not vehicle or not pl then return false end
@@ -310,14 +314,14 @@ function ParadiseZ.reboundCountdown(isChat)
     end
 end
 -----------------------            ---------------------------
+
 function ParadiseZ.parseExileCoords()   
     local strList = SandboxVars.ParadiseZ.ExileCoords
+    if not strList then return nil, nil, nil end
     local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
     tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)    
     return tx, ty, tz
 end
-
-
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local targ = ParadiseZ.getPl(pl)
