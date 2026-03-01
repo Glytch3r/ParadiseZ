@@ -135,6 +135,20 @@ option ParadiseZ.ThunderFlashDecay
 }
 
 
+option ParadiseZ.BlazeTemp
+{
+	type = double, min = 0.000, max = 6000, default = 40,
+	page = ParadiseZ, translation = ParadiseZ_BlazeTemp,
+}
+
+option ParadiseZ.FrostTemp
+{
+	type = double, min = -273.15, max = 0, default = -30,
+	page = ParadiseZ, translation = ParadiseZ_FrostTemp,
+}
+
+
+
 
 
 option ParadiseZpvp.VanillaNonPvpZone
@@ -278,4 +292,3 @@ option ParadiseZpvp.MeleePvpDmg
 	type = double,	 min = 0.00,  max = 100,  default = 10,
 	page = ParadiseZpvp, translation = ParadiseZpvp_UnarmedPvpDmg,
 }
-

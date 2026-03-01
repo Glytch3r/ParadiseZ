@@ -162,7 +162,7 @@ function ParadiseZ.crow(bool)
         ParadiseZ.clear()
     end
     triggerEvent("OnClothingUpdated", pl)
-    ParadiseZ.ScareCrow()
+    
 end
 -- print(ParadiseZ.isScareCrow(pl))
 function ParadiseZ.isScareCrow(pl)

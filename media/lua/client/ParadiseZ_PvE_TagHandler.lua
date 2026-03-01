@@ -124,3 +124,9 @@ end
 
 Events.OnCreatePlayer.Remove(ParadiseZ.init)
 Events.OnCreatePlayer.Add(ParadiseZ.init)
+--[[ 
+
+ParadiseZ.removeTag(getPlayer())
+Events.EveryOneMinute.Remove(ParadiseZ.tagHandler)
+
+ ]]

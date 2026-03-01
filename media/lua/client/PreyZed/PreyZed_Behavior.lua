@@ -33,14 +33,7 @@ function PreyZed.moveToXYZ(zed, x, y, z)
         end
     end
 end
-function PreyZed.isClosestPl(pl, zed)
-	local plDist = ParadiseZ.checkDist(pl, zed)
-	local compare = round(zed:distToNearestCamCharacter())
-	if plDist == compare then
-		return true
-	end
-	return false
-end
+
 
 function PreyZed.isAimedAt(pl, zed)
     if not zed or not pl then return false end
@@ -84,7 +77,7 @@ function PreyZed.Handler()
     for i = 0, zeds:size() - 1 do
         local zed = zeds:get(i)
         if zed and PreyZed.isPrey(zed) then
-            if PreyZed.isClosestPl(pl, zed) then
+            if ParadiseZ.isClosestPl(pl, zed) then
                 local dist = ParadiseZ.checkDist(pl, zed)
                 local md = zed:getModData()
                 local now = getGameTime():getWorldAgeHours()

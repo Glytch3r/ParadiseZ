@@ -18,7 +18,7 @@ function BurstAnim:new(x, y, worldX, worldY, worldZ)
     o.frameTime = 33
     o.lastUpdate = getTimestampMs()
 
-
+    
     o.worldX = worldX
     o.worldY = worldY
     o.worldZ = worldZ

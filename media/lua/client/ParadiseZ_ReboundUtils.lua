@@ -100,6 +100,7 @@ function ParadiseZ.tpCleaner()
     ParadiseZ.tpPl = nil
     ParadiseZ.tpTry = nil
 end
+
 --[[
 function ParadiseZ.getClosestReboundPoint(origin, margin)
     margin = margin or 4

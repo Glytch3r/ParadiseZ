@@ -1,13 +1,11 @@
 --ParadiseZ_Squares.lua
 ParadiseZ = ParadiseZ or {}
-
+--[[ 
 function ParadiseZ.getSprName(obj)
     if not obj then return nil end
     local spr = obj:getSprite()
     return spr and spr:getName() or nil
-end
-
-
+end ]]
 
 -----------------------            ---------------------------
 function ParadiseZ.isSameZone(pl, sq)

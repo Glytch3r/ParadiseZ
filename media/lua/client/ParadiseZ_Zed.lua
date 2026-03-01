@@ -24,13 +24,20 @@ function ParadiseZ.ZedReactToScareCrow(zed)
     local targ = zed:getTarget()
     if targ then
         if targ:getVariableBoolean('isScareCrow') == true then
-            zed:getTarget(nil)
+            zed:setTarget(nil)
         end
     end
 end
 --Events.OnZombieUpdate.Remove(ParadiseZ.ZedReactToScareCrow)
 --Events.OnZombieUpdate.Add(ParadiseZ.ZedReactToScareCrow)
 
+function ParadiseZ.getWalkType(zed)
+	return tostring(zed:getVariableString("zombieWalkType"))
+end
+function ParadiseZ.getWalkNum(zed)
+	local walk = ParadiseZ.getWalkType(zed)
+	return tonumber(walk:match("%d+"))
+end
 function ParadiseZ.moveToXYZ(zed, x, y, z)
     if not zed or not x or not y or not z then return end
     local pl = getPlayer()
@@ -72,17 +79,32 @@ function ParadiseZ.setSprinter(zed, num)
 	sandOpt:set("ZombieLore.Speed", zSpeed)
 end
 
+function ParadiseZ.isSprinter(zed)
+	local walk = ParadiseZ.getWalkType(zed)
+	if walk then
+		if tostring(walk:contains('sprint')) or luautils.stringStarts(walk, "sprint") then
+			return true
+		end
+	end
+	return false
+end
+function ParadiseZ.isSprintZoneFromSquare(sq)
+    if not sq then return false end
+    local zoneName = ParadiseZ.getZoneName(sq)
+    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
+    local zone = ParadiseZ.ZoneData[zoneName]
+    if not zone then return false end
+    return zone.isSprint == true
+end
 
-function ParadiseZ.zHit(zed, pl, part, wpn)
-    if pl and pl == getPlayer() and pl:getVariableBoolean('isScareCrow') == true then
-        ParadiseZ.setSprinter(zed, ZombRand(1, 3))
-        local zedID=zed:getOnlineID()
-        --sendClientCommand('ParadiseZ', 'knockDownZed', {zedID = zedID})
-        zed:setSkeleton(true)
---[[ 
-        zed:changeState(ZombieOnGroundState.instance())
-        zed:setAttackedBy(getCell():getFakeZombieForHit())
-        zed:becomeCorpse() ]]
+function ParadiseZ.sprinterHandler(zed)   
+    local pl = getPlayer() 
+    if not pl then return end
+    if zed and zed:isAlive() and not ParadiseZ.isSprinter(zed) then
+        if ParadiseZ.isClosestPl(pl, zed) then
+            ParadiseZ.setSprinter(zed, ZombRand(1,6))
+        end
     end
 end
---Events.OnHitZombie.Add(ParadiseZ.zHit)
+Events.OnZombieUpdate.Add(ParadiseZ.sprinterHandler)
+
