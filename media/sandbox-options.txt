@@ -292,3 +292,39 @@ option ParadiseZpvp.MeleePvpDmg
 	type = double,	 min = 0.00,  max = 100,  default = 10,
 	page = ParadiseZpvp, translation = ParadiseZpvp_UnarmedPvpDmg,
 }
+
+
+
+
+option BurstAnim.ExplosionRadius
+{
+	type = double,	 min = 0.00,  max = 6,  default = 2,
+	page = BurstAnim, translation = BurstAnim_ExplosionRadius,
+}
+option BurstAnim.KnockDownPercent
+{
+	type = double,	 min = 0.00,  max = 100,  default = 15,
+	page = BurstAnim, translation = BurstAnim_KnockDownPercent,
+}
+option BurstAnim.ZedKnockDownPercent
+{
+	type = double,	 min = 0.00,  max = 100,  default = 15,
+	page = BurstAnim, translation = BurstAnim_ZedKnockDownPercent,
+}
+option BurstAnim.BurstDmg
+{
+	type = double,	 min = 0.00,  max = 100,  default = 15,
+	page = BurstAnim, translation = BurstAnim_BurstDmg,
+}
+
+option BurstAnim.DeathChance
+{
+	type = double,	 min = 0.00,  max = 100,  default = 2,
+	page = BurstAnim, translation = BurstAnim_DeathChance,
+}
+option BurstAnim.EffectsRange
+{
+	type = double,	 min = 0.00,  max = 100,  default = 12,
+	page = BurstAnim, translation = BurstAnim_EffectsRange,
+}
+

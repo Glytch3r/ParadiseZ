@@ -28,7 +28,6 @@ end
 function EnvColor.isNight()
 	return forageSystem.getTimeOfDay() == 'isNight' or RainManager.isRaining()
 end
-
 function EnvColor.setWorldColor(enable)
    local light = 0
    local intensity = 1

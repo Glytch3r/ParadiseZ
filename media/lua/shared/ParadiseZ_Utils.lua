@@ -37,3 +37,12 @@ function ParadiseZ.getSpr(obj)
     local spr = obj:getSprite()
     return spr
 end
+
+
+function ParadiseZ.doRoll(percent)
+    percent = percent or 20
+    if percent == 100 then return true end
+    if percent == 0 then return false end
+	return percent >= ZombRand(1, 101)
+end
+

@@ -3,82 +3,36 @@ TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 -----------------------            ---------------------------
-local ticks = 0
-local reboundCooldown = 0
 
-function ParadiseZ.carTp(pl, vehicle)
-    if not vehicle or not pl then return end
+function ParadiseZ.roundN(v, n)
+    local m = 10 ^ (n or 3)
+    return math.floor(v * m + 0.5) / m
+end
 
-    local lx, ly, lz = ParadiseZ.getZoneEdge(pl)
-    if not lx or not ly or not lz then 
-        ParadiseZ.forceExitCar()
-        return 
-    end
-
-    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
-    local dx, dy = cx - lx, cy - ly
-    local len = math.sqrt(dx * dx + dy * dy)
-    if len == 0 then return end
-
-    dx, dy = dx / len, dy / len
-    local dist = 5
-    local px, py = dx * dist, dy * dist
-
-    local fieldCount = getNumClassFields(vehicle)
-    local transField
-    local fieldName = 'public final zombie.core.physics.Transform zombie.vehicles.BaseVehicle.jniTransform'
+function ParadiseZ.doRebound(pl, isChat)
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
     
-    for i = 0, fieldCount - 1 do
-        local field = getClassField(vehicle, i)
-        if tostring(field) == fieldName then
-            transField = field
-            break
+    local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
+    if not x or not y or not z then return end
+    
+    local car = pl:getVehicle()
+    if car then
+       if not isChat then 
+            if ParadiseZ.carTp(pl, car, x, y, z) then return end 
+        else
+            ParadiseZ.forceExitCar()
         end
     end
-    if not transField then return end
+    timer:Simple(1, function()  
+        ParadiseZ.tp(pl, x, y, z)
+        local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
+        if sq then ParadiseZ.addTempMarker(sq) end
+    end)
 
-    local v_transform = getClassFieldVal(vehicle, transField)
-    local w_transform = vehicle:getWorldTransform(v_transform)
-    local origin_field = getClassField(w_transform, 1)
-    local origin = getClassFieldVal(w_transform, origin_field)
-    origin:set(origin:x() - px, origin:y() - py, origin:z())
-    vehicle:setWorldTransform(w_transform)
-
-    if isClient() then
-        pcall(vehicle.update, vehicle)
-        pcall(vehicle.updateControls, vehicle)
-        pcall(vehicle.updateBulletStats, vehicle)
-        pcall(vehicle.updatePhysics, vehicle)
-        pcall(vehicle.updatePhysicsNetwork, vehicle)
-    end
 end
 
-function ParadiseZ.reboundHandler(pl)
-    ticks = ticks + 1
-    if ticks % 3 == 0 then        
-        if not pl then return end
-        if not pl:isAlive() then return end
-        if ticks <= reboundCooldown then return end
-
-        local plX, plY = ParadiseZ.getXY(pl) 
-        if not plX or not plY then return end
-
-        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
-        if not sq then return end 
-        local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
-        if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
-        if ParadiseZ.isXYZoneOuter(plX, plY, name) then
-            ParadiseZ.saveRebound(pl, name)
-            if getCore():getDebug() then 
-                if sq then ParadiseZ.addTempMarker(sq) end
-            end
-        else                         
-            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl)))) then
-                ParadiseZ.doRebound(pl, false)
-            end
-        end
-    end
-end
 function ParadiseZ.doExile(pl)
     --if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -97,25 +51,31 @@ function ParadiseZ.doExile(pl)
     if sq then ParadiseZ.addTempMarker(sq) end
 end
 
-
-
-
---[[ 
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
     if not vehicle or not pl then return false end
 
-    local lx, ly, lz =  x, y, z
-    if not lx or not ly or not lz then 
+    local lx, ly, lz = x, y, z
+    if lx == nil or ly == nil or lz == nil then
         ParadiseZ.forceExitCar()
         return false
     end
-    local sq = getCell():getOrCreateGridSquare(x, y, z) 
-    if sq and ParadiseZ.checkDist(pl, sq) >= 200  then 
-        ParadiseZ.forceExitCar() 
+
+    local sq = getCell():getOrCreateGridSquare(math.floor(lx), math.floor(ly), lz)
+    if sq and ParadiseZ.checkDist(pl, sq) >= 200 then
+        ParadiseZ.forceExitCar()
         return false
     end
-    local cx, cy, cz = vehicle:getX(), vehicle:getY(), vehicle:getZ()
-    local dx, dy = cx - lx, cy - ly
+
+    local curX, curY = pl:getX(), pl:getY()
+
+    local md = pl:getModData()
+    local rebound = md and md['Rebound'] or nil
+    local tx, ty = lx, ly
+    if type(rebound) == 'table' and rebound.ax and rebound.ay then
+        tx, ty = rebound.ax, rebound.ay
+    end
+
+    local dx, dy = curX - tx, curY - ty
     local len = math.sqrt(dx * dx + dy * dy)
     if len == 0 then return false end
 
@@ -140,7 +100,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
     local w_transform = vehicle:getWorldTransform(v_transform)
     local origin_field = getClassField(w_transform, 1)
     local origin = getClassFieldVal(w_transform, origin_field)
-    origin:set(origin:x() - px, origin:y() - py, origin:z())
+    origin:set(origin:x() - px, origin:y(), origin:z() - py)
     vehicle:setWorldTransform(w_transform)
 
     if isClient() then
@@ -153,47 +113,31 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
     return true
 end
 
- ]]
-function ParadiseZ.doRebound(pl, isChat)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
-    pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    
-    local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
-    if not x or not y or not z then return end
-    
-    local car = pl:getVehicle()
-    if car then
-        if ParadiseZ.carTp(pl, car, x, y, z) then return end 
-    end
-    
-    ParadiseZ.tp(pl, x, y, z)
-    local sq = getCell():getOrCreateGridSquare(x, y, z)
-    if sq then ParadiseZ.addTempMarker(sq) end
-end
 -----------------------            ---------------------------
 function ParadiseZ.initializeRebound(pl)
     pl = pl or getPlayer()
     if not pl then return end
-    
+
     local md = pl:getModData()
     if md['Rebound'] then return end
-    
+
     local plX, plY = ParadiseZ.getXY(pl)
     local plZ = pl:getZ()
     local name = ParadiseZ.getZoneName(pl)
-    
+
     if not plX or not plY then
         plX, plY, plZ = ParadiseZ.getFallbackCoord()
         if not plX or not plY or not plZ then return end
         name = tostring(SandboxVars.ParadiseZ.OutsideStr)
     end
-    
+
     local tab = {
         name = name,
-        x = plX,
-        y = plY,
-        z = plZ
+        x = plX + 0.5,
+        y = plY + 0.5,
+        z = plZ,
+        ax = ParadiseZ.roundN(pl:getX(), 3),
+        ay = ParadiseZ.roundN(pl:getY(), 3)
     }
     md['Rebound'] = tab
 end
@@ -250,21 +194,25 @@ end
 function ParadiseZ.saveRebound(pl, name)
     pl = pl or getPlayer()
     if not pl then return nil end
-    local plX, plY = ParadiseZ.getXY(pl)
-    if not plX or not plY then return nil end
-    
+
+    local sq = pl:getCurrentSquare()
+    if not sq then return nil end
+    local sx, sy = sq:getX(), sq:getY()
+
     name = name or ParadiseZ.getZoneName(pl)
     local md = pl:getModData()
-    
-    if ParadiseZ.isXYZoneOuter(plX, plY, name) then
+
+    if ParadiseZ.isXYZoneOuter(sx, sy, name) then
         local tab = {
             name = name,
-            x = plX,
-            y = plY,
-            z = pl:getZ()
+            x = sx + 0.5,
+            y = sy + 0.5,
+            z = pl:getZ(),
+            ax = roundN(pl:getX(), 3),
+            ay = roundN(pl:getY(), 3)
         }
         md['Rebound'] = tab
-        pl:setHaloNote("rebound updated\n:"..tostring(plX)..',    '..tostring(plY), 150, 250, 150, 180)
+        pl:setHaloNote("rebound updated\n:"..tostring(sx)..',    '..tostring(sy), 150, 250, 150, 180)
         return tab
     end
     return nil
@@ -314,14 +262,14 @@ function ParadiseZ.reboundCountdown(isChat)
     end
 end
 -----------------------            ---------------------------
-
 function ParadiseZ.parseExileCoords()   
     local strList = SandboxVars.ParadiseZ.ExileCoords
-    if not strList then return nil, nil, nil end
     local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
     tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)    
     return tx, ty, tz
 end
+
+
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local targ = ParadiseZ.getPl(pl)
@@ -332,59 +280,6 @@ function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
     local minY, maxY = math.min(y1, y2), math.max(y1, y2)
     return px >= minX and px <= maxX and py >= minY and py <= maxY
 end
-
-function ParadiseZ.getZoneEdge(targUser, name, margin)
-    margin = margin or 3
-    local targ = ParadiseZ.getPl(targUser)
-    if not targ then return nil end
-    if ParadiseZ.isOutSide(targ) then return nil end
-    name = name or ParadiseZ.getZoneName(targUser)
-    if not name then return end
-    local px, py = ParadiseZ.getXY(targUser)
-    if not px then return nil end
-    local pz = targ:getZ()
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not x1 then return nil end
-    local edgeX, edgeY = px, py
-    if px >= x1 and px <= x1 + margin then
-        edgeX = x1
-    elseif px <= x2 and px >= x2 - margin then
-        edgeX = x2
-    end
-    if py >= y1 and py <= y1 + margin then
-        edgeY = y1
-    elseif py <= y2 and py >= y2 - margin then
-        edgeY = y2
-    end
-    if edgeX ~= px or edgeY ~= py then
-        return edgeX, edgeY, pz
-    end
-    return nil
-end 
-
---[[ 
-
-function ParadiseZ.isZoneEdge(targUser, name, margin)
-    margin = margin or 3
-    local targ = ParadiseZ.getPl(targUser)
-    if not targ then return false end
-    if ParadiseZ.isOutSide(targ) then return false end
-    name = name or ParadiseZ.getZoneName(targUser)
-    if not name then return false end
-    local px, py = ParadiseZ.getXY(targUser)
-    if not px then return false end
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not x1 then return false end
-    if (px >= x1 and px <= x1 + margin) or (px <= x2 and px >= x2 - margin) then
-        return true
-    end
-    if (py >= y1 and py <= y1 + margin) or (py <= y2 and py >= y2 - margin) then
-        return true
-    end
-    return false
-end
-
-]]
 function ParadiseZ.isRestricted(sq, pl)
     pl = ParadiseZ.getPl(pl)
     if not pl then return false end
@@ -400,9 +295,6 @@ function ParadiseZ.isRestricted(sq, pl)
     end
     return false
 end
-
-
---[[ 
 
 local ticks = 0
 function ParadiseZ.reboundHandler(pl)
@@ -424,7 +316,7 @@ function ParadiseZ.reboundHandler(pl)
                 if sq then ParadiseZ.addTempMarker(sq) end
             end
         else                         
-            if ParadiseZ.isXYZoneInner(plX, plY, name) and (ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl)))) then
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and ((ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl)))) )then
                 ParadiseZ.doRebound(pl, false)
             end
         end
@@ -434,4 +326,3 @@ end
 Events.OnPlayerUpdate.Remove(ParadiseZ.reboundHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.reboundHandler)
 
- ]]
