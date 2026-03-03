@@ -1,4 +1,4 @@
-ISSprAnimator = ISSprAnimator or {}
+--[[ ISSprAnimator = ISSprAnimator or {}
 
 ISSprAnimator.LavaLamp = {
     ["ParadiseTiles_48"] = "ParadiseTiles_49",
@@ -65,7 +65,7 @@ function ISSprAnimator.setSprAnim(interval, rad, tab)
     
     Events.OnTick.Add(animHandler)
 end
---[[ 
+
 function ISSprAnimator.init(plNum, pl)
     ISSprAnimator.setSprAnim(4, 30, ISSprAnimator.LavaLamp)
 end

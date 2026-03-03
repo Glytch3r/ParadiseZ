@@ -22,17 +22,17 @@ Discord: glytch3r
 --]]
 
 keyBinding = keyBinding or {}
-table.insert(keyBinding, { value = "[ParadiseZ]" } );
+table.insert(keyBinding, { value = "[Oversight]" } );
 
-table.insert(keyBinding, { value = "ParadiseZ_OffsetForward", key = 17 } ) --w
-table.insert(keyBinding, { value = "ParadiseZ_OffsetLeft", key = 30 } ) --a
-table.insert(keyBinding, { value = "ParadiseZ_OffsetBackward", key = 31 } ) --s
-table.insert(keyBinding, { value = "ParadiseZ_OffsetRight", key = 32 } ) --d
+table.insert(keyBinding, { value = "Oversight_OffsetForward", key = 17 } ) --w
+table.insert(keyBinding, { value = "Oversight_OffsetLeft", key = 30 } ) --a
+table.insert(keyBinding, { value = "Oversight_OffsetBackward", key = 31 } ) --s
+table.insert(keyBinding, { value = "Oversight_OffsetRight", key = 32 } ) --d
 
-table.insert(keyBinding, { value = "ParadiseZ_OffsetUp", key = 200 } ) --up
-table.insert(keyBinding, { value = "ParadiseZ_OffsetDown", key = 208 } ) --down
+table.insert(keyBinding, { value = "Oversight_OffsetUp", key = 200 } ) --up
+table.insert(keyBinding, { value = "Oversight_OffsetDown", key = 208 } ) --down
 
-table.insert(keyBinding, { value = "ParadiseZ_SelectPrev", key = 203 } ) --left
-table.insert(keyBinding, { value = "ParadiseZ_SelectNext", key = 205 } ) --right
+table.insert(keyBinding, { value = "Oversight_SelectPrev", key = 203 } ) --left
+table.insert(keyBinding, { value = "Oversight_SelectNext", key = 205 } ) --right
 
-table.insert(keyBinding, { value = "ParadiseZ_StopSpectate", key = 1 } ) --escape
+table.insert(keyBinding, { value = "Oversight_StopSpectate", key = 1 } ) --escape

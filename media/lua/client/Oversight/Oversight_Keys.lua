@@ -68,17 +68,17 @@ function ParadiseZ.setSpectateOffset(key)
     local md = pl:getModData()
     local off = md.SpectateOffset
     if not off then return key end
-
+    
     local core = getCore()
-    local offsetForward = core:getKey("ParadiseZ_OffsetForward")
-    local offsetBackward = core:getKey("ParadiseZ_OffsetBackward")
-    local offsetLeft = core:getKey("ParadiseZ_OffsetLeft")
-    local offsetRight = core:getKey("ParadiseZ_OffsetRight")
-    local stopSpectate = core:getKey("ParadiseZ_StopSpectate")
-    local offsetUp = core:getKey("ParadiseZ_OffsetUp")
-    local offsetDown = core:getKey("ParadiseZ_OffsetDown")
-    local selectPrev = core:getKey("ParadiseZ_SelectPrev")
-    local selectNext = core:getKey("ParadiseZ_SelectNext")
+    local offsetForward = core:getKey("Oversight_OffsetForward")
+    local offsetBackward = core:getKey("Oversight_OffsetBackward")
+    local offsetLeft = core:getKey("Oversight_OffsetLeft")
+    local offsetRight = core:getKey("Oversight_OffsetRight")
+    local stopSpectate = core:getKey("Oversight_StopSpectate")
+    local offsetUp = core:getKey("Oversight_OffsetUp")
+    local offsetDown = core:getKey("Oversight_OffsetDown")
+    local selectPrev = core:getKey("Oversight_SelectPrev")
+    local selectNext = core:getKey("Oversight_SelectNext")
     local mapKey = core:getKey("Map")
 
     if key == offsetForward then

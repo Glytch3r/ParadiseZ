@@ -9,6 +9,30 @@ UI_EN = {
     UI_Intro3 = "Welcome to Paradise",
     UI_ClickToSkip = "Enter Paradise",
 
+
+
+    UI_optionscreen_Oversight_OffsetForward = "OffsetForward",
+    UI_optionscreen_Oversight_OffsetBackward = "OffsetBackward",
+    UI_optionscreen_Oversight_OffsetLeft = "OffsetLeft",
+    UI_optionscreen_Oversight_OffsetRight = "OffsetRight",
+    UI_optionscreen_Oversight_StopSpectate = "StopSpectate",
+    UI_optionscreen_Oversight_OffsetUp = "OffsetUp",
+    UI_optionscreen_Oversight_OffsetDown = "OffsetDown",
+    UI_optionscreen_Oversight_SelectPrev = "SelectPrev",
+    UI_optionscreen_Oversight_SelectNext = "SelectNext",
+
+
+
+
+
+
+    UI_optionscreen_ binding_Crouch = "Sneak",
+    UI_optionscreen_binding_Forward = " Forward",
+    UI_optionscreen_binding_Backward = " Backward",
+    UI_optionscreen_binding_Left = " Left",
+    UI_optionscreen_binding_Right = " Right",
+    UI_optionscreen_binding_Aim = " Aim",
+
     UI_ServerOption_AntiCheatProtectionType1_tooltip = "PVP Damage",
     UI_ServerOption_AntiCheatProtectionType2_tooltip = "Speed",
     UI_ServerOption_AntiCheatProtectionType3_tooltip = "Distance Hit Range",

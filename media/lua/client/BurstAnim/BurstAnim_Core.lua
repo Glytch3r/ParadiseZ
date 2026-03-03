@@ -93,6 +93,7 @@ if isClient() then
     end
 
     function BurstAnim.zKnockDown(zed, isFront)
+        isFront = isFront or true
         zed:setKnockedDown(true)
         zed:setCrawler(true)
         zed:setCanCrawlUnderVehicle(true)
@@ -101,6 +102,7 @@ if isClient() then
     end
 
     function BurstAnim.plStagger(pl, isFront)
+        isFront = isFront or true
         pl:setBumpType("stagger")
         pl:setVariable("BumpDone", true)
         pl:setVariable("BumpFall", true)
