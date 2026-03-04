@@ -124,7 +124,6 @@ function ParadiseZ.doPvPExile(pl)
 end
 
 
-
 --[[ 
 function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
     local isAvoid = false
