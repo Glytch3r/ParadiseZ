@@ -42,7 +42,7 @@ function ParadiseZ.doRebound(pl, isChat)
 end
 
 
-
+--[[ 
 function ParadiseZ.doExile(pl)
     --if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -60,7 +60,7 @@ function ParadiseZ.doExile(pl)
     local sq = getCell():getOrCreateGridSquare(x, y, z)
     if sq then ParadiseZ.addTempMarker(sq) end
 end
-
+ ]]
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
     if not vehicle or not pl then return false end
 
