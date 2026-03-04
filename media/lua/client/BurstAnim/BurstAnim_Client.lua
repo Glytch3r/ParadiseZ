@@ -77,7 +77,7 @@ Commands.BurstAnim.triggerPlStagger = function(args)
     local isFront = args.isFront
     local dmg = args.dmg
     local isStagger = args.isStagger
-    BurstAnim.plDmg(targ, isFront, dmg, isStagger)  -- fix: was `pl` (undefined), now `targ`
+    BurstAnim.plDmg(targ, isFront, dmg, isStagger)  
 end
 
 Commands.BurstAnim.triggerZKnockDown = function(args)

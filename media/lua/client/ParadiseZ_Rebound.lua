@@ -19,19 +19,34 @@ function ParadiseZ.doRebound(pl, isChat)
     
     local car = pl:getVehicle()
     if car then
-       if not isChat then 
-            if ParadiseZ.carTp(pl, car, x, y, z) then return end 
-        else
-            ParadiseZ.forceExitCar()
+        local seat = car:getSeat(pl)
+        if seat and seat ~= 0 then
+            if not isChat then 
+                if ParadiseZ.carTp(pl, car, x, y, z) then return end 
+            else
+                ParadiseZ.forceExitCar()
+            end
+            local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
+            if sq then ParadiseZ.addTempMarker(sq) end
+            return
         end
+        if ParadiseZ.carTp(pl, car, x, y, z) then return end 
     end
-    timer:Simple(1, function()  
+
+    timer:Simple(1, function()      
         ParadiseZ.tp(pl, x, y, z)
         local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
         if sq then ParadiseZ.addTempMarker(sq) end
     end)
 
 end
+
+
+
+
+
+
+
 
 function ParadiseZ.doExile(pl)
     --if not SandboxVars.ParadiseZ.ReboundSystem then return end
@@ -112,6 +127,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
     end
     return true
 end
+
 
 -----------------------            ---------------------------
 function ParadiseZ.initializeRebound(pl)
@@ -289,7 +305,7 @@ function ParadiseZ.isRestricted(sq, pl)
     local name = ParadiseZ.getZoneName(sq)
     local x, y = ParadiseZ.getXY(pl)
     if ParadiseZ.isXYZoneInner(x, y, name) then
-        if (ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl) then
+        if (ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl)  or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl))) then
             return true
         end
     end
@@ -316,7 +332,7 @@ function ParadiseZ.reboundHandler(pl)
                 if sq then ParadiseZ.addTempMarker(sq) end
             end
         else                         
-            if ParadiseZ.isXYZoneInner(plX, plY, name) and ((ParadiseZ.isRestricted(sq, pl) or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl)))) )then
+            if ParadiseZ.isXYZoneInner(plX, plY, name) and ((ParadiseZ.isRestricted(sq, pl)) )then
                 ParadiseZ.doRebound(pl, false)
             end
         end
