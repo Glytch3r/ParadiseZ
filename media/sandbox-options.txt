@@ -301,10 +301,10 @@ option BurstAnim.ExplosionRadius
 	type = double,	 min = 0.00,  max = 6,  default = 2,
 	page = BurstAnim, translation = BurstAnim_ExplosionRadius,
 }
-option BurstAnim.KnockDownPercent
+option BurstAnim.PlayerStaggerPercent
 {
 	type = double,	 min = 0.00,  max = 100,  default = 15,
-	page = BurstAnim, translation = BurstAnim_KnockDownPercent,
+	page = BurstAnim, translation = BurstAnim_PlayerStaggerPercent,
 }
 option BurstAnim.ZedKnockDownPercent
 {
@@ -317,11 +317,6 @@ option BurstAnim.BurstDmg
 	page = BurstAnim, translation = BurstAnim_BurstDmg,
 }
 
-option BurstAnim.DeathChance
-{
-	type = double,	 min = 0.00,  max = 100,  default = 2,
-	page = BurstAnim, translation = BurstAnim_DeathChance,
-}
 option BurstAnim.EffectsRange
 {
 	type = double,	 min = 0.00,  max = 100,  default = 12,

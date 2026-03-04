@@ -1,4 +1,3 @@
-
 --server
 if isClient() then return; end
 
@@ -6,8 +5,16 @@ local Commands = {};
 Commands.BurstAnim = {};
 
 
-Commands.BurstAnim.relayBurst = function(player, args)
-	sendServerCommand("BurstAnim", "relayBurst", args)
+Commands.BurstAnim.triggerPlStagger = function(player, args)
+	sendServerCommand("BurstAnim", "triggerPlStagger", args)
+end
+
+Commands.BurstAnim.triggerZKnockDown = function(player, args)
+	sendServerCommand("BurstAnim", "triggerZKnockDown", args)
+end
+
+Commands.BurstAnim.triggerBurst = function(player, args)
+	sendServerCommand("BurstAnim", "triggerBurst", args)
 end
 
 Events.OnClientCommand.Add(function(module, command, player, args)
@@ -15,4 +22,3 @@ Events.OnClientCommand.Add(function(module, command, player, args)
 	    Commands[module][command](player, args)
 	end
 end)
-
