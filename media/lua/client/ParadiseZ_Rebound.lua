@@ -43,11 +43,6 @@ end
 
 
 
-
-
-
-
-
 function ParadiseZ.doExile(pl)
     --if not SandboxVars.ParadiseZ.ReboundSystem then return end
     pl = pl or getPlayer()
@@ -146,7 +141,7 @@ function ParadiseZ.initializeRebound(pl)
         if not plX or not plY or not plZ then return end
         name = tostring(SandboxVars.ParadiseZ.OutsideStr)
     end
-
+    
     local tab = {
         name = name,
         x = plX + 0.5,

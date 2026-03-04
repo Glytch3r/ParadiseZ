@@ -73,12 +73,16 @@ function ParadiseZ.tpCheck(pl)
     local targetPl = ParadiseZ.tpPl
 
     if not data or not targetPl or pl ~= targetPl then return end
+    
+    local tx = math.floor(data.x)
+    local ty = math.floor(data.y)
+    local tz = math.floor(data.z)
 
     local cx = math.floor(pl:getX())
     local cy = math.floor(pl:getY())
     local cz = math.floor(pl:getZ())
 
-    if cx ~= data.x or cy ~= data.y or cz ~= data.z then
+    if cx ~= tx or cy ~= ty or cz ~= tz then
         ParadiseZ.tpTry = ParadiseZ.tpTry + 1
 
         if ParadiseZ.tpTry <= 10 then
