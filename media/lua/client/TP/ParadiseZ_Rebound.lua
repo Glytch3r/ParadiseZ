@@ -41,26 +41,6 @@ function ParadiseZ.doRebound(pl, isChat)
 
 end
 
-
---[[ 
-function ParadiseZ.doExile(pl)
-    --if not SandboxVars.ParadiseZ.ReboundSystem then return end
-    pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    
-    local x, y, z = ParadiseZ.parseExileCoords() 
-    if not x or not y or not z then return end
-    
-    local car = pl:getVehicle()
-    if car then
-        ParadiseZ.forceExitCar()
-    end
-    
-    ParadiseZ.tp(pl, x, y, z)
-    local sq = getCell():getOrCreateGridSquare(x, y, z)
-    if sq then ParadiseZ.addTempMarker(sq) end
-end
- ]]
 function ParadiseZ.carTp(pl, vehicle, x, y, z)
     if not vehicle or not pl then return false end
 
@@ -273,12 +253,6 @@ function ParadiseZ.reboundCountdown(isChat)
     end
 end
 -----------------------            ---------------------------
-function ParadiseZ.parseExileCoords()   
-    local strList = SandboxVars.ParadiseZ.ExileCoords
-    local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
-    tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)    
-    return tx, ty, tz
-end
 
 
 
