@@ -219,8 +219,8 @@ function ParadiseZ.saveRebound(pl, name)
             x = sx + 0.5,
             y = sy + 0.5,
             z = pl:getZ(),
-            ax = roundN(pl:getX(), 3),
-            ay = roundN(pl:getY(), 3)
+            ax = ParadiseZ.roundN(pl:getX(), 3),
+            ay = ParadiseZ.roundN(pl:getY(), 3)
         }
         md['Rebound'] = tab
         pl:setHaloNote("rebound updated\n:"..tostring(sx)..',    '..tostring(sy), 150, 250, 150, 180)
