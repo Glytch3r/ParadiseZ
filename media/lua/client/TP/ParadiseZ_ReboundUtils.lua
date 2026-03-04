@@ -22,6 +22,8 @@ function ParadiseZ.forceExitCar()
 end
 
 function ParadiseZ.tp(pl, x, y, z)
+    ParadiseZ.doTp(pl, x, y, z)
+--[[ 
     pl = pl or getPlayer()
     if not pl then return end
     z = z or 0
@@ -50,7 +52,7 @@ function ParadiseZ.tp(pl, x, y, z)
         Events.OnPlayerUpdate.Add(ParadiseZ.tpCheck)
     end
 
-    ParadiseZ.doTp(pl, x, y, z)
+    ParadiseZ.doTp(pl, x, y, z) ]]
 end
 
 function ParadiseZ.doTp(pl, x, y, z)
