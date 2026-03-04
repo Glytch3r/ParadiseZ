@@ -83,10 +83,7 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         md.LifeBarFlash = 0.4
         
         if md.LifePoints <= 0 then
-            if SandboxVars.ParadiseZpvp.teleportPvpDeath and not targ:isTeleporting() then
-           
-                ParadiseZ.doExile(targ)
-            else               
+            if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
                 targ:Kill(char)
             end
             --targ:setPlayingDeathSound(true)
@@ -96,6 +93,35 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
+function ParadiseZ.exileHandler(pl)
+    pl = pl or getPlayer()
+    if not pl then return end
+    if not pl:isAlive() then return end
+    local md = pl:getModData()
+    if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
+        ParadiseZ.doPvPExile(pl)
+    end
+end
+Events.OnPlayerUpdate.Add(ParadiseZ.exileHandler)
+
+function ParadiseZ.doPvPExile(pl)
+    --if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    pl = pl or getPlayer()
+    if not pl or not pl:isAlive() then return end
+    
+    local x, y, z = ParadiseZ.parseExileCoords() 
+    if not x or not y or not z then return end
+    
+    local car = pl:getVehicle()
+    if car then
+        ParadiseZ.forceExitCar()
+    end
+    timer:Simple(1, function() 
+        ParadiseZ.tp(pl, x, y, z)
+        local sq = getCell():getOrCreateGridSquare(x, y, z)
+        if sq then ParadiseZ.addTempMarker(sq) end
+    end)
+end
 
 
 
