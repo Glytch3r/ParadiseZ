@@ -26,24 +26,7 @@ BurstAnim.mineList = {
    ["ParadiseTiles_7"]=true,
 }
 
-function BurstAnim.landmine()
-    local pl = getPlayer()
-    if not pl then return end
-    local sq = pl:getCurrentSquare()
-    if not sq then return end
-    for i=1, sq:getObjects():size() do
-        local obj = sq:getObjects():get(i-1)
-        if obj and instanceof(obj, "IsoObject") then
-            local sprName = ParadiseZ.getSprName(obj)
-            if sprName and BurstAnim.mineList[sprName] then
-                doSledge(obj)
-                BurstAnim.triggerBurst(pl)
-            end
-        end
-    end
-end
 
-Events.OnPlayerMove.Add(BurstAnim.landmine)
 
 function BurstAnim.isSqInFront(targ, sq)
     if not targ or not sq then return false end

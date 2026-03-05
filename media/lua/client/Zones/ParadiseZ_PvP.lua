@@ -61,15 +61,8 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         isAvoid = false
         pvpDmg = false
     end
-    targ:setAvoidDamage(isAvoid)
-    
-    
-    --dmg = dmg * ( or 1.6)
+    targ:setAvoidDamage(isAvoid)   
     local bonus = 0
-    
-    --print(targ == getPlayer())
-
-
     local isCrit = targ:isCriticalHit() 
     if isCrit then
         bonus = ZombRand(0, SandboxVars.ParadiseZpvp.pvpDmgMult + 1)
@@ -86,9 +79,7 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
             if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
                 targ:Kill(char)
             end
-            --targ:setPlayingDeathSound(true)
         end
-
     end
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)

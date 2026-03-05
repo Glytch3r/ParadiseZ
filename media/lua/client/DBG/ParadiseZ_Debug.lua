@@ -413,13 +413,6 @@ end)
 ]]
 
 
---[[ 
-    ISWorldMap.ShowWorldMap(0)
-    ISFastTeleportMove.cheat = true
-    pl:setBuildCheat(true)
-
-	SendCommandToServer("/setaccesslevel Glytch3r admin")
-]]
 function ParadiseZ.getMidPoint(x1, y1, x2, y2)
     local midX = (x1 + x2) / 2
     local midY = (y1 + y2) / 2

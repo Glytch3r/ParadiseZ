@@ -14,6 +14,7 @@ function ParadiseZ.exileHandler(pl)
     local md = pl:getModData()
     if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
         ParadiseZ.doPvPExile(pl)
+        md.LifePoints = md.LifePoints + 25
     end
 end
 Events.OnPlayerUpdate.Add(ParadiseZ.exileHandler)

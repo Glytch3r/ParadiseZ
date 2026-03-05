@@ -58,7 +58,7 @@ end
 function ParadiseZ.getPrevPl(currentPl)
     return ParadiseZ.getNextPl(currentPl, false)
 end
-ParadiseZ = ParadiseZ or {}
+
 
 function ParadiseZ.setSpectateOffset(key)
     local pl = getPlayer()

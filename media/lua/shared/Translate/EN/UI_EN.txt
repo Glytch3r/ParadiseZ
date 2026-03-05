@@ -26,7 +26,7 @@ UI_EN = {
 
 
 
-    UI_optionscreen_ binding_Crouch = "Sneak",
+    UI_optionscreen_binding_Crouch = "Sneak",
     UI_optionscreen_binding_Forward = " Forward",
     UI_optionscreen_binding_Backward = " Backward",
     UI_optionscreen_binding_Left = " Left",
