@@ -6,6 +6,11 @@ option ParadiseZ.ClearRadius
 }
 
 
+option ParadiseZ.ClearFireRadius
+{
+	type = integer, min = 0, max = 100, default = 50,
+	page = ParadiseZ, translation = ParadiseZ_ClearFireRadius,
+}
 
 option ParadiseZ.OutsideStr  {
 	type = string, default =  Outside,
