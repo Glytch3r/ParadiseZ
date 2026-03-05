@@ -74,11 +74,14 @@ function ParadiseZ.steppedOnTrap(char)
                     BurstAnim.triggerBurst(char)
 
                     local isFront = BurstAnim.isSqInFront(char, sq)
+                    local isStagger = SandboxVars.BurstAnim.PlayerStaggerPercent
+                    local isCrawler = SandboxVars.BurstAnim.ZedCrawlerPercent
+                    local dmg = ZombRand(SandboxVars.BurstAnim.BurstDmg/2, SandboxVars.BurstAnim.BurstDmg+1) 
 
-                    if instanceof(char, "IsoPlayer") then
-                        BurstAnim.plStagger(char, isFront)
+                    if instanceof(char, "IsoPlayer") then    
+                        BurstAnim.plDmg(pl, isFront, dmg, BurstAnim.doRoll(isStagger))         
                     elseif instanceof(char, "IsoZombie") then
-                        BurstAnim.zKnockDown(char, isFront)
+                        BurstAnim.zKnockDown(zed, isFront, BurstAnim.doRoll(isCrawler))              
                     end
                     
                     if isClient() then
@@ -106,3 +109,5 @@ end
 
 Events.OnPlayerUpdate.Add(ParadiseZ.steppedOnTrap)
 Events.OnZombieUpdate.Add(ParadiseZ.steppedOnTrap)
+
+

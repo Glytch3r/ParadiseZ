@@ -87,8 +87,8 @@ function BurstAnim.triggerBurst(pl)
                         end
 
                         if instanceof(obj, "IsoZombie") then
-                            local isKnockDown = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedKnockDownPercent or 0)
-                            local isCrawler = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedKnockDownPercent or 0)
+                            local isKnockDown = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
+                            local isCrawler = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
 
                             if dmg > 0 then
                                 local newHealth = math.max(0, obj:getHealth() - dmg)

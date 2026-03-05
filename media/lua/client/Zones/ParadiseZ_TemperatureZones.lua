@@ -29,20 +29,23 @@ function ParadiseZ.getCliColor(sq)
     return 0,0,0,0
 end
 function ParadiseZ.cliHandler(pl)
-    if not pl then return end
-    local sq = pl:getSquare() 
-    if not sq then return end
-    local isColRed = ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay()
-    local isColBlue = ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight()
-    local hot = SandboxVars.ParadiseZ.BlazeTemp
-    local cold = SandboxVars.ParadiseZ.FrostTemp
-    
-    EnvColor.setWorldColor(isColRed or isColBlue)
-    if isColRed then
-    elseif isColBlue then
+    if SandboxVars.ParadiseZ.TempColors then
+        if not pl then return end
+        local sq = pl:getSquare() 
+        if not sq then return end
+        local isColRed = ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay()
+        local isColBlue = ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight()
+        local hot = SandboxVars.ParadiseZ.BlazeTemp
+        local cold = SandboxVars.ParadiseZ.FrostTemp
+        
+        EnvColor.setWorldColor(isColRed or isColBlue)
+        if isColRed then
+        elseif isColBlue then
+        end
     end
 end
 Events.OnPlayerUpdate.Add(ParadiseZ.cliHandler)
+
 TrailingTemp = TrailingTemp or {}
 TrailingTemp.ticks = 0
 function TrailingTemp.delHeat()
@@ -72,6 +75,7 @@ function TrailingTemp.addHeat(pl, isHot, isCold)
     )
     getCell():addHeatSource(TrailingTemp.HeatSource)
 end
+
 function TrailingTemp.update(pl)
     TrailingTemp.ticks = TrailingTemp.ticks + 1
     if TrailingTemp.ticks % 60 ~= 0 then return end
