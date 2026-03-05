@@ -79,7 +79,7 @@ function ParadiseZ.steppedOnTrap(char)
                     local dmg = ZombRand(SandboxVars.BurstAnim.BurstDmg/2, SandboxVars.BurstAnim.BurstDmg+1) 
 
                     if instanceof(char, "IsoPlayer") then    
-                        BurstAnim.plDmg(pl, isFront, dmg, BurstAnim.doRoll(isStagger))         
+                        BurstAnim.plDmg(pl, isFront, dmg)         
                     elseif instanceof(char, "IsoZombie") then
                         BurstAnim.zKnockDown(zed, isFront, BurstAnim.doRoll(isCrawler))              
                     end

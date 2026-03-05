@@ -55,16 +55,16 @@ function BurstAnim.zKnockDown(zed, isFront, isCrawler)
     zed:setCanWalk(not isCrawler)
 end
 
-function BurstAnim.plDmg(pl, isFront, dmg, isStagger)
-    isStagger = isStagger or false
-    if isStagger then
-        isFront = isFront or true
-        pl:setBumpType("stagger")
-        pl:setVariable("BumpDone", true)
-        pl:setVariable("BumpFall", true)
-        pl:setVariable("BumpFallType", isFront and "pushedFront" or "pushedBehind")
-        pl:reportEvent("wasBumped")
-    end
+function BurstAnim.plDmg(pl, isFront, dmg)
+    isFront = isFront or true
+    pl = pl or getPlayer()
+
+    pl:setBumpType("stagger");
+    pl:setVariable("BumpDone", true);
+    pl:setVariable("BumpFall", true);
+    pl:setVariable("BumpFallType", isFront and "pushedFront" or "pushedBehind")
+    pl:reportEvent("wasBumped")
+
     if pl == getPlayer() then
         dmg = dmg or 25
         pl:getBodyDamage():ReduceGeneralHealth(dmg)

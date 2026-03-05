@@ -44,19 +44,15 @@ function EnvColor.setWorldColor(enable)
    local eR, eG, eB, eA = iR + 0.1, iG + 0.1, iB + 0.1, iA
 
    if enable then
-      clim:getClimateFloat(intensity):setEnableAdmin(true)
-      clim:getClimateColor(light):setEnableAdmin(true)
-
       if iA > 0 then
          clim:getClimateColor(light):setAdminValueInterior(iR, iG, iB, iA)
       end
       if eA > 0 then
          clim:getClimateColor(light):setAdminValueExterior(eR, eG, eB, eA)
-      end
-   else
-      clim:getClimateFloat(intensity):setEnableAdmin(false)
-      clim:getClimateColor(light):setEnableAdmin(false)
-   end
+      end   
 
+   end
+   --clim:getClimateFloat(intensity):setEnableAdmin(enable)
+   --clim:getClimateColor(light):setEnableAdmin(enable)
    clim:transmitClientChangeAdminVars()
 end

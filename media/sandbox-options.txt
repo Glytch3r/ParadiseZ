@@ -308,11 +308,6 @@ option BurstAnim.ExplosionRadius
 	type = double,	 min = 0.00,  max = 6,  default = 2,
 	page = BurstAnim, translation = BurstAnim_ExplosionRadius,
 }
-option BurstAnim.PlayerStaggerPercent
-{
-	type = double,	 min = 0.00,  max = 100,  default = 15,
-	page = BurstAnim, translation = BurstAnim_PlayerStaggerPercent,
-}
 option BurstAnim.ZedCrawlerPercent
 {
 	type = double,	 min = 0.00,  max = 100,  default = 15,
