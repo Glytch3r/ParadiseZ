@@ -109,7 +109,6 @@ option ParadiseZ.RadiationBorderSize
 }
 
 
-
 option ParadiseZ.RadZoneDmg
 {
 	type = double,	 min = 0.00,  max = 100,  default = 0.02,
@@ -182,6 +181,12 @@ option ParadiseZ.BombZoneChance
 	type = double, min = 0, max = 100, default = 15,
 	page = ParadiseZ, translation = ParadiseZ_BombZoneDelay,
 }
+option ParadiseZ.BombZoneRad
+{
+	type = double, min = 0, max = 100, default = 50,
+	page = ParadiseZ, translation = ParadiseZ_BombZoneRad,
+}
+
 
 
 option ParadiseZpvp.VanillaNonPvpZone

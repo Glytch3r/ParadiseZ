@@ -1,4 +1,20 @@
 ParadiseZ = ParadiseZ or {}
+function ParadiseZ.getRandomSquare(pl)
+
+    pl = pl or getPlayer()
+    if not pl then return nil end
+
+    local px = round(pl:getX())
+    local py = round(pl:getY())
+    local pz = pl:getZ() or 0
+
+    local rad = SandboxVars.ParadiseZ.BombZoneRad
+
+    local x = px + ZombRand(-rad, rad + 1)
+    local y = py + ZombRand(-rad, rad + 1)
+
+    return getCell():getGridSquare(x, y, pz)
+end
 
 function ParadiseZ.triggerTrapOnSquare(sq)
     if not sq then return end
@@ -50,7 +66,7 @@ function ParadiseZ.BombZoneHandler(pl)
     ticks = ticks + 1
     if ticks % SandboxVars.ParadiseZ.BombZoneDelay == 0 then
         if BurstAnim.doRoll(SandboxVars.ParadiseZ.BombZoneChance) then
-            local sq = getRandomFreeSquare()
+            local sq = ParadiseZ.getRandomSquare(pl)
             if sq then
                 ParadiseZ.triggerTrapOnSquare(sq)
             end
