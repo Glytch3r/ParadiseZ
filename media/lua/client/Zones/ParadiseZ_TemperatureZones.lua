@@ -66,11 +66,13 @@ function TrailingTemp.addHeat(pl, isHot, isCold)
     elseif isCold then
         temp = math.floor(SandboxVars.ParadiseZ.FrostTemp)
     end
+    --IsoHeatSource(int x, int y, int z, int radius, int temperature)
+
     TrailingTemp.HeatSource = IsoHeatSource.new(
         sq:getX(),
         sq:getY(),
         sq:getZ(),
-        1,
+        SandboxVars.ParadiseZ.TempRad,
         temp
     )
     getCell():addHeatSource(TrailingTemp.HeatSource)
@@ -78,7 +80,7 @@ end
 
 function TrailingTemp.update(pl)
     TrailingTemp.ticks = TrailingTemp.ticks + 1
-    if TrailingTemp.ticks % 60 ~= 0 then return end
+    if TrailingTemp.ticks % 20 ~= 0 then return end
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end

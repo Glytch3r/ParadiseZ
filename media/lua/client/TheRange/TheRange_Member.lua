@@ -159,7 +159,7 @@ function TheRange.setPoints(card, amount)
     if not md then return end
 
     amount = tonumber(amount) or 0
-    amount = math.max(0, math.min(100, amount))
+    amount = math.max(0,  amount)
     md.CardPoints = amount
 end
 

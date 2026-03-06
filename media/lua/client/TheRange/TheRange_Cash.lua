@@ -98,7 +98,7 @@ function TheRange.onPtsPicked(target, button, value, card, obj)
 
     local price = tonumber(SandboxVars.ParadiseZ.TheRangeCreditPrice) or 1
     local percent = tonumber(SandboxVars.ParadiseZ.TheRangeExchangePercent) or 0
-
+    
     percent = math.max(0, math.min(1, percent))
 
     local gross = value * price

@@ -156,6 +156,11 @@ option ParadiseZ.FrostTemp
 	page = ParadiseZ, translation = ParadiseZ_FrostTemp,
 }
 
+option ParadiseZ.TempRad
+{
+	type = double, min = 0, max = 1000, default = 30,
+	page = ParadiseZ, translation = ParadiseZ_TempRad,
+}
 
 
 option ParadiseZ.TempColors
@@ -181,7 +186,6 @@ option ParadiseZpvp.ExileCoords
 
 
 
-}
 
 
 
