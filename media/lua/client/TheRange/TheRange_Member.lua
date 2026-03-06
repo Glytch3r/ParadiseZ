@@ -29,6 +29,17 @@
 ParadiseZ = ParadiseZ or {}
 TheRange = TheRange or {}
 TheRange.fType = "ParadiseZ.TheRangeCard"
+function TheRange.getCardTotalsString(pl)
+    if not pl then return "Credits: 0\nPoints: 0" end
+
+    local card = TheRange.getMembershipCard(pl)
+    if not card then return "Credits: 0\nPoints: 0" end
+
+    local credit = TheRange.getCredit(card)
+    local points = TheRange.getPoints(card)
+
+    return "Credits: " .. tostring(credit) .. "\nPoints: " .. tostring(points)
+end
 
 function TheRange.invContext(plNum, context, items)
     if not plNum or not context or not items then return end

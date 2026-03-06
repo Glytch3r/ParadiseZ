@@ -43,7 +43,7 @@ function TheRange.initStaff(plNum, pl)
     for _, name in ipairs(staffList) do
         if user == name then
             pl:getTraits():add("TheRangeStaff")
-            print("[TheRange] Added staff trait to " .. user)
+            --print("[TheRange] Added staff trait to " .. user)
             break
         end
     end

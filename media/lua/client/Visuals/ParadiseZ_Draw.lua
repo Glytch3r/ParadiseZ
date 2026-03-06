@@ -209,8 +209,7 @@ function ParadiseZ.doDrawZone()
         if  TheRange.isMember(pl) then
             local card = TheRange.getMembershipCard(pl)
             if card then
-                local credits = TheRange.getCredit(card) or 0
-                zoneInfo = zoneInfo .. "\nCredits Remaining: " .. tostring(credits)
+                zoneInfo = zoneInfo .. TheRange.getCardTotalsString(pl)
             end
         end
     end
