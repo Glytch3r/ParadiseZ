@@ -34,7 +34,7 @@ end
 
 function ParadiseZ.steppedOnTrap(char)
     if not char then return end
-
+    if not ParadiseZ.isMineZone(char) then return end
     local sq = getCell():getGridSquare(char:getX(), char:getY(), char:getZ())
     if not sq then return end
 
