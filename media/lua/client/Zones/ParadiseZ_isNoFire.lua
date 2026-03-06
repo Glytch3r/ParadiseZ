@@ -1,14 +1,4 @@
 
-function ParadiseZ.isNoFire(sq)
-    if not sq then return false end
-    local zoneName = ParadiseZ.getZoneName(sq)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isNoFire == true
-end
-
-
 
 
 
@@ -32,7 +22,7 @@ function ParadiseZ.noFireHandler(pl)
         for dy = -rad, rad do
 
             local targetSq = cell:getGridSquare(px + dx, py + dy, pz)
-            if targetSq and targetSq:Is(IsoFlagType.burning) and ParadiseZ.isNoFire(targetSq) then
+            if targetSq and targetSq:Is(IsoFlagType.burning) and ParadiseZ.isNoFireZone(targetSq) then
                 targetSq:transmitStopFire()
                 targetSq:stopFire()
             end

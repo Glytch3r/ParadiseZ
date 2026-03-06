@@ -122,124 +122,28 @@ function ParadiseZ.isRegularZone(pl)
     
     return true
 end
-
-
-function ParadiseZ.isBlazeZone(pl)
+function ParadiseZ.checkZoneFlag(pl, flag)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
+
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
+
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
-    return zone.isBlaze == true
+
+    return zone[flag] == true
 end
 
-function ParadiseZ.isFrostZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isFrost == true
-end
-
-function ParadiseZ.isBombZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isBomb == true
-end
-
-function ParadiseZ.isMineZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isMine == true
-end
-
-function ParadiseZ.isNoCampZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isNoCamp == true
-end
-
-function ParadiseZ.isNoFireZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isNoFire == true
-end
-
-function ParadiseZ.isCageZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isCage == true
-end
-
-function ParadiseZ.isPartyZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isParty == true
-end
-
-function ParadiseZ.isRallyZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isRally == true
-end
-
-function ParadiseZ.isSpecialZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isSpecial == true
-end
-
-function ParadiseZ.isTradeZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isTrade == true
-end
-
-function ParadiseZ.isSprintZone(pl)
-    local targ = ParadiseZ.getPl(pl)
-    if not targ then return false end
-    local zoneName = ParadiseZ.getZoneName(targ)
-    if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
-    local zone = ParadiseZ.ZoneData[zoneName]
-    if not zone then return false end
-    return zone.isSprint == true
-end
+function ParadiseZ.isBlazeZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isBlaze") end
+function ParadiseZ.isFrostZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isFrost") end
+function ParadiseZ.isBombZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isBomb") end
+function ParadiseZ.isMineZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isMine") end
+function ParadiseZ.isNoCampZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isNoCamp") end
+function ParadiseZ.isNoFireZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isNoFire") end
+function ParadiseZ.isCageZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isCage") end
+function ParadiseZ.isPartyZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isParty") end
+function ParadiseZ.isRallyZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isRally") end
+function ParadiseZ.isSpecialZone(pl) return ParadiseZ.checkZoneFlag(pl, "isSpecial") end
+function ParadiseZ.isTradeZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isTrade") end
+function ParadiseZ.isSprintZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isSprint") end
