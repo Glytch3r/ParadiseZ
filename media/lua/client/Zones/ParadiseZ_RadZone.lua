@@ -106,21 +106,42 @@ function ParadiseZ.isWearingRadSuit()
 
     return false
 end
+function ParadiseZ.getRadSuitDamageMult(pl)
+    local items = pl:getWornItems()
+    local hasSuit = false
+    local hasHole = false
+
+    for i = 0, items:size() - 1 do
+        local item = items:getItemByIndex(i)
+        if item and item:getModData()['isRadSuit'] ~= nil then
+            hasSuit = true
+            local vis = item:getVisual()
+            if vis and vis:getHolesNumber() > 0 then
+                hasHole = true
+            end
+        end
+    end
+
+    if not hasSuit then return 1 end
+    if hasHole then return 0.5 end
+    return 0
+end
 
 
------------------------            ---------------------------
 local ticks = 0
 
 function ParadiseZ.RadZoneHandler(pl)
     ticks = ticks + 1
-    if ticks % 3 == 0 then
-        if ParadiseZ.isRadZone(pl) then
-            if not ParadiseZ.isWearingRadSuit() then 
-                pl:getBodyDamage():ReduceGeneralHealth(SandboxVars.ParadiseZ.RadZoneDmg)
-            end
+    if ticks % 3 ~= 0 then return end
+
+    if ParadiseZ.isRadZone(pl) then
+        local mult = ParadiseZ.getRadSuitDamageMult(pl)
+        if mult > 0 then
+            pl:getBodyDamage():ReduceGeneralHealth(SandboxVars.ParadiseZ.RadZoneDmg * mult)
         end
     end
 end
+
 Events.OnPlayerUpdate.Remove(ParadiseZ.RadZoneHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.RadZoneHandler)
 
