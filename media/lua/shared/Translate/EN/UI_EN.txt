@@ -5,19 +5,16 @@ UI_EN = {
     UI_trait_TheRangeStaff_desc = "Does not need Credits to enter Hunt Zone",
 
     UI_trait_Caged = "Caged",
-    UI_trait_Caged_desc = "May not leave Cage Zones",
+    UI_trait_Caged_desc  = "May not leave Cage Zones",
 
     UI_trait_PvE = "PvE",
     UI_trait_PvE_desc = "Cannot Enter PvP Zone. Will not be able to engage in PvP",
-
-
+    
 
     UI_Intro1 = "From the ashes of the old world we rise",
     UI_Intro2 = "Because greatness is forged in fire",
     UI_Intro3 = "Welcome to Paradise",
     UI_ClickToSkip = "Enter Paradise",
-
-
 
     UI_optionscreen_Oversight_OffsetForward = "OffsetForward",
     UI_optionscreen_Oversight_OffsetBackward = "OffsetBackward",
@@ -103,6 +100,5 @@ UI_EN = {
     UI_GameLoad_UnexpectedError1 = "Paradise is under maintenance",
     UI_mapspawn_title = "SELECT PARTY DESTINATION",
 
-    UI_trait_PvE = "PvE",
-    UI_trait_PvEDesc = "Prevents PvP damage both from and against this player",
+
 }
