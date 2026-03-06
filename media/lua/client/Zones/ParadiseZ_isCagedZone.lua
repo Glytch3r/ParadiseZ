@@ -103,7 +103,7 @@ function ParadiseZ.cageHandler(pl)
         local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
         local x, y, z = ParadiseZ.getLastCageCoord(pl)
 
-        clip("isCageZone="..tostring(ParadiseZ.isCageZone(pl)).." | name="..tostring(name).." | dest="..tostring(x)..","..tostring(y)..","..tostring(z).." | pos="..tostring(plX)..","..tostring(plY))
+        --clip("isCageZone="..tostring(ParadiseZ.isCageZone(pl)).." | name="..tostring(name).." | dest="..tostring(x)..","..tostring(y)..","..tostring(z).." | pos="..tostring(plX)..","..tostring(plY))
 
         if not ParadiseZ.isCageZone(pl) then
             if x and y and z then

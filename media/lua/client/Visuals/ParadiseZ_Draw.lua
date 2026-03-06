@@ -69,10 +69,14 @@ function ParadiseZ.getDrawStr(char)
         zoneKey = "Radiation"
     elseif ParadiseZ.isHuntZone(pl) then
         zoneKey = "Hunt"
-    elseif ParadiseZ.isBlazeZone(pl) then
-        zoneKey = "Blaze"
-    elseif ParadiseZ.isFrostZone(pl) then
-        zoneKey = "Frost"
+    if ParadiseZ.isBlazeZone(pl) then
+        local isActive = ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay()
+        table.insert(info, isActive and "Blaze ACTIVE" or "Blaze")
+    end
+    if ParadiseZ.isFrostZone(pl) then
+        local isActive = ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight()
+        table.insert(info, isActive and "Frost ACTIVE" or "Frost")
+    end
     elseif ParadiseZ.isBombZone(pl) then
         zoneKey = "Bomb"
     elseif ParadiseZ.isMineZone(pl) then
@@ -201,7 +205,7 @@ function ParadiseZ.doDrawZone()
     local color = colors[zoneKey] or { r = 1, g = 1, b = 1 }
 
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-    local alpha = (not zoneKey or zoneKey == "") and (isAdm and 0.1 or 0) or 0.8
+    local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
 
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
 
@@ -213,7 +217,9 @@ function ParadiseZ.doDrawZone()
             end
         end
     end
-    
+
+
+
     getTextManager():DrawString(UIFont.Medium, 68, 100,
         zoneInfo, color.r, color.g, color.b, alpha)
 
@@ -230,3 +236,4 @@ end
 
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)
+
