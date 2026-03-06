@@ -206,11 +206,15 @@ function ParadiseZ.doDrawZone()
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
 
     if zoneKey == "Hunt" then
-        local modData = pl:getModData()
-        local credits = modData and modData.HuntCredits or 0
-        zoneInfo = zoneInfo .. "\nCredits Remaining: " .. tostring(credits)
+        if  TheRange.isMember(pl) then
+            local card = TheRange.getMembershipCard(pl)
+            if card then
+                local credits = TheRange.getCredit(card) or 0
+                zoneInfo = zoneInfo .. "\nCredits Remaining: " .. tostring(credits)
+            end
+        end
     end
-
+    
     getTextManager():DrawString(UIFont.Medium, 68, 100,
         zoneInfo, color.r, color.g, color.b, alpha)
 
