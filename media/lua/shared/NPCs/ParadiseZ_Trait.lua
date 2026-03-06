@@ -1,10 +1,18 @@
 
 
 Events.OnGameBoot.Add(function()
-	TraitFactory.addTrait("TheRangeStaff", getText("UI_trait_TheRangeStaff"), 0, getText("UI_trait_TheRangeStaff_desc"), true) 
+
+	--TraitFactory.addTrait("TheRangeStaff", getText("UI_trait_TheRangeStaff"), 0, getText("UI_trait_TheRangeStaff_desc"), true) 
+
+	local traitStr = "TheRangeStaff"
+	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), 0, getText("UI_trait_"..traitStr.."Desc"), true)
 
 	local traitStr = "PvE"
 	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), -1, getText("UI_trait_"..traitStr.."Desc"), false)
+
+	local traitStr = "Caged"
+	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), 0, getText("UI_trait_"..traitStr.."Desc"), true)
+
 	TraitFactory.sortList()
 	local traits = TraitFactory.getTraits()
 	for i=0, traits:size()-1 do

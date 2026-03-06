@@ -26,7 +26,6 @@ ParadiseZ = ParadiseZ or {}
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 
 ParadiseZ.ISMiniScoreboardUI_doPlayerListContextMenu = ParadiseZ.ISMiniScoreboardUI_doPlayerListContextMenu or ISMiniScoreboardUI.doPlayerListContextMenu
-
 function ISMiniScoreboardUI:doPlayerListContextMenu(targPl, x, y)
     local plNum = self.admin:getPlayerNum()
     local context = ISContextMenu.get(plNum, x + self:getAbsoluteX(), y + self:getAbsoluteY());
@@ -40,8 +39,17 @@ function ISMiniScoreboardUI:doPlayerListContextMenu(targPl, x, y)
         context:addOption("Spectate: ".. tostring(targUser), self, function()
             ParadiseZ.setSpectate(targUser)
         end);
+        local targPlObj = getPlayerFromUsername(targUser)
+        if targPlObj then
+            local isCaged = targPlObj:getTraits():contains("Caged")
+            local cageLabel = isCaged and "Uncage: "..tostring(targUser) or "Cage: "..tostring(targUser)
+            context:addOption(cageLabel, self, function()
+                ParadiseZ.setCaged(targUser, not isCaged)
+            end);
+        end
     end
 end
+
 
 ParadiseZ.ISMiniScoreboardUI_initialise = ParadiseZ.ISMiniScoreboardUI_initialise or ISMiniScoreboardUI.initialise
 
