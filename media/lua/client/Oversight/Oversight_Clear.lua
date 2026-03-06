@@ -197,7 +197,7 @@ function ParadiseZ.StopFire(pl)
         end
     end
 
-    pl:addLineChatElement("Stopped Fire")
+    --pl:addLineChatElement("Stopped Fire")
 end
 
 function ParadiseZ.DespawnCars(pl)
