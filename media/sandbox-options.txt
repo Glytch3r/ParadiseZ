@@ -81,7 +81,7 @@ option ParadiseZ.DefaultCageCoords
 {
 	type = string, default = 11641;8324;0, 
 	page = ParadiseZ, translation = ParadiseZ_DefaultCageCoords,
-
+}
 option ParadiseZ.ShowPvETag
 {
 	type = boolean, default = true,
