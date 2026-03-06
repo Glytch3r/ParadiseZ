@@ -33,11 +33,9 @@ function ParadiseZ.doRebound(pl, isChat)
         if ParadiseZ.carTp(pl, car, x, y, z) then return end 
     end
 
-    timer:Simple(1, function()      
-        ParadiseZ.tp(pl, x, y, z)
-        local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
-        if sq then ParadiseZ.addTempMarker(sq) end
-    end)
+    ParadiseZ.tp(pl, x, y, z)
+    local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
+    if sq then ParadiseZ.addTempMarker(sq) end
 
 end
 
