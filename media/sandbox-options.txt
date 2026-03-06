@@ -171,6 +171,18 @@ option ParadiseZ.TempColors
 
 
 
+option ParadiseZ.BombZoneDelay
+{
+	type = double, min = 0, max = 99999999, default = 3600,
+	page = ParadiseZ, translation = ParadiseZ_BombZoneDelay,
+}
+
+option ParadiseZ.BombZoneChance
+{
+	type = double, min = 0, max = 100, default = 15,
+	page = ParadiseZ, translation = ParadiseZ_BombZoneDelay,
+}
+
 
 option ParadiseZpvp.VanillaNonPvpZone
 {
