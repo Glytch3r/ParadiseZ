@@ -183,7 +183,7 @@ option ParadiseZ.BombZoneChance
 }
 option ParadiseZ.BombZoneRad
 {
-	type = double, min = 0, max = 100, default = 50,
+	type = double, min = 0, max = 1000, default = 50,
 	page = ParadiseZ, translation = ParadiseZ_BombZoneRad,
 }
 
