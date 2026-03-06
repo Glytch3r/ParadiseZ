@@ -1,5 +1,9 @@
-
-ParadiseZ = ParadiseZ or {}
+function ParadiseZ.parseCageCoords()
+    local strList = SandboxVars.ParadiseZ.DefaultCageCoords
+    local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
+    tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)
+    return tx, ty, tz
+end
 
 function ParadiseZ.setCaged(targUser, bool)
     if not targUser then return end
@@ -50,7 +54,8 @@ function ParadiseZ.getLastCageCoord(pl)
     if rebound and rebound.x and rebound.y and rebound.z then
         return rebound.x, rebound.y, rebound.z
     end
-    return nil, nil, nil
+    local x, y, z = ParadiseZ.parseCageCoords()
+    return x, y, z
 end
 
 function ParadiseZ.doCage(pl)
@@ -87,14 +92,19 @@ function ParadiseZ.cageHandler(pl)
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
         if not sq then return end
         local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
-        if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
-        if not ParadiseZ.isCageZone(pl) then return end
+        if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) or not ParadiseZ.isCageZone(pl) then
+            local x, y, z = ParadiseZ.parseCageCoords()
+            if x and y and z then
+                ParadiseZ.tp(pl, x, y, z)
+            end
+            return
+        end
         if ParadiseZ.isXYZoneInner(plX, plY, name) then
             ParadiseZ.saveCageRebound(pl, name)
             if getCore():getDebug() then
                 if sq then ParadiseZ.addTempMarker(sq) end
             end
-        elseif ParadiseZ.isXYZoneOuter(plX, plY, name) or not ParadiseZ.isXYInsideZone(plX, plY, name) then
+        else --if ParadiseZ.isXYZoneOuter(plX, plY, name) or not ParadiseZ.isXYInsideZone(plX, plY, name) then
             ParadiseZ.doCage(pl)
         end
     end
