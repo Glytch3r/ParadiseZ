@@ -32,7 +32,7 @@ TheRange.fType = "ParadiseZ.TheRangeCard"
 
 function TheRange.invContext(plNum, context, items)
     if not plNum or not context or not items then return end
-    if not (isDebugEnabled() or (isClient() and isAdmin())) then return end
+   --if not (isDebugEnabled() or (isClient() and isAdmin())) then return end
 
     local pl = getSpecificPlayer(plNum)
     if not pl then return end
