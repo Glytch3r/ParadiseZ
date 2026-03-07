@@ -69,13 +69,19 @@ function ParadiseZ.getDrawStr(char)
         zoneKey = "Radiation"
     elseif ParadiseZ.isHuntZone(pl) then
         zoneKey = "Hunt"
-    if ParadiseZ.isBlazeZone(pl) then
-        local isActive = ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay()
-        table.insert(info, isActive and "Blaze ACTIVE" or "Blaze")
+    if ParadiseZ.isBlazeZone(pl) then 
+        if ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay() then
+            zoneKey = "Blaze ACTIVE"
+        else
+            zoneKey = "Blaze"
+        end  
     end
     if ParadiseZ.isFrostZone(pl) then
-        local isActive = ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight()
-        table.insert(info, isActive and "Frost ACTIVE" or "Frost")
+        if ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight() then
+            zoneKey = "Frost ACTIVE"
+        else
+            zoneKey = "Frost"
+        end        
     end
     elseif ParadiseZ.isBombZone(pl) then
         zoneKey = "Bomb"

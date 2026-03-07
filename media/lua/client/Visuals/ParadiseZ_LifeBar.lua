@@ -41,7 +41,6 @@ function LifeBarUI.UI:render()
     
     md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery))
 
-    
 end
 
 function LifeBarUI.UI:new(x, y, width, height)
@@ -79,7 +78,7 @@ end
 
 function ParadiseZ.LifeBarVisibility(pl)
     if not isIngameState() then return end
-
+    
     pl = pl or getPlayer()
     if not pl then return end
 
