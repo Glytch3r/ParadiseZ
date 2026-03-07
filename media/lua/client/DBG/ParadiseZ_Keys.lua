@@ -1,6 +1,7 @@
 
 ParadiseZ = ParadiseZ or {}
 
+ParadiseZ.ApplyKeyBindings()
 
 -----------------------            ---------------------------
 function ParadiseZ.dbgKeys(key)

@@ -1,5 +1,7 @@
 EnvColor = EnvColor or {}
 ParadiseZ = ParadiseZ or {}
+TrailingTemp = TrailingTemp or {}
+
 function ParadiseZ.isBlazeZoneFromSquare(sq)
     if not sq then return false end
     local zoneName = ParadiseZ.getZoneName(sq)
@@ -8,6 +10,7 @@ function ParadiseZ.isBlazeZoneFromSquare(sq)
     if not zone then return false end
     return zone.isBlaze == true
 end
+
 function ParadiseZ.isFrostZoneFromSquare(sq)
     if not sq then return false end
     local zoneName = ParadiseZ.getZoneName(sq)
@@ -16,6 +19,7 @@ function ParadiseZ.isFrostZoneFromSquare(sq)
     if not zone then return false end
     return zone.isFrost == true
 end
+
 function ParadiseZ.getCliColor(sq)
     if sq then        
 
@@ -56,8 +60,7 @@ function ParadiseZ.getCliStr(sq)
     end
     return "Normal"
 end
-TrailingTemp = TrailingTemp or {}
-TrailingTemp.ticks = 0
+
 function TrailingTemp.delTemp()
     if TrailingTemp.HeatSource then
         getCell():removeHeatSource(TrailingTemp.HeatSource)
@@ -91,9 +94,10 @@ function TrailingTemp.addTemp(pl, isHot, isCold)
     end
 end
 
+local TrailingTempTicks = 0
 function TrailingTemp.update(pl)
-    TrailingTemp.ticks = TrailingTemp.ticks + 1
-    if TrailingTemp.ticks % 360 ~= 0 then return end
+    TrailingTempTicks = TrailingTempTicks + 1
+    if TrailingTempTicks % 360 ~= 0 then return end
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end
