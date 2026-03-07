@@ -17,4 +17,23 @@ module ParadiseZ {
         FabricType = Cotton,
         WorldStaticModel = Shirt_Ground,
 	}
+	item Jacket_JimAdmin
+    {
+        DisplayCategory = Clothing,
+        Type = Clothing,
+        DisplayName = Paradise Admin Jacket,
+        ClothingItem = Jacket_JimAdmin,
+        BodyLocation = JacketSuit,
+        BloodLocation = Jacket,
+		Icon = JimAdmin,
+        RunSpeedModifier = 0.95,
+        CombatSpeedModifier = 0.95,
+        ScratchDefense = 20,
+        NeckProtectionModifier = 0.5,
+        Insulation = 0.55,
+        WindResistance = 0.45,
+        FabricType = Cotton,
+        Weight = 2,
+        WorldStaticModel = SuitJacket_Ground,
+    }
 }

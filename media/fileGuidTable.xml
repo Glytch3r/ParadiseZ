@@ -9,4 +9,9 @@
 		<path>media/clothing/clothingItems/Shirt_TheRange.xml</path>
 		<guid>f5852b6b-5df9-4009-b628-29ea3e0ab5d3</guid>
 	</files>	
+	<files>
+		<path>media/clothing/clothingItems/Jacket_JimAdmin.xml</path>
+		<guid>fcccfc5e-23fb-4275-a094-9c0ccd657494</guid>
+	</files>	
+
 </fileGuidTable>
