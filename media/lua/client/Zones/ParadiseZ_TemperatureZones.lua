@@ -92,24 +92,25 @@ function TrailingTemp.addTemp(pl, isHot, isCold)
         )
         getCell():addHeatSource(TrailingTemp.HeatSource)
     end
+    timer:Simple(1, function() 
+        TrailingTemp.delTemp()
+    end)
 end
 
 local TrailingTempTicks = 0
 function TrailingTemp.update(pl)
+    if not SandboxVars.ParadiseZ.TempActive then return end
     TrailingTempTicks = TrailingTempTicks + 1
-    if TrailingTempTicks % 360 ~= 0 then return end
+    if TrailingTempTicks % 3600 ~= 0 then return end
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end
     local isHot = ParadiseZ.isBlazeZone(sq) and EnvColor.isDay()
     local isCold = ParadiseZ.isFrostZone(sq) and EnvColor.isNight()
-    if TrailingTemp.HeatSource then
-        TrailingTemp.delHeat()
+
+    if isHot or isCold then        
+        TrailingTemp.addTemp(pl, isHot, isCold)        
     end
-    if not isHot and not isCold then        
-        return
-    end
-    TrailingTemp.addTemp(pl, isHot, isCold)
 end
 
 Events.OnPlayerUpdate.Remove(TrailingTemp.update)

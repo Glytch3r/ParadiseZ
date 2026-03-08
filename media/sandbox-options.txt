@@ -157,7 +157,7 @@ option ParadiseZ.FrostTemp
 
 option ParadiseZ.TempRad
 {
-	type = double, min = 0, max = 1000, default = 30,
+	type = double, min = 0, max = 1000, default = 5,
 	page = ParadiseZ, translation = ParadiseZ_TempRad,
 }
 
@@ -166,6 +166,11 @@ option ParadiseZ.TempColors
 {
 	type = boolean, default = false,
 	page = ParadiseZ, translation = ParadiseZ_TempColors,
+}
+option ParadiseZ.TempActive
+{
+	type = boolean, default = true,
+	page = ParadiseZ, translation = ParadiseZ_TempActive,
 }
 
 
