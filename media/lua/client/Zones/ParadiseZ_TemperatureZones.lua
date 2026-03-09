@@ -107,7 +107,7 @@ function TrailingTemp.update(pl)
     if not sq then return end
     local isHot = ParadiseZ.isBlazeZone(sq) and EnvColor.isDay()
     local isCold = ParadiseZ.isFrostZone(sq) and EnvColor.isNight()
-
+    
     if isHot or isCold then        
         TrailingTemp.addTemp(pl, isHot, isCold)        
     end
