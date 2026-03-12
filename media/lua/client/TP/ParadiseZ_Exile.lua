@@ -8,10 +8,12 @@ end
 
 
 function ParadiseZ.exileHandler(pl)
-    pl = pl or getPlayer()
+    if not isIngameState() then return end
     if not pl then return end
     if not pl:isAlive() then return end
     local md = pl:getModData()
+    if not md then return end
+
     if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
         ParadiseZ.doPvPExile(pl)
         md.LifePoints = md.LifePoints + 25
@@ -30,7 +32,7 @@ function ParadiseZ.doPvPExile(pl)
     if car then
         ParadiseZ.forceExitCar()
     end
-    timer:Simple(1, function() 
+    timer:Simple(0.2, function() 
         ParadiseZ.tp(pl, x, y, z)
         local sq = getCell():getOrCreateGridSquare(x, y, z)
         if sq then ParadiseZ.addTempMarker(sq) end
