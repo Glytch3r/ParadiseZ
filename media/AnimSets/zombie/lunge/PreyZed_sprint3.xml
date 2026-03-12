@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode x_extends="PreyZed_defaultLunge.xml">
 	<m_Name>PreyZed_sprint3</m_Name>
-	<m_AnimName>Bob_Sprint</m_AnimName>
+	<m_AnimName>Bob_IdleSneakLow_HBreathing</m_AnimName>
 
 	<m_Conditions>
 		<m_Name>isPrey</m_Name>

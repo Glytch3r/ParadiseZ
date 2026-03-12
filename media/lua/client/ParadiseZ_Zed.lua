@@ -38,6 +38,7 @@ function ParadiseZ.getWalkNum(zed)
 	local walk = ParadiseZ.getWalkType(zed)
 	return tonumber(walk:match("%d+"))
 end
+
 function ParadiseZ.moveToXYZ(zed, x, y, z)
     if not zed or not x or not y or not z then return end
     local pl = getPlayer()
