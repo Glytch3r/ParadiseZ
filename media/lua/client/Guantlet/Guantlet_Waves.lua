@@ -58,7 +58,16 @@ function Guantlet.getRandSq(cx, cy, cz)
     until nearbySquare or attempts > 50
     return nearbySquare
 end
-
+--[[ 
+Guantlet.startGuantlet('test', {
+    numWaves = 3,
+    zedsPerWave = 30,
+    timePerWave = 60,
+    breaktimeSeconds = 30,
+    delaySeconds = 10,
+    Level = 1
+}) 
+]]
 function Guantlet.startGuantlet(GuantletId, config)
     if not GuantletId then return end
     if not GuantletData then GuantletData = {} end
