@@ -46,6 +46,33 @@ function PreyZed.isAimedAt(pl, zed)
     local div = 9
     return (diff <= fov / div or diff >= 360 - fov / div) and pl:isAiming()
 end
+
+function PreyZed.fleeFromPl(zed, pl)
+    local zx, zy, zz = round(zed:getX()), round(zed:getY()), zed:getZ() or 0
+    local px, py = pl:getX(), pl:getY()
+    local dx = zx - px
+    local dy = zy - py
+    local len = math.sqrt(dx * dx + dy * dy)
+    if len == 0 then return end
+    dx = dx / len
+    dy = dy / len
+    for _ = 1, 10 do
+        local scatter = PreyZed.fleeDist * 0.3
+        local nx = round(zx + dx * PreyZed.fleeDist + ZombRand(-scatter, scatter))
+        local ny = round(zy + dy * PreyZed.fleeDist + ZombRand(-scatter, scatter))
+        local sq = getCell():getOrCreateGridSquare(nx, ny, zz)
+        if sq and PreyZed.isWalkable(sq) then
+            zed:setTarget(nil)
+          --  zed:setAttackTarget(nil)
+           
+            PreyZed.moveToXYZ(zed, nx, ny, zz)
+            return
+        end
+    end
+end
+
+
+--[[ 
 function PreyZed.fleeFromPl(zed, pl)
     local zx, zy, zz = round(zed:getX()), round(zed:getY()), zed:getZ() or 0
     local px, py = pl:getX(), pl:getY()
@@ -67,35 +94,34 @@ function PreyZed.fleeFromPl(zed, pl)
             return
         end
     end    
-end
-function PreyZed.Handler()
+end ]]
+function PreyZed.Handler(zed)
     local pl = getPlayer()
     if not pl then return end
 
-    local zeds = pl:getCell():getZombieList()
+    if zed and PreyZed.isPrey(zed) then
+        zed:setUseless(true)
 
-    for i = 0, zeds:size() - 1 do
-        local zed = zeds:get(i)
-        if zed and PreyZed.isPrey(zed) then
-            if ParadiseZ.isClosestPl(pl, zed) then
-                local dist = ParadiseZ.checkDist(pl, zed)
-                local md = zed:getModData()
-                local now = getGameTime():getWorldAgeHours()
+        if ParadiseZ.isClosestPl(pl, zed) then
+            local dist = ParadiseZ.checkDist(pl, zed)
+            local md = zed:getModData()
+            local now = getGameTime():getWorldAgeHours()
 
-                zed:setUseless(true)
-                zed:setCanWalk(true)
-                zed:setFakeDead(false)
+            zed:setCanWalk(true)
+            zed:setFakeDead(false)
 
-                if dist <= PreyZed.fleeRange then
-                    if zed:getTarget() then
-                        zed:setTarget(nil)
-                    end
+            if dist <= PreyZed.fleeRange then
+                if zed:getTarget() then
+                    zed:setTarget(nil)
+                end
 
-                    if not md.Prey_NextMove or now >= md.Prey_NextMove then
-                        md.Prey_NextMove = now + (PreyZed.fleeCD / 3600)
-                        PreyZed.fleeFromPl(zed, pl)  
-                    end
-                else
+                if not md.Prey_NextMove or now >= md.Prey_NextMove then
+                    md.Prey_NextMove = now + (PreyZed.fleeCD / 3600)
+                    PreyZed.fleeFromPl(zed, pl)
+                end
+            else
+                if not md.Prey_RandMove or now >= md.Prey_RandMove then
+                    md.Prey_RandMove = now + (10 / 3600)
                     PreyZed.moveRandLoc(zed)
                 end
             end
@@ -103,9 +129,9 @@ function PreyZed.Handler()
     end
 end
 
-Events.EveryOneMinute.Remove(PreyZed.Handler)
-Events.EveryOneMinute.Add(PreyZed.Handler)
 
+Events.OnZombieUpdate.Remove(PreyZed.Handler)
+Events.OnZombieUpdate.Add(PreyZed.Handler)
 
 
 function PreyZed.turnAround(targ)
