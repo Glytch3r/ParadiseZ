@@ -8,12 +8,12 @@ end
 
 
 function ParadiseZ.exileHandler(pl)
+    pl = pl or getPlayer()
     if not isIngameState() then return end
     if not pl then return end
     if not pl:isAlive() then return end
     local md = pl:getModData()
     if not md then return end
-
     if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
         ParadiseZ.doPvPExile(pl)
         md.LifePoints = md.LifePoints + 25
