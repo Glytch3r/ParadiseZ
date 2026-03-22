@@ -43,7 +43,7 @@ function ParadiseZ.moveToXYZ(zed, x, y, z)
     if not zed or not x or not y or not z then return end
     local pl = getPlayer()
     if not pl then return end
-   
+    
     local sq = getCell():getOrCreateGridSquare(x, y, z)
     if not sq then return end
     if zed:getSquare() ~= sq then
