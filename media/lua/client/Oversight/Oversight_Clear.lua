@@ -481,7 +481,7 @@ function ParadiseZ.lvlUp()
     end
     for i = TraitFactory.getTraits():size()-1, 0, -1 do
         local trait = TraitFactory.getTraits():get(i)
-        if trait:getCost() >= 0 then
+        if trait:getCost() >= 1 then
             if not pl:HasTrait(trait:getType()) then pl:getTraits():add(trait:getType()) end
         else
             if pl:HasTrait(trait:getType()) then pl:getTraits():remove(trait:getType()) end
