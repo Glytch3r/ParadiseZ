@@ -116,12 +116,12 @@ option ParadiseZ.RadZoneDmg
 }
 
 
-option ParadiseZ.TheRangeStaff {
+option ParadiseZ.TheRangeStaff {/*  */
 	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,
 	page = ParadiseZ, translation = ParadiseZ_TheRangeStaff,
 }
 option ParadiseZ.TheRangeCreditPrice {
-	type = integer, min = 0, max = 1000000, default = 5,
+	type = double, min = 0, max = 1000000, default = 5,
 	page = ParadiseZ, translation = ParadiseZ_TheRangeStaff,
 }
 
@@ -184,7 +184,7 @@ option ParadiseZ.BombZoneDelay
 option ParadiseZ.BombZoneChance
 {
 	type = double, min = 0, max = 100, default = 15,
-	page = ParadiseZ, translation = ParadiseZ_BombZoneDelay,
+	page = ParadiseZ, translation = ParadiseZ_BombZoneChance,
 }
 option ParadiseZ.BombZoneRad
 {
