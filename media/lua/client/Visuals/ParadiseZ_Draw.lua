@@ -138,7 +138,7 @@ function ParadiseZ.getReboundInfo()
     return "\n\nREBOUND:\n"
         .. tostring(round(rebound.x)) .. ", "
         .. tostring(round(rebound.y)) .. ", "
-        .. tostring(rebound.z)
+        .. tostring(rebound.z) .. "\n"
 end
 
 
