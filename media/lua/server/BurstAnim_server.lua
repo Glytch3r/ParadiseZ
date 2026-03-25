@@ -1,39 +1,99 @@
+----------------------------------------------------------------
+-----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
+----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
+----- █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
+-----  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
+----------------------------------------------------------------
+--                                                            --
+--   Project Zomboid Modding Commissions                      --
+--   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
+--                                                            --
+--   ▫ Discord  ꞉   glytch3r                                  --
+--   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
+--   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
+--   ▫ Github   ꞉   https://github.com/Glytch3r               --
+--                                                            --
+----------------------------------------------------------------
+----- ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
+----- █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
+----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
+-----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
+----------------------------------------------------------------
+BurstAnim = BurstAnim or {}
+ParadiseZ = ParadiseZ or {}
+
 local Commands = {}
-Commands.Guantlet = {}
+Commands.BurstAnim = {}
 
-Guantlet = Guantlet or {}
 
-function Guantlet.storeData(data)
-    if not data then return end
-    for id, entry in pairs(data) do
-        GuantletData[tostring(id)] = entry
+function BurstAnim.doRoll(percent)
+    percent = percent or 50
+
+	if percent <= 0 then return false end
+	if percent >= 100 then return true end
+	return percent >= ZombRand(1, 101)
+end
+
+function BurstAnim.findZedByID(id)
+    local list = getCell():getZombieList()
+    for i = 0, list:size() - 1 do
+        local z = list:get(i)
+        if z and z:getOnlineID() == id then
+            return z
+        end
+    end
+    return nil
+end
+
+function BurstAnim.zKnockDown(zed, isFront, isCrawler)
+    isFront = isFront or true
+    isCrawler = isCrawler or false
+    zed:setKnockedDown(true)
+    zed:setCrawler(isCrawler)
+    zed:setCanCrawlUnderVehicle(isCrawler)
+    zed:setFallOnFront(isFront)
+    zed:setCanWalk(not isCrawler)
+end
+
+function BurstAnim.plDmg(pl, isFront, dmg, isStagger)
+    isStagger = isStagger or false
+    if isStagger then
+        isFront = isFront or true
+        pl:setBumpType("stagger")
+        pl:setVariable("BumpDone", true)
+        pl:setVariable("BumpFall", true)
+        pl:setVariable("BumpFallType", isFront and "pushedFront" or "pushedBehind")
+        pl:reportEvent("wasBumped")
+    end
+    if pl == getPlayer() then
+        dmg = dmg or 25
+        pl:getBodyDamage():ReduceGeneralHealth(dmg)
     end
 end
 
-Commands.Guantlet.doSpawn = function(player, args)
-    local x, y, z, fit, fChance, isDown = args.x, args.y, args.z, args.fit, args.fChance, args.isDown
-    local zed = addZombiesInOutfit(math.floor(x), math.floor(y), math.floor(z), 1, tostring(fit), tonumber(fChance), isDown, false, isDown, isDown, 1.0)
-    if zed and isDown and not zed:isOnFloor() then
-        zed:knockDown(true)
-    end
+Commands.BurstAnim.triggerPlStagger = function(args)
+    local targ = getPlayerByOnlineID(args.pId)
+    if not targ then return end
+    local isFront = args.isFront
+    local dmg = args.dmg
+    local isStagger = args.isStagger
+    BurstAnim.plDmg(targ, isFront, dmg, isStagger) 
 end
 
-Commands.Guantlet.sSync = function(player, args)
-    local GuantletId = args.GuantletId
-    if not GuantletId then return end
-    local data = args.data
-    if data then
-        Guantlet.storeData(data)
-        sendServerCommand("Guantlet", "cSync", {id = player:getOnlineID(), GuantletId = GuantletId, data = data})
-    else
-        GuantletData[GuantletId] = nil
-        sendServerCommand("Guantlet", "cSync", {id = player:getOnlineID(), GuantletId = GuantletId})
-    end
-    ModData.transmit("GuantletData")
+Commands.BurstAnim.triggerZKnockDown = function(args)
+    local zed = BurstAnim.findZedByID(args.zId)
+    if not zed then return end
+    local isFront = args.isFront
+    local isCrawler = args.isCrawler
+    BurstAnim.zKnockDown(zed, isFront, isCrawler)
 end
 
-Events.OnClientCommand.Add(function(module, command, player, args)
+Commands.BurstAnim.triggerBurst = function(args)
+    BurstAnim.doBurst(args.x, args.y, args.z, args.dir)
+end
+
+Events.OnServerCommand.Add(function(module, command, args)
     if Commands[module] and Commands[module][command] then
-        Commands[module][command](player, args)
+        Commands[module][command](args)
     end
 end)

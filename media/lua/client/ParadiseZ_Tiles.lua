@@ -24,10 +24,10 @@ require "lua_timers"
 ParadiseZ = ParadiseZ or {}
 
 ParadiseZ.List = {
-   ["ParadiseZ_48"]=true,
-   ["ParadiseZ_49"]=true,
-   ["ParadiseZ_50"]=true,
-   ["ParadiseZ_51"]=true,
+   ["ParadiseTiles_48"]=true,
+   ["ParadiseTiles_49"]=true,
+   ["ParadiseTiles_50"]=true,
+   ["ParadiseTiles_51"]=true,
 }
 
 ParadiseZ.Frames = {  
@@ -38,8 +38,8 @@ ParadiseZ.Frames = {
 }
 
 ParadiseZ.mineList = {
-   ["ParadiseZ_6"]=true,
-   ["ParadiseZ_7"]=true,
+   ["ParadiseTiles_6"]=true,
+   ["ParadiseTiles_7"]=true,
 }
 
 function ParadiseZ.getRandFloat()
@@ -128,7 +128,7 @@ function ParadiseZ.sprHandler(pl)
             if sq then
                 for i = 0, sq:getObjects():size() - 1 do
                     local obj = sq:getObjects():get(i)
-                    if obj and ParadiseZ.isSpr(obj, "ParadiseZ") then
+                    if obj and ParadiseZ.isSpr(obj, "ParadiseTiles") then
                         local sprName = ParadiseZ.getSprName(obj)
                         if sprName and ParadiseZ.List[sprName] then
                             local sprNum = ParadiseZ.getSprNum(sprName)
@@ -136,11 +136,11 @@ function ParadiseZ.sprHandler(pl)
                                 if obj:isActivated() then
                                     local nextSprNum = ParadiseZ.Frames[tostring(sprNum)]
                                     if nextSprNum then
-                                        ParadiseZ.setSpr(obj, "ParadiseZ_" .. nextSprNum)
+                                        ParadiseZ.setSpr(obj, "ParadiseTiles_" .. nextSprNum)
                                     end
                                 else
                                     if sprNum ~= 48 then
-                                        ParadiseZ.setSpr(obj, "ParadiseZ_48")
+                                        ParadiseZ.setSpr(obj, "ParadiseTiles_48")
                                     end
                                 end
                             end
