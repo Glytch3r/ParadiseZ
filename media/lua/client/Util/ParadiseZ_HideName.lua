@@ -65,13 +65,7 @@ end
 Events.OnCreatePlayer.Add(ParadiseZ.hideNameInit)
 
 function ParadiseZ.nameHideHandler(pl)
-    local items = pl:getWornItems()
-    for i = 0, items:size() - 1 do
-        local item = items:getItemByIndex(i)
-        if item and item:getScriptItem() and item:getScriptItem():getParam("isNameHider") then
-            item:getModData()['isNameHider'] = true
-        end
-    end
+
     ParadiseZ.setHideName(ParadiseZ.isWearingHider())
 end
 
