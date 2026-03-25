@@ -1,5 +1,3 @@
-ParadiseZ = ParadiseZ or {}
-
 function ParadiseZ.getHiderList()
     local strList = SandboxVars.ParadiseZ.HiderList or "Base.Hat_BalaclavaFull;Base.Hat_BalaclavaFace;Base.WeldingMask"
     local t = {}
@@ -9,7 +7,19 @@ function ParadiseZ.getHiderList()
     return t
 end
 
-function ParadiseZ.isWearingHider()
+Events.OnCreatePlayer.Add(function()
+    local hiders = ParadiseZ.getHiderList()
+    local param = "isNameHider = TRUE"
+
+    for i = 1, #hiders do
+        local item = ScriptManager.instance:getItem(hiders[i])
+        if item then
+            item:DoParam(param)
+        end
+    end
+end)
+
+function ParadiseZ.isWearingNameHider()
     local pl = getPlayer()
     if not pl then return false end
     local items = pl:getWornItems()
@@ -17,7 +27,7 @@ function ParadiseZ.isWearingHider()
         local item = items:getItemByIndex(i)
         if item and item:getModData()['isNameHider'] ~= nil then
             local vis = item:getVisual()
-            if vis and vis.getHolesNumber or item:getVisual():getHolesNumber() <= 0 then
+            if vis and vis:getHolesNumber() <= 0 then
                 return true
             end
         end
@@ -26,47 +36,37 @@ function ParadiseZ.isWearingHider()
 end
 
 function ParadiseZ.setHideName(isHide)
-    local pl = getPlayer() 
+    local pl = getPlayer()
     if not pl then return end
-
-    if pl:getModData()['HideName'] == nil then
-        ParadiseZ.hideNameInit(pl:getPlayerNum(), pl)
-    end
-
+    local md = pl:getModData()
     if isHide then
+        if not md['HideNameCache'] then
+            md['HideNameCache'] = {
+                Forename = pl:getDescriptor():getForename(),
+                Surname = pl:getDescriptor():getSurname()
+            }
+        end
         pl:getDescriptor():setForename('')
         pl:getDescriptor():setSurname('')
     else
-        pl:getDescriptor():setForename(pl:getModData()['HideName']['Forename'])
-        pl:getDescriptor():setSurname(pl:getModData()['HideName']['Surname'])
+        if md['HideNameCache'] then
+            pl:getDescriptor():setForename(md['HideNameCache']['Forename'])
+            pl:getDescriptor():setSurname(md['HideNameCache']['Surname'])
+            md['HideNameCache'] = nil
+        end
     end
-
     sendPlayerStatsChange(pl)
 end
 
-function ParadiseZ.hideNameInit(plNum, pl)
-    local suit = ParadiseZ.getHiderList()
-    local param = "isNameHider = TRUE"
-    if suit then
-        for i = 1, #suit do
-            local item = ScriptManager.instance:getItem(suit[i])
-            if item then
-                item:DoParam(param)
-            end
-        end
-    end
-    if pl:getModData()['HideName'] == nil then
-        pl:getModData()['HideName'] = {}
-        pl:getModData()['HideName']['Forename'] = pl:getDescriptor():getForename()
-        pl:getModData()['HideName']['Surname'] = pl:getDescriptor():getSurname()		
-    end
-    triggerEvent("OnClothingUpdated", pl)
-end
-Events.OnCreatePlayer.Add(ParadiseZ.hideNameInit)
+local prevHiding = false
 
-function ParadiseZ.nameHideHandler(pl)
-
-    ParadiseZ.setHideName(ParadiseZ.isWearingHider())
+function ParadiseZ.NameHiderHandler(pl)
+    local hiding = ParadiseZ.isWearingNameHider()
+    if hiding ~= prevHiding then
+        prevHiding = hiding
+        ParadiseZ.setHideName(hiding)
+    end
 end
 
-Events.OnClothingUpdated.Add(ParadiseZ.nameHideHandler)
+Events.OnPlayerUpdate.Remove(ParadiseZ.NameHiderHandler)
+Events.OnPlayerUpdate.Add(ParadiseZ.NameHiderHandler)
