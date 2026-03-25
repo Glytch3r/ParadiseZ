@@ -19,10 +19,14 @@ function ParadiseZ.doRebound(pl, isChat)
     
     local car = pl:getVehicle()
     if car then
+        if ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl) then
+            ParadiseZ.forceExitCar()
+            return
+        end
         local seat = car:getSeat(pl)
         if seat and seat ~= 0 then
             if not isChat then 
-                if ParadiseZ.carTp(pl, car, x, y, z) then return end 
+                if ParadiseZ.carTp(pl, car, x, y, z) then return end             
             else
                 ParadiseZ.forceExitCar()
             end
@@ -32,7 +36,7 @@ function ParadiseZ.doRebound(pl, isChat)
         end
         if ParadiseZ.carTp(pl, car, x, y, z) then return end 
     end
-
+    
     ParadiseZ.tp(pl, x, y, z)
     local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
     if sq then ParadiseZ.addTempMarker(sq) end
