@@ -1,15 +1,6 @@
 ParadiseZ = ParadiseZ or {}
 
-function ParadiseZ.dispNameChanger(dispName)
-    if not SandboxVars.ParadiseZ.ClonerDisplayName then
-        return dispName
-    end
-    local name = dispName
-    while name:find("%s*%b()") do
-        name = name:gsub("%s*%b()", "")
-    end
-    return name:match("^%s*(.-)%s*$") 
-end
+
 function ParadiseZ.cloneStuff(item, dest)
     if not item then return end
     local pl = getPlayer()
@@ -52,8 +43,8 @@ function ParadiseZ.cloneStuff(item, dest)
     if instanceof(item, "InventoryItem") then
         toSpawn = dest:AddItem(item:getFullType())
         if not toSpawn then return end
-        if item:getName() then
-            toSpawn:setName(ParadiseZ.dispNameChanger(item:getName()))
+        if SandboxVars.ParadiseZ.ClonerDisplayName then
+            toSpawn:setName(item:getDisplayName())
         end
         for _, p in ipairs(genericProps) do
             local g, s = p[1], p[2]
@@ -196,7 +187,7 @@ function ParadiseZ.cloner(player, context, items)
             local iconStr = ParadiseZ.getIconStr(realItem)
             print(iconStr)
             local texPath = "media/textures/Item_" .. tostring(realItem:getType()) 
-            local name = ParadiseZ.dispNameChanger(realItem:getDisplayName())
+            local name = realItem:getDisplayName()
 
             local c1 = subMenu:addOption(name, realItem, ParadiseZ.cloneStuff)
             c1.iconTexture = getTexture(texPath)
