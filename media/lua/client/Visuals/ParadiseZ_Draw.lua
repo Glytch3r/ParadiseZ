@@ -226,12 +226,10 @@ function ParadiseZ.doDrawZone()
 
 
 
-    getTextManager():DrawString(UIFont.Medium, 68, 100,
-        zoneInfo, color.r, color.g, color.b, alpha)
+    getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
 
     if reboundText and reboundText ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, 160,
-            reboundText, color.r, color.g, color.b, alpha)
+        getTextManager():DrawString(UIFont.Small, 68, 160, reboundText, color.r, color.g, color.b, alpha)
     end
 
     if texture then
