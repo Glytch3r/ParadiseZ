@@ -43,9 +43,8 @@ function ParadiseZ.cloneStuff(item, dest)
     if instanceof(item, "InventoryItem") then
         toSpawn = dest:AddItem(item:getFullType())
         if not toSpawn then return end
-        if SandboxVars.ParadiseZ.ClonerDisplayName then
-            toSpawn:setName(item:getDisplayName())
-        end
+        toSpawn:setName(item:getDisplayName())
+   
         for _, p in ipairs(genericProps) do
             local g, s = p[1], p[2]
             if item[g] and toSpawn[s] then
@@ -187,8 +186,10 @@ function ParadiseZ.cloner(player, context, items)
             local iconStr = ParadiseZ.getIconStr(realItem)
             print(iconStr)
             local texPath = "media/textures/Item_" .. tostring(realItem:getType()) 
-            local name = realItem:getDisplayName()
-
+            local name = realItem:getName()
+            if SandboxVars.ParadiseZ.ClonerDisplayName then
+                name = realItem:getDisplayName()
+            end
             local c1 = subMenu:addOption(name, realItem, ParadiseZ.cloneStuff)
             c1.iconTexture = getTexture(texPath)
 
