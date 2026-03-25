@@ -1,16 +1,22 @@
 ParadiseZ = ParadiseZ or {}
+
+function ParadiseZ.dispNameChanger(dispName)
+    if not SandboxVars.ParadiseZ.ClonerDisplayName then
+        return dispName
+    end
+    local name = dispName
+    while name:find("%s*%b()") do
+        name = name:gsub("%s*%b()", "")
+    end
+    return name:match("^%s*(.-)%s*$") 
+end
 function ParadiseZ.cloneStuff(item, dest)
-
     if not item then return end
-
     local pl = getPlayer()
     if not pl then return end
-
     local inv = pl:getInventory()
     dest = dest or inv
-
     local toSpawn
-
     local genericProps = {
         { "getCondition", "setCondition" },
         { "getHaveBeenRepaired", "setHaveBeenRepaired" },
@@ -19,9 +25,7 @@ function ParadiseZ.cloneStuff(item, dest)
         { "getKeyId", "setKeyId" },
         { "getWetness", "setWetness" },
         { "getUsedDelta", "setUsedDelta" },
-
     }
-
     local foodProps = {
         { "getAge", "setAge" },
         { "getOffAge", "setOffAge" },
@@ -40,7 +44,6 @@ function ParadiseZ.cloneStuff(item, dest)
         { "getFoodSickness", "setFoodSickness" },
         { "getHeat", "setHeat" },
     }
-
     local clothingProps = {
         { "getBloodLevel", "setBloodLevel" },
         { "getDirtyness", "setDirtyness" },
@@ -49,7 +52,9 @@ function ParadiseZ.cloneStuff(item, dest)
     if instanceof(item, "InventoryItem") then
         toSpawn = dest:AddItem(item:getFullType())
         if not toSpawn then return end
-
+        if item:getName() then
+            toSpawn:setName(ParadiseZ.dispNameChanger(item:getName()))
+        end
         for _, p in ipairs(genericProps) do
             local g, s = p[1], p[2]
             if item[g] and toSpawn[s] then
@@ -73,7 +78,6 @@ function ParadiseZ.cloneStuff(item, dest)
                     toSpawn:setContainsClip(clip)
                 end
             end
-
             local attachmentList = { "Scope", "Clip", "Sling", "Stock", "Canon", "Recoilpad" }
             for _, p in ipairs(attachmentList) do
                 local fn = item["get"..p]
@@ -111,7 +115,6 @@ function ParadiseZ.cloneStuff(item, dest)
                     end
                 end
             end
-
             if item.getVisual and toSpawn.getVisual then
                 local vis = item:getVisual()
                 local newVis = toSpawn:getVisual()
@@ -130,7 +133,6 @@ function ParadiseZ.cloneStuff(item, dest)
                     end
                 end
             end
-
             pl:resetModelNextFrame()
             triggerEvent("OnClothingUpdated", pl)
         end
@@ -154,10 +156,8 @@ function ParadiseZ.cloneStuff(item, dest)
             toSpawn = dest:AddItem(item)
         end
     end
-
     return toSpawn
 end
-
 
 function ParadiseZ.cloneMultipleStuff(item, int)
 	if int == nil then int = 1 end
@@ -179,7 +179,6 @@ end
 
 function ParadiseZ.cloner(player, context, items)    
     if string.lower(getPlayer():getAccessLevel()) ~= "admin" then return end
-
     local duplicateOption = context:addOption("Paradise Item Cloner: ")
     duplicateOption.iconTexture = getTexture("media/ui/Paradise/cloner.png")
     local subMenu = ISContextMenu:getNew(context)
@@ -197,14 +196,15 @@ function ParadiseZ.cloner(player, context, items)
             local iconStr = ParadiseZ.getIconStr(realItem)
             print(iconStr)
             local texPath = "media/textures/Item_" .. tostring(realItem:getType()) 
+            local name = ParadiseZ.dispNameChanger(realItem:getDisplayName())
 
-            local c1 = subMenu:addOption(realItem:getDisplayName(), realItem, ParadiseZ.cloneStuff)
+            local c1 = subMenu:addOption(name, realItem, ParadiseZ.cloneStuff)
             c1.iconTexture = getTexture(texPath)
 
-            local c2 = subMenu:addOption(realItem:getDisplayName() .. " x5", realItem, function() ParadiseZ.cloneMultipleStuff(realItem, 5) end)
+            local c2 = subMenu:addOption(name .. " x5", realItem, function() ParadiseZ.cloneMultipleStuff(realItem, 5) end)
             c2.iconTexture = getTexture(texPath)
 
-            local c3 = subMenu:addOption(realItem:getDisplayName() .. " x10", realItem, function() ParadiseZ.cloneMultipleStuff(realItem, 10) end)
+            local c3 = subMenu:addOption(name .. " x10", realItem, function() ParadiseZ.cloneMultipleStuff(realItem, 10) end)
             c3.iconTexture = getTexture(texPath)
         end
     end
