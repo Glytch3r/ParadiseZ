@@ -122,6 +122,7 @@ function ParadiseZ.isRegularZone(pl)
     
     return true
 end
+
 function ParadiseZ.checkZoneFlag(pl, flag)
     local targ = ParadiseZ.getPl(pl)
     if not targ then return false end
@@ -135,12 +136,12 @@ function ParadiseZ.checkZoneFlag(pl, flag)
     return zone[flag] == true
 end
 
+function ParadiseZ.isNoFireZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isNoFire") end
 function ParadiseZ.isBlazeZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isBlaze") end
 function ParadiseZ.isFrostZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isFrost") end
 function ParadiseZ.isBombZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isBomb") end
 function ParadiseZ.isMineZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isMine") end
 function ParadiseZ.isNoCampZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isNoCamp") end
-function ParadiseZ.isNoFireZone(pl)  return ParadiseZ.checkZoneFlag(pl, "isNoFire") end
 function ParadiseZ.isCageZone(pl)    return ParadiseZ.checkZoneFlag(pl, "isCage") end
 function ParadiseZ.isPartyZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isParty") end
 function ParadiseZ.isRallyZone(pl)   return ParadiseZ.checkZoneFlag(pl, "isRally") end
