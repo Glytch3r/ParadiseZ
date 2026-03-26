@@ -26,7 +26,7 @@ module ParadiseZ {
         Icon	=	TheRangeCard,
 		WorldStaticModel = TheRangeCard,
 		CardOwner = None,
-		CardCredits = 0,
+		CardCredits = 1,
 		CardPoints = 0,
 
     }
