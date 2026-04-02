@@ -26,6 +26,7 @@
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+
 ParadiseZ = ParadiseZ or {}
 TheRange = TheRange or {}
 TheRange.fType = "ParadiseZ.TheRangeCard"
@@ -43,7 +44,6 @@ end
 
 function TheRange.invContext(plNum, context, items)
     if not plNum or not context or not items then return end
-   --if not (isDebugEnabled() or (isClient() and isAdmin())) then return end
 
     local pl = getSpecificPlayer(plNum)
     if not pl then return end
@@ -51,31 +51,24 @@ function TheRange.invContext(plNum, context, items)
     local user = pl:getUsername()
     if not user then return end
 
-    local card = nil
+    local cards = {}
 
     for _, entry in ipairs(items) do
-        if type(entry) == "table" and entry.items and entry.items[1] then
-            local item = entry.items[1]
-            if instanceof(item, "InventoryItem") and item:getFullType() == TheRange.fType then
-                card = item
-                break
+        if type(entry) == "table" and entry.items then
+            for i = 1, #entry.items do
+                local item = entry.items[i]
+                if instanceof(item, "InventoryItem") and item:getFullType() == TheRange.fType then
+                    table.insert(cards, item)
+                end
             end
         elseif instanceof(entry, "InventoryItem") then
             if entry:getFullType() == TheRange.fType then
-                card = entry
-                break
+                table.insert(cards, entry)
             end
         end
     end
 
-    if not card then return end
-
-    local md = card:getModData()
-    if not md then return end
-
-    if md.CardOwner == nil then md.CardOwner = "None" end
-    if md.CardCredits == nil then md.CardCredits = 0 end
-    if md.CardPoints == nil then md.CardPoints = 0 end
+    if #cards == 0 then return end
 
     local main = context:addOption("TheRange: ")
     main.iconTexture = getTexture("media/textures/TheRange.png")
@@ -83,34 +76,57 @@ function TheRange.invContext(plNum, context, items)
     local sub = ISContextMenu:getNew(context)
     context:addSubMenu(main, sub)
 
-    if md.CardOwner == "None" then
-        sub:addOption("Register", card, function()
-            md.CardOwner = user
-        end)
-    end
+    sub:addOption("Register", cards, function(list)
+        for i = 1, #list do
+            local card = list[i]
+            local md = card:getModData()
+            if md then
+                if md.CardOwner == nil then md.CardOwner = "None" end
+                if md.CardCredits == nil then md.CardCredits = 0 end
+                if md.CardPoints == nil then md.CardPoints = 0 end
+                if md.CardOwner == "None" then
+                    md.CardOwner = user
+                end
+            end
+        end
+    end)
 
     if string.lower(pl:getAccessLevel()) == "admin" then
-        sub:addOption("Add Credit", card, function()
-            TheRange.addCredit(card, 1)
+        sub:addOption("Add Credit", cards, function(list)
+            for i = 1, #list do
+                TheRange.addCredit(list[i], 1)
+            end
         end)
-        sub:addOption("Reduce Credit", card, function()
-            TheRange.reduceCredit(card, 1)
+
+        sub:addOption("Reduce Credit", cards, function(list)
+            for i = 1, #list do
+                TheRange.reduceCredit(list[i], 1)
+            end
         end)
     end
 
-    local cap1 = sub:addOption("Owner: " .. tostring(md.CardOwner), card, nil)
-    cap1.notAvailable = true
+    local card = cards[1]
+    local md = card:getModData()
 
-    local cap2 = sub:addOption("Credits: " .. tostring(md.CardCredits), card, nil)
-    cap2.notAvailable = true
+    if md then
+        if md.CardOwner == nil then md.CardOwner = "None" end
+        if md.CardCredits == nil then md.CardCredits = 0 end
+        if md.CardPoints == nil then md.CardPoints = 0 end
 
-    local cap3 = sub:addOption("Points: " .. tostring(md.CardPoints), card, nil)
-    cap3.notAvailable = true
+        local cap1 = sub:addOption("Owner: " .. tostring(md.CardOwner), nil, nil)
+        cap1.notAvailable = true
 
+        local cap2 = sub:addOption("Credits: " .. tostring(md.CardCredits), nil, nil)
+        cap2.notAvailable = true
+
+        local cap3 = sub:addOption("Points: " .. tostring(md.CardPoints), nil, nil)
+        cap3.notAvailable = true
+    end
 end
 
 Events.OnFillInventoryObjectContextMenu.Remove(TheRange.invContext)
 Events.OnFillInventoryObjectContextMenu.Add(TheRange.invContext)
+
 
 function TheRange.getMembershipCard(pl)
     pl = pl or getPlayer()
