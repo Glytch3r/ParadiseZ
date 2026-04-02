@@ -678,7 +678,7 @@ function ParadiseZ.ZoneEditorWindow:refreshList()
     self.datas.selected = selectedIdx
 end
 
-
+--
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
