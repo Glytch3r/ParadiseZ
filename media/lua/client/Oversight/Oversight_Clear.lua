@@ -177,11 +177,14 @@ function ParadiseZ.ClearFloorItems2(pl)
     ISInventoryPage.renderDirty = true
 end
 
-function ParadiseZ.StopFire(pl)
+function ParadiseZ.StopFire(pl, checkZone)
     pl = pl or getPlayer() 
     if not pl then return end
-
+    
     local rad = SandboxVars.ParadiseZ.ClearRadius or 15
+    if checkZone then
+        rad = SandboxVars.ParadiseZ.ClearFireRadius
+    end
     local cell = pl:getCell()
     local sq = pl:getCurrentSquare()
     if not cell or not sq then return end
@@ -190,13 +193,19 @@ function ParadiseZ.StopFire(pl)
     for xDelta = -rad, rad do
         for yDelta = -rad, rad do
             local targetSq = cell:getOrCreateGridSquare(x + xDelta, y + yDelta, z)
-            if targetSq and targetSq:Is(IsoFlagType.burning) then
-                targetSq:transmitStopFire()
-                targetSq:stopFire()
+            if targetSq then
+                if checkZone and not ParadiseZ.isNoFireZone(targetSq) then
+
+                else
+                    if targetSq:Is(IsoFlagType.burning) then
+                        targetSq:transmitStopFire()
+                        targetSq:stopFire()
+                    end
+                end
             end
+
         end
     end
-
     --pl:addLineChatElement("Stopped Fire")
 end
 

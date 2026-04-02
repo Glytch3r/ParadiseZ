@@ -7,6 +7,8 @@ function ParadiseZ.getPl(char)
         return getPlayerFromUsername(char)
     elseif instanceof(char, "IsoPlayer") then
         return char
+    elseif instanceof(char, "IsoGridSquare")  then
+        return char
     end
     return nil
 end
