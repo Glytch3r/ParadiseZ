@@ -555,6 +555,7 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o:setResizable(true)
     return o
 end
+
 function ParadiseZ.ZoneEditorWindow:prerender()
     ISCollapsableWindow.prerender(self)
     self.bgTexture = bg_TEX
@@ -687,11 +688,11 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
         if button.internal == "RESET" then
             local function resetModal(targ, button)
                 if button == 'YES' then                            
-                    --self.ZoneData = ParadiseZ.ZoneDataBackup
-                    --ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
+                    self.ZoneData = ParadiseZ.ZoneDataBackup
+                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-                    -- self.shouldSync = true
-                    --self:refreshList()
+                    self.shouldSync = true
+                    self:refreshList()
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
                     end)
