@@ -22,7 +22,7 @@ function ParadiseZ.doFlash(targPl)
     md.FlashDecayRate = 1.0 / frames
 
     if md.FlashDecayRate < 0.001 then
-        md.FlashDecayRate = 0.001
+        md.FlashDecayRate = 0
     end
 end
 
