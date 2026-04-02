@@ -12,10 +12,18 @@ function ParadiseZ.doFlash(targPl)
     if not pl then return end
     ParadiseZ.initFlashData(pl)
     local md = pl:getModData()
+
     local decay = SandboxVars.ParadiseZ.ThunderFlashDecay or 0.4
     if type(decay) ~= "number" or decay <= 0 then decay = 0.4 end
+
     md.FlashAlpha = 1.0
-    md.FlashDecayRate = 1.0 / (decay * 60)
+
+    local frames = math.max(1, decay * 60)
+    md.FlashDecayRate = 1.0 / frames
+
+    if md.FlashDecayRate < 0.001 then
+        md.FlashDecayRate = 0.001
+    end
 end
 
 function ParadiseZ.drawFlash()
@@ -29,7 +37,8 @@ function ParadiseZ.drawFlash()
 
     if md.FlashAlpha > 0 then
         getRenderer():renderRect(0, 0, sw, sh, 0.5, 0.5, 0.5, md.FlashAlpha)
-        md.FlashAlpha = math.max(0, md.FlashAlpha - md.FlashDecayRate)
+        md.FlashAlpha = md.FlashAlpha - md.FlashDecayRate
+        if md.FlashAlpha <= 0.001 then md.FlashAlpha = 0 end
     end
 
     if md.LifeBarFlash > 0 then

@@ -1,5 +1,10 @@
 ParadiseZ = ParadiseZ or {}
 
+function ParadiseZ.roundN(v, n)
+    local m = 10 ^ (n or 3)
+    return math.floor(v * m + 0.5) / m
+end
+
 function ParadiseZ.checkDist(pl, sq)
     if not pl or not sq then return end
     local dx = pl:getX() - sq:getX()
