@@ -687,11 +687,12 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     if string.lower(pl:getAccessLevel()) == "admin" then
         if button.internal == "RESET" then
             local function resetModal(targ, button)
-                if button == 'YES' then                            
-                    self.ZoneData = ParadiseZ.ZoneDataBackup
-                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
-                    ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-                    self.shouldSync = true
+                if button == 'YES' then    
+                    ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
+                    self.ZoneData = ParadiseZ.ZoneData
+                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneData)
+                    ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
+                    self.shouldSync = false
                     self:refreshList()
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
@@ -699,9 +700,9 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                     timer:Simple(1.2, function()
                         self.btnReset:setImage(reset_TEX)
                     end)
-                    timer:Simple(2, function()
+             --[[        timer:Simple(2, function()
                         self:close()
-                    end)
+                    end) ]]
                 else
                     self.btnReset:setImage(reset_TEX)                    
                 end
