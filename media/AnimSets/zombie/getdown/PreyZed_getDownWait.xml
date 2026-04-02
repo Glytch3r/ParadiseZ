@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <animNode>
 	<m_Name>PreyZed_getDownWait</m_Name>
-	<m_AnimName>Zombie_Idle</m_AnimName>
+	<m_AnimName>Bob_IdleSneakLow_HBreathing</m_AnimName>
 
 	<m_Conditions>
 		<m_Name>isPrey</m_Name>
