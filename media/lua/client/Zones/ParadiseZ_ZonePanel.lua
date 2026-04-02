@@ -677,6 +677,7 @@ function ParadiseZ.ZoneEditorWindow:refreshList()
     self.datas.selected = selectedIdx
 end
 
+
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
@@ -687,9 +688,9 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             local function resetModal(targ, button)
                 if button == 'YES' then                            
                     self.ZoneData = ParadiseZ.ZoneDataBackup
-                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
+                    --ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-                    self.shouldSync = false
+                    self.shouldSync = true
                     self:refreshList()
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
