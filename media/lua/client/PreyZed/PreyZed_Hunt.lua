@@ -39,7 +39,7 @@ function PreyZed.dead(zed)
          if not card then return end
          
          if ParadiseZ.isHuntZone(pl) and ParadiseZ.isHuntZoneSq(sq) then
-            local pts = SandboxVars.ParadiseZ.TheRangePointsPerKill 
+            local pts = SandboxVars.TheRange.PointsPerKill 
             TheRange.addPoints(card, pts)
             pl:setHaloNote(tostring(TheRange.getPoints(card)),150,250,150,900) 
          end

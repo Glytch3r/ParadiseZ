@@ -7,7 +7,9 @@ function ParadiseZ.getHiderList()
     return t
 end
 
-Events.OnCreatePlayer.Add(function()
+
+
+function ParadiseZ.doHiderParams()
     local hiders = ParadiseZ.getHiderList()
     local param = "isNameHider = TRUE"
 
@@ -17,7 +19,10 @@ Events.OnCreatePlayer.Add(function()
             item:DoParam(param)
         end
     end
-end)
+end
+Events.OnCreatePlayer.Add(ParadiseZ.doHiderParams)
+Events.OnSandboxModified.Add(ParadiseZ.doHiderParams)
+
 
 function ParadiseZ.isWearingNameHider()
     local pl = getPlayer()

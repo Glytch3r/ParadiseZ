@@ -124,24 +124,7 @@ option ParadiseZ.RadZoneDmg
 }
 
 
-option ParadiseZ.TheRangeStaff {
-	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,
-	page = ParadiseZ, translation = ParadiseZ_TheRangeStaff,
-}
-option ParadiseZ.TheRangeCreditPrice {
-	type = double, min = 0, max = 1000000, default = 5,
-	page = ParadiseZ, translation = ParadiseZ_TheRangeStaff,
-}
 
-option ParadiseZ.TheRangePointsPerKill {
-	type = double,	 min = 0.00,  max = 999999999,  default = 3,
-	page = ParadiseZ, translation = ParadiseZ_TheRangePointsPerKill,
-}
-option ParadiseZ.TheRangeExchangePercent
-{
-	type = double,	 min = 0.00,  max = 100,  default = 0.02,
-	page = ParadiseZ, translation = ParadiseZ_TheRangeExchangePercent,
-}
 
 
 
@@ -371,5 +354,26 @@ option BurstAnim.EffectsRange
 {
 	type = double,	 min = 0.00,  max = 100,  default = 12,
 	page = BurstAnim, translation = BurstAnim_EffectsRange,
+}
+
+
+
+option TheRange.Staff {
+	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,
+	page = TheRange, translation = TheRange_Staff,
+}
+option TheRange.CreditPrice {
+	type = double, min = 0, max = 1000000, default = 5,
+	page = TheRange, translation = TheRange_CreditPrice,
+}
+
+option TheRange.PointsPerKill {
+	type = double,	 min = 0.00,  max = 999999999,  default = 3,
+	page = TheRange, translation = TheRange_PointsPerKill,
+}
+option TheRange.ExchangePercent
+{
+	type = double,	 min = 0.00,  max = 100,  default = 0.02,
+	page = TheRange, translation = TheRange_ExchangePercent,
 }
 

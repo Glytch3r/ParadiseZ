@@ -51,7 +51,7 @@ function ParadiseZ.getSuitList()
     return t
 end
 
-Events.OnCreatePlayer.Add(function()
+function ParadiseZ.doRadParams()
     local suit = ParadiseZ.getSuitList()
     local param = "isRadSuit = TRUE"
 
@@ -61,7 +61,12 @@ Events.OnCreatePlayer.Add(function()
             item:DoParam(param)
         end
     end
-end)
+end
+Events.OnCreatePlayer.Add(ParadiseZ.doRadParams)
+Events.OnSandboxModified.Add(ParadiseZ.doRadParams)
+
+
+
 
 --[[ 
 Monmouth Power Station

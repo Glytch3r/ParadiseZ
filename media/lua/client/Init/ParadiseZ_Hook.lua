@@ -1,4 +1,5 @@
 ParadiseZ = ParadiseZ or {}
+LuaEventManager.AddEvent("OnSandboxModified")
 
 
 function ParadiseZ.isAdm()
@@ -13,6 +14,7 @@ Events.OnGameStart.Add(function()
         ParadiseZ.echo("SandboxOptions Updated")
         self.options:sendToServer()
         getSandboxOptions():toLua()
+        triggerEvent("OnSandboxModified")
         self:destroy()
     end
 --[[ 

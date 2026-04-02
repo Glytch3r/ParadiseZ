@@ -27,7 +27,7 @@ function TheRange.isStaff(pl)
 end
 
 function TheRange.parseNames()
-    local strList = SandboxVars.ParadiseZ.TheRangeStaff or "zeconyhd;Dajulu;Lark;Glytch3r"
+    local strList = SandboxVars.TheRange.Staff or "zeconyhd;Dajulu;Lark;Glytch3r"
     local t = {}
     for item in string.gmatch(strList, "[^;]+") do
         table.insert(t, item)

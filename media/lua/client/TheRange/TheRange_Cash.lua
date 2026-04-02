@@ -96,8 +96,8 @@ function TheRange.onPtsPicked(target, button, value, card, obj)
     local currentPts = TheRange.getPoints(card)
     if currentPts < value then return end
 
-    local price = tonumber(SandboxVars.ParadiseZ.TheRangeCreditPrice) or 1
-    local percent = tonumber(SandboxVars.ParadiseZ.TheRangeExchangePercent) or 0
+    local price = tonumber(SandboxVars.TheRange.CreditPrice) or 1
+    local percent = tonumber(SandboxVars.TheRange.ExchangePercent) or 0
     
     percent = math.max(0, math.min(1, percent))
 
