@@ -3,8 +3,37 @@ TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 -----------------------            ---------------------------
+function ParadiseZ.isRestricted(sq, pl)
+    pl = ParadiseZ.getPl(pl) or getPlayer()
+    if not pl or not pl:isAlive() then return false end
 
+    local realSq = pl:getCurrentSquare()
+    if not realSq then return false end
 
+    if sq ~= realSq then
+        sq = realSq
+    end
+
+    if ParadiseZ.isOutsideSq(sq) then return false end
+
+    local name = ParadiseZ.getZoneName(pl)
+    if not name then return false end
+
+    local x, y = ParadiseZ.getXY(pl)
+    if not x or not y then return false end
+
+    if ParadiseZ.isXYZoneInner(x, y, name) then
+        if (ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl))
+        or ParadiseZ.isBlockedZone(pl)
+        or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl))) then
+            return true
+        end
+    end
+
+    return false
+end
+
+--[[ 
 function ParadiseZ.isRestricted(sq, pl)
     pl = ParadiseZ.getPl(pl)
     if not pl then return false end
@@ -19,7 +48,7 @@ function ParadiseZ.isRestricted(sq, pl)
         end
     end
     return false
-end
+end ]]
 
 local ticks = 0
 function ParadiseZ.reboundHandler(pl)
