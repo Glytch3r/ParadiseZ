@@ -690,7 +690,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                     --self.ZoneData = ParadiseZ.ZoneDataBackup
                     --ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-                   -- self.shouldSync = true
+                    -- self.shouldSync = true
                     --self:refreshList()
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
