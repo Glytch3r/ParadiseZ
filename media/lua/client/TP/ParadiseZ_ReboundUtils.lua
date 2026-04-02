@@ -107,40 +107,6 @@ function ParadiseZ.tpCleaner()
     ParadiseZ.tpTry = nil
 end
 
---[[
-function ParadiseZ.getClosestReboundPoint(origin, margin)
-    margin = margin or 4
-    local pl = getPlayer()
-    if not pl then return nil, nil, nil end
-    local cell = pl:getCell()
-    local ox, oy, oz = origin and origin:getX() or pl:getX(), origin and origin:getY() or pl:getY(), origin and origin:getZ() or pl:getZ()
-    local originZone = ParadiseZ.getZoneName(origin)
-    local rad = 30
-    local maxRad = 6000000
-    
-    while rad <= maxRad do
-        for xDelta = -rad, rad do
-            for yDelta = -rad, rad do
-                local testSq = cell:getOrCreateGridSquare(ox + xDelta, oy + yDelta, oz)
-                if testSq and not ParadiseZ.isRestricted(testSq, pl) then
-                    
-                    if not ParadiseZ.isSameZone(pl, testSq) then                             
-                        local dx, dy = testSq:getX() - ox, testSq:getY() - oy
-                        local dist = math.sqrt(dx*dx + dy*dy)
-                        local zoneName = ParadiseZ.getZoneName(testSq)
-                        if zoneName and dist >= margin and (ParadiseZ.isOutsideSq(testSq) or (not ParadiseZ.ZoneData[zoneName] or not ParadiseZ.ZoneData[zoneName].isBlocked)) then
-                            return testSq:getX(), testSq:getY(), testSq:getZ()
-                        end
-                    end
-                end
-            end
-        end
-        rad = rad + 5
-    end
-
-    return ox, oy, oz
-end
- ]]
 --[[ 
 
 function ParadiseZ.findReboundPoint(pl, originSq, outward)
