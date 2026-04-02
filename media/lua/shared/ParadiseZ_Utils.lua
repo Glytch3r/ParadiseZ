@@ -1,5 +1,19 @@
 ParadiseZ = ParadiseZ or {}
 
+function ParadiseZ.echo(var, isClip)
+	var = tostring(var)
+	local pl = getPlayer() 
+	if pl then
+		pl:addLineChatElement(var)
+	end
+	if not getCore():getDebug() then return end
+
+	print(var)
+	if isClip then
+		Clipboard.setClipboard(var);
+	end
+end
+
 function ParadiseZ.roundN(v, n)
     local m = 10 ^ (n or 3)
     return math.floor(v * m + 0.5) / m

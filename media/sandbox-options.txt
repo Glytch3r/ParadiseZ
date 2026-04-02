@@ -357,6 +357,13 @@ option BurstAnim.EffectsRange
 }
 
 
+option BurstAnim.zedKnockDown	
+{
+	type = boolean, default = true,
+	page = BurstAnim, translation = BurstAnim_zedKnockDown,
+}
+
+
 
 option TheRange.Staff {
 	type = string, default = zeconyhd;Dajulu;Lark;Glytch3r,

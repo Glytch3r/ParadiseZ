@@ -92,11 +92,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
 
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
-    addSafeOption(opt, "ReApply Gun Params", function() 
+    addSafeOption(opt, "ReApply All Params", function() 
         if isClient() then 
-            sendClientCommand("ParadiseZ", "gunParams", { })
-        else
-            ParadiseZ.applyGunParams(getCore():getDebug()) 
+            sendClientCommand("ParadiseZ", "reParams", { })   
         end	
         local GunVersionKey = SandboxVars.ParadiseZpvp.GunVersionKey
         pl:setHaloNote(tostring("Gun Paramaters Applied: "..tostring(GunVersionKey)),150,250,150,900)     

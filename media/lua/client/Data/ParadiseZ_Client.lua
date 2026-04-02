@@ -15,7 +15,8 @@ print(getPlayer():getModData()['isScareCrow'] )
  ]]
 
 -----------------------            ---------------------------
---[[ Commands.ParadiseZ.knockDownZed = function(args)
+ Commands.ParadiseZ.knockDownZed = function(args)
+    if not SandboxVars.BurstAnim.zedKnockDown then return end
     local source = getPlayer();
     local player = getPlayerByOnlineID(args.id)
     local zedID = args.zedID
@@ -27,7 +28,7 @@ print(getPlayer():getModData()['isScareCrow'] )
 		end
 	end
 end
- ]]
+
 
 function ParadiseZ.doKnockDownPl(targ, pushedDir)
    -- targ:setBumpType("stagger");
@@ -48,11 +49,20 @@ Commands.ParadiseZ.knockDownPl = function(args)
     ParadiseZ.doKnockDownPl(targ, args.pushedDir)
 end
 
-Commands.ParadiseZ.gunParams = function(args)
-    ParadiseZ.applyGunParams(getCore():getDebug())   
-    local pl = getPlayer() 
-    if not pl then return end
+Commands.ParadiseZ.reParams = function(args)    
+    triggerEvent("OnSandboxModified")
 end
+
+Commands.ParadiseZ.tellAll = function(args)
+    local pl = getPlayer()
+    if not pl then return end
+    if not pl:isAlive() then 
+        pl:addLineChatElement(tostring(args.msg))
+    else
+        pl:Say(tostring(args.msg)) 
+    end
+end
+
 
 -----------------------            ---------------------------
 function ParadiseZ.doThunder() 
