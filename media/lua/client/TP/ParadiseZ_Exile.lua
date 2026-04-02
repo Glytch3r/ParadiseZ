@@ -6,7 +6,7 @@ function ParadiseZ.parseExileCoords()
     return tx, ty, tz
 end
 
-
+local teleporting = false
 function ParadiseZ.exileHandler(pl)
     pl = pl or getPlayer()
     if not isIngameState() then return end
@@ -15,8 +15,14 @@ function ParadiseZ.exileHandler(pl)
     local md = pl:getModData()
     if not md then return end
     if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
-        ParadiseZ.doPvPExile(pl)
-        md.LifePoints = md.LifePoints + 25
+        if not teleporting then
+            teleporting = true        
+            ParadiseZ.doPvPExile(pl)
+            timer:Simple(1, function() 
+                teleporting = false
+                md.LifePoints = md.LifePoints + 25
+            end)
+        end
     end
 end
 Events.OnPlayerUpdate.Add(ParadiseZ.exileHandler)
