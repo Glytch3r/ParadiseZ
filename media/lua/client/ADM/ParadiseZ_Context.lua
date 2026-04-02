@@ -89,7 +89,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
 
 
-
+        if ExtendedScoreboard then
+            addSafeOption(opt, "Extended Scoreboard", function() ExtendedScoreboard.openPanel() end, "media/ui/Search_Icon_On.png")
+        end
 
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
 --[[ 

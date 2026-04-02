@@ -398,3 +398,15 @@ option TheRange.ExchangePercent
 	page = TheRange, translation = TheRange_ExchangePercent,
 }
 
+option ParadiseZ.ScoreboardSlowerRefresh
+{
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_ScoreboardSlowerRefresh,
+}
+
+
+
+
+
+
+
