@@ -14,6 +14,10 @@ Events.OnGameStart.Add(function()
 end)
 
 Events.OnSandboxModified.Add(function()
-    ParadiseZ.echo("SandboxOptions Updated")
+    local pl = getPlayer() 
+    if not pl then return end
+    if string.lower(pl:getAccessLevel()) == "admin" then
+        ParadiseZ.echo("SandboxOptions Updated")
+    end
 end)
 
