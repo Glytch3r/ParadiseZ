@@ -6,7 +6,6 @@ LifeBarUI.visible = true
 LifeBarUI.maxValue = 100
 
 
---LifeBarUI.flashDecayRate = LifeBarUI.flashDecayRate or SandboxVars.ParadiseZpvp.HitFlashDecay or 1.8
 
 LifeBarUI.UI = ISPanel:derive("LifeBarUI_UI")
 

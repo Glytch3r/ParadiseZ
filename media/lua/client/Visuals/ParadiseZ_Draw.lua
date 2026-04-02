@@ -38,7 +38,7 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isTradeZone(pl) then table.insert(info, "Trade") end
     if ParadiseZ.isSprintZone(pl) then table.insert(info, "Sprint") end
 
-    table.insert(info, "X:" .. tostring(round(x)) .. "    Y:" .. tostring(round(y)))
+    table.insert(info, "X: " .. tostring(round(x)) .. "    Y: " .. tostring(round(y)))
 
     return table.concat(info, "\n")
 end

@@ -76,9 +76,10 @@ function ExtendedScoreboard.buildRemotePlayerData(user)
     if not obj then return nil end
    
     local body = obj:getBodyDamage()
-    if obj ~= getPlayer() then
+    if not obj:isLocalPlayer() then
         body = obj:getBodyDamageRemote()
     end
+    
     local mood = obj:getMoodles()
     local stats = obj:getStats()
     local desc = obj:getDescriptor()

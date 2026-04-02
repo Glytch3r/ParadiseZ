@@ -141,7 +141,7 @@ option ParadiseZ.RadZoneDmg
 
 option ParadiseZ.ThunderFlashDecay
 {
-	type = double,	 min = 0.000,  max = 5,  default = 0.4,
+	type = double,	 min = 0.000,  max = 5,  default = 0.04,
 	page = ParadiseZ, translation = ParadiseZ_ThunderFlashDecay,
 }
 
