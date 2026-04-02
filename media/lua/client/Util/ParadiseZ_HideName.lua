@@ -1,3 +1,5 @@
+ParadiseZ = ParadiseZ or {}
+LuaEventManager.AddEvent("OnSandboxModified")
 function ParadiseZ.getHiderList()
     local strList = SandboxVars.ParadiseZ.HiderList or "Base.Hat_BalaclavaFull;Base.Hat_BalaclavaFace;Base.WeldingMask"
     local t = {}

@@ -8,12 +8,12 @@ Events.OnGameStart.Add(function()
         self.options:sendToServer()
         getSandboxOptions():toLua()
         triggerEvent("OnSandboxModified")
+        sendClientCommand("ParadiseZ", "reParams", { })
         self:destroy()
     end
 end)
 
 Events.OnSandboxModified.Add(function()
     ParadiseZ.echo("SandboxOptions Updated")
-    sendClientCommand("ParadiseZ", "reParams", { })
 end)
 

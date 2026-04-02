@@ -3,7 +3,7 @@ ParadiseZ = ParadiseZ or {}
 
 local Commands = {};
 Commands.ParadiseZ = {};
-
+LuaEventManager.AddEvent("OnSandboxModified")
 -----------------------            ---------------------------
 
 

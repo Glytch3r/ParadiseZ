@@ -18,6 +18,7 @@
 
 ParadiseZ = ParadiseZ or {}
 TheRange = TheRange or {}
+LuaEventManager.AddEvent("OnSandboxModified")
 -----------------------            ---------------------------
 
 function TheRange.isStaff(pl)

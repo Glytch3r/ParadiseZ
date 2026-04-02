@@ -684,18 +684,27 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     --if not zone then return end
     if string.lower(pl:getAccessLevel()) == "admin" then
         if button.internal == "RESET" then
-            self.ZoneData = ParadiseZ.ZoneDataBackup
-            ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
-            ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
-            self.shouldSync = false
-            self:refreshList()
+            local function resetModal(targ, button)
+                if button == 'YES' then                            
+                    self.ZoneData = ParadiseZ.ZoneDataBackup
+                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneDataBackup)
+                    ParadiseZ.saveZoneData(ParadiseZ.ZoneDataBackup)
+                    self.shouldSync = false
+                    self:refreshList()
+                    timer:Simple(1, function()
+                        self.btnReset:setImage(reset_TEX_OFF)
+                    end)
+                    timer:Simple(1.2, function()
+                        self.btnReset:setImage(reset_TEX)
+                    end)
+                else
+                    self.btnReset:setImage(reset_TEX)                    
+                end
+            end
+            local modal = ISModalDialog:new(0, 0, 350, 150, "Confirm Reset?", true, nil, resetModal)
+            modal:initialise()
+            modal:addToUIManager()
             self.btnReset:setImage(reset_TEX_ON)
-            timer:Simple(1, function()
-                self.btnReset:setImage(reset_TEX_OFF)
-            end)
-            timer:Simple(1.2, function()
-                self.btnReset:setImage(reset_TEX)
-            end)
         end
 
         if button.internal == "ADD" then

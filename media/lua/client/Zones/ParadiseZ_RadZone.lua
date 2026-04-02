@@ -18,6 +18,7 @@
 
 
 ParadiseZ = ParadiseZ or {}
+LuaEventManager.AddEvent("OnSandboxModified")
 
 -----------------------            ---------------------------
 

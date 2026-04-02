@@ -20,6 +20,7 @@
 -----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
 ----------------------------------------------------------------
 ParadiseZ = ParadiseZ or {}
+LuaEventManager.AddEvent("OnSandboxModified")
 
 ParadiseZ.defaultShotguns = {
     ["Base.Shotgun"] = true,
