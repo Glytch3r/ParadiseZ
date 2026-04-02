@@ -21,7 +21,6 @@ function ParadiseZ.isRestricted(sq, pl)
     end
     return false
 end ]]
-ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.isRestricted(target)
     if not target then return false end
