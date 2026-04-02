@@ -4,7 +4,8 @@ require "SuburbsDistributions"
 
 local locations = {
 	["CrateCostume"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 4},
-    ["CrateClothesRandom"] = {obj = "ParadiseZ.Jacket_JimAdmin", rate = 4},
+    ["CrateClothesRandom"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 4},
+	--ParadiseZ.Jacket_JimAdmin
 }
 
 Events.OnPostDistributionMerge.Add(function()
