@@ -16,9 +16,9 @@
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
 
+ParadiseZ = ParadiseZ or {}
 TheRange = TheRange or {}
 -----------------------            ---------------------------
-TheRange = TheRange or {}
 
 function TheRange.isStaff(pl)
     pl = pl or getPlayer()
@@ -37,16 +37,29 @@ end
 
 function TheRange.initStaff(plNum, pl)
     pl = pl or getPlayer()
-    if TheRange.isStaff(pl) then return end
+    if not pl then return end
+
     local user = pl:getUsername()
     local staffList = TheRange.parseNames()
+    local isListed = false
+
     for _, name in ipairs(staffList) do
         if user == name then
-            pl:getTraits():add("TheRangeStaff")
-            --print("[TheRange] Added staff trait to " .. user)
+            isListed = true
             break
+        end
+    end
+
+    if isListed then
+        if not pl:HasTrait("TheRangeStaff") then
+            pl:getTraits():add("TheRangeStaff")
+        end
+    else
+        if pl:HasTrait("TheRangeStaff") then
+            pl:getTraits():remove("TheRangeStaff")
         end
     end
 end
 
+Events.OnSandboxModified.Add(TheRange.initStaff)
 Events.OnCreatePlayer.Add(TheRange.initStaff)

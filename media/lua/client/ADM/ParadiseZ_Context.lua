@@ -92,6 +92,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
 
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
+--[[ 
     addSafeOption(opt, "ReApply All Params", function() 
         if isClient() then 
             sendClientCommand("ParadiseZ", "reParams", { })   
@@ -101,6 +102,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
         getSoundManager():playUISound("UIActivateMainMenuItem")
         context:hideAndChildren()
     end, "media/ui/Paradise/GunParams.png")
+ ]]
     addSafeOption(opt, "Hide Admin Tag: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isHideAdminTag(pl))), function() ParadiseZ.toggleHideAdminTag(pl, activate) end, "media/ui/Paradise/AdmTagContextIcon.png")
     
     if not pl:getVehicle() then
