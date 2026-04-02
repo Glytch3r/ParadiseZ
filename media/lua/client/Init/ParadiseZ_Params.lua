@@ -88,7 +88,6 @@ function ParadiseZ.isBalaclava(fType)
     return tab[fType]
 end
 
-
 function ParadiseZ.applyGunParams(shouldPrint)
     local sm = ScriptManager.instance
     local allItems = sm:getAllItems()
@@ -132,9 +131,9 @@ function ParadiseZ.applyGunParams(shouldPrint)
     end
 end
 
-Events.OnCreatePlayer.Add(function()
-    ParadiseZ.applyGunParams()
-end)
+
+Events.OnSandboxModified.Add(ParadiseZ.applyGunParams)
+Events.OnCreatePlayer.Add(ParadiseZ.applyGunParams)
 
 -----------------------            ---------------------------
 
@@ -183,6 +182,7 @@ end
 
 Events.OnEquipPrimary.Add(ParadiseZ.updatePlayerGuns)
 Events.OnClothingUpdated.Add(ParadiseZ.updatePlayerGuns)
+Events.OnSandboxModified.Add(ParadiseZ.updatePlayerGuns)
 
 -----------------------            ---------------------------
 --[[ ParadiseZ = ParadiseZ or {}
