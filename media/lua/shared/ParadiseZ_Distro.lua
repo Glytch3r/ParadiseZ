@@ -3,8 +3,8 @@ require "Items/ProceduralDistributions"
 require "SuburbsDistributions"
 
 local locations = {
-	["CrateCostume"] = {obj = "ParadiseZ.Shirt_TheRange", rate = 4},
-    ["CrateClothesRandom"] = {obj = "ParadiseZ.Shirt_TheRange", rate = 4},
+	["CrateCostume"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 4},
+    ["CrateClothesRandom"] = {obj = "ParadiseZ.Jacket_JimAdmin", rate = 4},
 }
 
 Events.OnPostDistributionMerge.Add(function()
@@ -13,3 +13,4 @@ Events.OnPostDistributionMerge.Add(function()
 		table.insert(ProceduralDistributions.list[k].items, v.rate)
 	end
 end)
+
