@@ -90,7 +90,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
 
         if ExtendedScoreboard then
-            addSafeOption(opt, "Extended Scoreboard", function() ExtendedScoreboard.openPanel() end, "media/ui/Search_Icon_On.png")
+            addSafeOption(opt, "Extended Scoreboard", function() ExtendedScoreboard.openPanel() end, "media/ui/Paradise/OversightContextIcon.png")
         end
 
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")

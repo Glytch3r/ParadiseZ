@@ -13,5 +13,8 @@
 		<path>media/clothing/clothingItems/Jacket_JimAdmin.xml</path>
 		<guid>fcccfc5e-23fb-4275-a094-9c0ccd657494</guid>
 	</files>	
-
+	<files>
+		<path>media/clothing/clothingItems/Tshirt_ParadiseZ.xml</path>
+		<guid>8c16a036-e650-485f-8ac0-3efdf95004bf</guid>
+	</files>	
 </fileGuidTable>

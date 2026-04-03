@@ -3,7 +3,21 @@
 module ParadiseZ {
     imports { Base }	
 
-
+	item Shirt_ParadiseZ
+	{
+	    DisplayCategory = Clothing,
+		Type = Clothing,
+		DisplayName = Paradise Server Shirt,
+		ClothingItem = Tshirt_ParadiseZ,
+		BodyLocation = ShortSleeveShirt,
+		Icon = ParadiseZ,
+		BloodLocation = Shirt,
+        Insulation = 0.2,
+        WindResistance = 0.05,
+        FabricType = Cotton,
+        WorldStaticModel = TShirt_Ground,
+	}
+    
 	item Jacket_TheRange
     {
         DisplayCategory = Clothing,
