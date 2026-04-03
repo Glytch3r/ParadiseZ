@@ -3,6 +3,13 @@
 	<m_Name>PreyZed_defaultLunge</m_Name>
 	<m_SpeedScale>0.80</m_SpeedScale>
 	<m_BlendTime>0.35</m_BlendTime>
+
+	<m_Conditions>
+		<m_Name>isPrey</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+
 	<m_Conditions>
 		<m_Name>intrees</m_Name>
 		<m_Type>BOOL</m_Type>

@@ -8,6 +8,13 @@
 	<m_BlendTime>0.40</m_BlendTime>
 	<m_Scalar>FenceLungeX</m_Scalar>
 	<m_Scalar2>FenceLungeY</m_Scalar2>
+
+	<m_Conditions>
+		<m_Name>isPrey</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+
 	<m_Conditions>
 		<m_Name>ClimbWindowOutcome</m_Name>
 		<m_Type>STRING</m_Type>
