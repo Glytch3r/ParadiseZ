@@ -57,4 +57,50 @@ module ParadiseZ {
         Weight = 2,
         WorldStaticModel = SuitJacket_Ground,
     }
+
+    item HoodieDOWN_ParadiseZ
+    {
+        DisplayName = Paradise Server Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieDOWN_ParadiseZ,
+        ClothingItemExtra = HoodieUP_ParadiseZ,
+        ClothingItemExtraOption = UpHoodie,
+        clothingExtraSubmenu = DownHoodie,
+        BodyLocation = Sweater,
+        BloodLocation = Jumper,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        NeckProtectionModifier = 0.5,
+        Insulation = 0.6,
+        WindResistance = 0.25,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
+    item HoodieUP_ParadiseZ
+    {
+        DisplayName = Paradise Server Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieUP_ParadiseZ,
+        ClothingItemExtra = HoodieDOWN_ParadiseZ,
+        ClothingItemExtraOption = DownHoodie,
+        clothingExtraSubmenu = UpHoodie,
+        BodyLocation = SweaterHat,
+        BloodLocation = Jumper;FullHelmet,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        Insulation = 0.55,
+        WindResistance = 0.2,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
+
+
+
+
+
+
+
+
 }

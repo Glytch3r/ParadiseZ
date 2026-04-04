@@ -17,4 +17,14 @@
 		<path>media/clothing/clothingItems/Tshirt_ParadiseZ.xml</path>
 		<guid>8c16a036-e650-485f-8ac0-3efdf95004bf</guid>
 	</files>	
+
+	<files>
+		<path>media/clothing/clothingItems/HoodieDOWN_ParadiseZ.xml</path>
+		<guid>80fd5c12-ca9b-4295-9d70-6c744a21f225</guid>
+	</files>	
+	<files>
+		<path>media/clothing/clothingItems/HoodieUP_ParadiseZ.xml</path>
+		<guid>b5d9a4ef-d662-4d17-a847-c8a14ad9e1ba</guid>
+	</files>	
+
 </fileGuidTable>

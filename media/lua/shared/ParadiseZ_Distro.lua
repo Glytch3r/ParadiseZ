@@ -5,6 +5,7 @@ require "SuburbsDistributions"
 local locations = {
 	["CrateCostume"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 4},
     ["CrateClothesRandom"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 4},
+	["HuntingLockers"] = {obj = "ParadiseZ.Jacket_TheRange", rate = 5},
 
 	["BinDumpster"] = {obj = "ParadiseZ.Shirt_ParadiseZ", rate = 1},
 	["SafehouseArmor"] = {obj = "ParadiseZ.Shirt_ParadiseZ", rate = 1},
@@ -67,7 +68,9 @@ local locations = {
 	["WardrobeWomanClassy"] = {obj = "ParadiseZ.Shirt_ParadiseZ", rate = 5},
 	["ZippeeClothing"] = {obj = "ParadiseZ.Shirt_ParadiseZ", rate = 5},
 
-
+	["Locker"] = {obj = "ParadiseZ.HoodieDOWN_ParadiseZ", rate = 5},
+	["DresserGeneric"] = {obj = "ParadiseZ.HoodieDOWN_ParadiseZ", rate = 5},
+	["ClosetShelfGeneric"] = {obj = "ParadiseZ.HoodieDOWN_ParadiseZ", rate = 5},
 
 
 
