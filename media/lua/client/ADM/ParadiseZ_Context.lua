@@ -42,7 +42,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     if not pl or not pl:isAlive() then return end
 
-
+--[[ 
     if string.lower(pl:getAccessLevel()) ~= "admin" then 
         local optTip = context:addOption( "Paradise Zone Panel", worldobjects, function()
             ParadiseZ.editor(true); 
@@ -52,6 +52,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
         end)        
         return 
     end
+ ]]
     --Events.OnPlayerUpdate.Remove(ParadiseZ.highlightSqHandler)
     ParadiseZ.closeModal()
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
@@ -87,12 +88,12 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
+--[[ 
 
-
-        if ExtendedScoreboard then
-            addSafeOption(opt, "Extended Scoreboard", function() ExtendedScoreboard.openPanel() end, "media/ui/Paradise/OversightContextIcon.png")
-        end
-
+    if ExtendedScoreboard then
+        addSafeOption(opt, "Extended Scoreboard", function() ExtendedScoreboard.openPanel() end, "media/ui/Paradise/OversightContextIcon.png")
+    end
+ ]]
     addSafeOption(opt, "TrailingLight: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.isTrailingLightMode(pl) or false)), function() ParadiseZ.toggleTrailingLightMode(pl) end, "media/ui/Paradise/LightContextIcon.png")
 --[[ 
     addSafeOption(opt, "ReApply All Params", function() 

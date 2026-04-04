@@ -11,10 +11,8 @@ function ParadiseZ.doFlash(targPl)
     if not pl then return end
     ParadiseZ.initFlashData(pl)
     local md = pl:getModData()
+    md.FlashAlpha = 1
 
-    if md.FlashAlpha <= 0.4 then
-        md.FlashAlpha = 0.8
-    end
 end
 
 function ParadiseZ.drawFlash()
@@ -27,16 +25,16 @@ function ParadiseZ.drawFlash()
     local sw, sh = getCore():getScreenWidth(), getCore():getScreenHeight()
 
     local decay = SandboxVars.ParadiseZ.ThunderFlashDecay or 0.04
-    md.FlashAlpha = math.max(0, md.FlashAlpha - decay)
-    md.LifeBarFlash = math.max(0, md.LifeBarFlash - decay)
-    
     if md.FlashAlpha > 0 then
-        getRenderer():renderRect(0, 0, sw, sh, 0.5, 0.5, 0.5, md.FlashAlpha)
+        getRenderer():renderRect(0, 0, sw, sh, 0.6, 0.6, 0.6, md.FlashAlpha)
     end
 
     if md.LifeBarFlash > 0 then
         getRenderer():renderRect(0, 0, sw, sh, 1.0, 0.0, 0.0, md.LifeBarFlash)
     end
+    md.FlashAlpha = math.max(0, md.FlashAlpha - decay)
+    md.LifeBarFlash = math.max(0, md.LifeBarFlash - decay)
+    
 end
 
 Events.OnPostUIDraw.Remove(ParadiseZ.drawFlash)
