@@ -53,6 +53,10 @@ function ParadiseZ.context(plNum, context, worldobjects)
         return 
     end
  ]]
+    if string.lower(pl:getAccessLevel()) ~= "admin" then 
+        return         
+    end
+
     --Events.OnPlayerUpdate.Remove(ParadiseZ.highlightSqHandler)
     ParadiseZ.closeModal()
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
