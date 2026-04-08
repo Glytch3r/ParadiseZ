@@ -19,6 +19,32 @@ function ParadiseZ.roundN(v, n)
     return math.floor(v * m + 0.5) / m
 end
 
+function ParadiseZ.getColor(z)
+    if z.isBomb or z.isMine or z.isBlaze or z.isSprint or z.isKos or z.isRad then
+        return 1,0,0,0.2
+    end
+
+    if z.isFrost or z.isCage or z.isBlocked then
+        return 1,1,0,0.2
+    end
+    
+    if z.isSafe or z.isPvE or z.isHunt or z.isNoCamp or z.isParty or z.isRally or z.isSpecial or z.isTrade or z.isNoFire then
+        return 0,0,1,0.2
+    end
+
+    return 1,1,1,0.2
+end
+
+function ParadiseZ.isModActive(name)
+    for i = 0, getActivatedMods():size()-1 do
+        local mod = getActivatedMods():get(i):gsub("^\\+", ""):lower()
+        if mod == name:lower() then
+            return true
+        end
+    end
+    return false
+end
+
 function ParadiseZ.checkDist(pl, sq)
     if not pl or not sq then return end
     local dx = pl:getX() - sq:getX()

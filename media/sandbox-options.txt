@@ -134,6 +134,11 @@ option ParadiseZ.RadZoneDmg
 	page = ParadiseZ, translation = ParadiseZ_RadZoneDmg,
 }
 
+option ParadiseZ.DuckDropChance
+{
+	type = double,	 min = 0.00,  max = 100,  default = 2,
+	page = ParadiseZ, translation = ParadiseZ_DuckDropChance,
+}
 
 
 
