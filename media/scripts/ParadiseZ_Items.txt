@@ -42,8 +42,8 @@ module ParadiseZ {
         DisplayCategory = Junk,
         Weight   =   0.1,
         Type    =   Normal,
-        DisplayName = Duck hunt Jim,
-        Icon	=  duck_jim,
+        DisplayName = Duck hunt 50,
+        Icon	=  Rubberducky,
         WorldStaticModel = duck_jim,
     }
 

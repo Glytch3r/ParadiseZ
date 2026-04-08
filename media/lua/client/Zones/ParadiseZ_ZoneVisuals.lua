@@ -1,14 +1,20 @@
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneVisuals = ParadiseZ.ZoneVisuals or {}
 
+ParadiseZ.ZoneVisuals.enabled = true
+
 function ParadiseZ.ZoneVisuals.getData()
     return ModData.get("ParadiseZ_ZoneData") or {}
 end
 
 function ParadiseZ.ZoneVisuals.drawWorldMap(self)
+    if not ParadiseZ.ZoneVisuals.enabled then return end
+
     local data = ParadiseZ.ZoneVisuals.getData()
     if not data then return end
+
     local isometric = self.mapAPI:getBoolean("Isometric")
+
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
             local r,g,b,a = ParadiseZ.getColor(z)
@@ -44,12 +50,29 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         end
     end
 end
+function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
+    local playerNum = 0
+    local context = getPlayerContextMenu(playerNum)
+    if not context then return end
 
+    local option = context:addOption("Zone Visuals", self, function()
+        ParadiseZ.ZoneVisuals.enabled = not ParadiseZ.ZoneVisuals.enabled
+    end)
+
+    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
+end
 function ParadiseZ.ZoneVisuals.hookWorldMap()
-    local old = ISWorldMap.render
+    local hookrender = ISWorldMap.render
     ISWorldMap.render = function(self, ...)
-        old(self, ...)
+        hookrender(self, ...)
         ParadiseZ.ZoneVisuals.drawWorldMap(self)
+    end
+
+    local hookcontext = ISWorldMap.onRightMouseUp
+    ISWorldMap.onRightMouseUp = function(self, x, y, ...)
+        local result = hookcontext(self, x, y, ...)
+        ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
+        return result
     end
 end
 
