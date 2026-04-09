@@ -34,12 +34,16 @@ function ParadiseZ.doPvPExile(pl)
     local x, y, z = ParadiseZ.parseExileCoords() 
     if not x or not y or not z then return end
     
+
+    if pl:HasTrait('InjuredPvP') then
+        pl:getTraits():remove('InjuredPvP')
+    end
     local car = pl:getVehicle()
     if car then
         ParadiseZ.forceExitCar()
     end
     timer:Simple(0.2, function() 
-        ParadiseZ.tp(pl, x, y, z)
+        ParadiseZ.tp(pl, x, y, z) 
         local sq = getCell():getOrCreateGridSquare(x, y, z)
         if sq then ParadiseZ.addTempMarker(sq) end
     end)

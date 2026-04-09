@@ -1,25 +1,18 @@
 --client\ParadiseZ_Draw.lua
-
 ParadiseZ = ParadiseZ or {}
-
 ParadiseZ.showZoneInfo = true
-
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
-
     local name = ParadiseZ.getZoneName(pl)
     local x, y = ParadiseZ.getXY(pl)
     if not (x and y) then return end
-
     local zoneName = name
     if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr)
         and ParadiseZ.isXYZoneOuter(x, y, name) then
         zoneName = zoneName .. " (Border)"
     end
-
     local info = { zoneName }
-
     if ParadiseZ.isKosZone(pl) then table.insert(info, "KosZone") end
     if ParadiseZ.isPveZone(pl) then table.insert(info, "PvE") end
     if ParadiseZ.isBlockedZone(pl) then table.insert(info, "Blocked") end
@@ -38,21 +31,16 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isSpecialZone(pl) then table.insert(info, "Special") end
     if ParadiseZ.isTradeZone(pl) then table.insert(info, "Trade") end
     if ParadiseZ.isSprintZone(pl) then table.insert(info, "Sprint") end
-
     table.insert(info, "X: " .. tostring(round(x)) .. "    Y: " .. tostring(round(y)))
-
     return table.concat(info, "\n")
 end
-
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
     local pl = ParadiseZ.getPl(char)
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end
-
     local zoneKey
-
     if ParadiseZ.isPartOfSH(sq) then
         zoneKey = "HQ"
     elseif ParadiseZ.isOutside(pl) then
@@ -106,57 +94,112 @@ function ParadiseZ.getDrawStr(char)
     elseif ParadiseZ.isRegularZone(pl) then
         zoneKey = "Zone"
     end
-
     zoneKey = zoneKey or ""
-
     local reboundText = ""
     local isShowInfo = SandboxVars.ParadiseZ.AdminOnlyZoneInfo
-
     if getCore():getDebug() or not isShowInfo then
         reboundText = ParadiseZ.getReboundInfo() or ""
     end
-
     return zoneKey, reboundText
 end
-
 function ParadiseZ.getReboundInfo()
     local pl = getPlayer()
     if not pl then return "" end
     if not getCore():getDebug() or pl:isTeleporting() then return "" end
-
     local modData = pl:getModData()
     local rebound = modData["Rebound"]
-
     if type(rebound) ~= "table" or not (rebound.x and rebound.y and rebound.z) then
         local x, y, z = ParadiseZ.getFallbackCoord()
         if not (x and y and z) then return "" end
         rebound = { x = x, y = y, z = z, name = "Fallback" }
         modData["Rebound"] = rebound
     end
-
     return "\n\nREBOUND:\n"
         .. tostring(round(rebound.x)) .. ", "
         .. tostring(round(rebound.y)) .. ", "
         .. tostring(rebound.z) .. "\n"
 end
-
 ParadiseZ.lastZone = nil
+function ParadiseZ.getZoneIcons(pl)
+    local icons = {}
+    if ParadiseZ.isKosZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), type = "PvP" })
+    end
+    if ParadiseZ.isPveZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"), type = "NonPvp" })
+    end
+    if ParadiseZ.isBlockedZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"), type = "Blocked" })
+    end
+    if ParadiseZ.isSafeZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"), type = "Protected" })
+    end
+    if ParadiseZ.isRadZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"), type = "Radiation" })
+    end
+    if ParadiseZ.isHuntZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"), type = "Hunt" })
+    end
+    if ParadiseZ.isBlazeZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"), type = "Blaze" })
+    end
+    if ParadiseZ.isFrostZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"), type = "Frost" })
+    end
+    if ParadiseZ.isBombZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"), type = "Bomb" })
+    end
+    if ParadiseZ.isMineZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_MineField.png"), type = "MineField" })
+    end
+    if ParadiseZ.isNoCampZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoCamp.png"), type = "NoCamp" })
+    end
+    if ParadiseZ.isNoFireZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoFire.png"), type = "NoFire" })
+    end
+    if ParadiseZ.isCageZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Cage.png"), type = "Cage" })
+    end
+    if ParadiseZ.isPartyZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Party.png"), type = "Party" })
+    end
+    if ParadiseZ.isRallyZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rally.png"), type = "Rally" })
+    end
+    if ParadiseZ.isSpecialZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"), type = "Special" })
+    end
+    if ParadiseZ.isTradeZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"), type = "Trade" })
+    end
+    if ParadiseZ.isSprintZone(pl) then
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"), type = "Sprint" })
+    end
+    return icons
+end
+function ParadiseZ.getStatusIcons(pl)
+    local icons = {}
+    if pl:HasTrait("InjuredPvP") then
+        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_InjuredPvP.png"), type = "Injured" })
+    end 
+    if pl:HasTrait("Caged") then
+        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_Caged.png"), type = "Caged" })
+    end
+    return icons
+end
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
-
     ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
     local currentZone = ParadiseZ.getZoneName(pl)
-
     if ParadiseZ.lastZone ~= currentZone then
         ISChat.instance.servermsgTimer = 9000
         ISChat.instance.servermsg = tostring(currentZone)
         ParadiseZ.lastZone = currentZone
     end
-
     local zoneKey, reboundText = ParadiseZ.getDrawStr(pl)
-
     local textures = {
         HQ = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
         Outside = getTexture("media/textures/zone/ParadiseZ_Zone_Outside.png"),
@@ -180,7 +223,6 @@ function ParadiseZ.doDrawZone()
         Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
         Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
     }
-
     local colors = {
         HQ = { r = 0, g = 0, b = 1 },
         Outside = { r = 1, g = 0.4, b = 0 },
@@ -204,15 +246,11 @@ function ParadiseZ.doDrawZone()
         Trade = { r = 0, g = 1, b = 0 },
         Sprint = { r = 1, g = 0.7, b = 0.7 },
     }
-
     local texture = textures[zoneKey]
     local color = colors[zoneKey] or { r = 1, g = 1, b = 1 }
-
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
     local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
-
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
-
     if zoneKey == "Hunt" then
         if TheRange.isMember(pl) then
             local card = TheRange.getMembershipCard(pl)
@@ -221,24 +259,45 @@ function ParadiseZ.doDrawZone()
             end
         end
     end
-
     getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
-
-    if reboundText and reboundText ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, 160, reboundText, color.r, color.g, color.b, alpha)
+    
+    local hpBarRight = getCore():getScreenWidth() - 140
+    local hpBarTop = 35
+    
+    local zoneIcons = ParadiseZ.getZoneIcons(pl)
+    local iconX = hpBarRight
+    for i = 1, #zoneIcons do
+        if zoneIcons[i].texture then
+            UIManager.DrawTexture(zoneIcons[i].texture, iconX, hpBarTop, 24, 24, 0.8)
+            iconX = iconX - 26
+        end
     end
-
+    
+    local statusIcons = ParadiseZ.getStatusIcons(pl)
+    local statusIconY = hpBarTop + 26
+    iconX = hpBarRight
+    for i = 1, #statusIcons do
+        if statusIcons[i].texture then
+            UIManager.DrawTexture(statusIcons[i].texture, iconX, statusIconY, 24, 24, 1)
+            iconX = iconX - 26
+        end
+    end
+    
+    local textYOffset = 100
+    if zoneIcons and #zoneIcons > 0 then
+        textYOffset = textYOffset + 28
+    end
+    if statusIcons and #statusIcons > 0 then
+        textYOffset = textYOffset + 28
+    end
+    
+    if reboundText and reboundText ~= "" then
+        getTextManager():DrawString(UIFont.Small, 68, textYOffset + 50, reboundText, color.r, color.g, color.b, alpha)
+    end
+    
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
-
-    if pl:HasTrait("InjuredPvP") then
-        local injuredTex = getTexture("media/textures/ParadiseZ_PvP_Injured.png")
-        if injuredTex then
-            UIManager.DrawTexture(injuredTex, 50, 50, 24, 24, 1)
-        end
-    end
 end
-
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)

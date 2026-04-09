@@ -87,7 +87,7 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         if md.LifePoints <= 0 then
             if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
                 targ:Kill(char)
-            end
+            end    
         end
     end
 end
