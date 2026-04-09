@@ -707,7 +707,6 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             local function modalPress(target, btn, param1, param2)
                 if btn.internal == 'YES' then    
 
-
                     ParadiseZ.doRestoreZones()
                     ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
@@ -728,8 +727,41 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
         end
 
         if button.internal == "BACKUP" then
-            ParadiseZ.doBackupZones()
-        	pl:addLineChatElement('ParadiseZ.ZoneDataBackup Saved to ZoneDataBackup.ini')
+            local zones = {}
+            for i = 1, #self.datas.items do
+                local entry = self.datas.items[i]
+                local z = entry.item
+                zones[entry.text] = {
+                    name = entry.text,
+                    x1 = z.x1,
+                    y1 = z.y1,
+                    x2 = z.x2,
+                    y2 = z.y2,
+                    isKos = z.isKos,
+                    isPvE = z.isPvE,
+                    isSafe = z.isSafe,
+                    isBlocked = z.isBlocked,
+                    isRad = z.isRad or false,
+                    isHunt = z.isHunt or false,
+                    isBlaze = z.isBlaze or false,
+                    isFrost = z.isFrost or false,
+                    isBomb = z.isBomb or false,
+                    isMine = z.isMine or false,
+                    isNoCamp = z.isNoCamp or false,
+                    isNoFire = z.isNoFire or false,
+                    isCage = z.isCage or false,
+                    isParty = z.isParty or false,
+                    isRally = z.isRally or false,
+                    isSpecial = z.isSpecial or false,
+                    isTrade = z.isTrade or false,
+                    isSprint = z.isSprint or false,
+                }
+            end
+            
+            ParadiseZ.ZoneDataBackup = zones
+            ParadiseZ.IO("ZoneDataBackup.ini", zones, false)
+
+            pl:addLineChatElement('ParadiseZ.ZoneDataBackup Saved to ZoneDataBackup.ini')
         end
         
         if button.internal == "ADD" then
