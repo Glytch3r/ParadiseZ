@@ -5,7 +5,8 @@ ISApplyMedkitPvP = ISBaseTimedAction:derive("ISApplyMedkitPvP");
 
 function ISApplyMedkitPvP:isValid()
     if self.item then
-        return self.character:getInventory():contains(self.item) and self.character:HasTrait('InjuredPvP')
+        local md = self.character:getModData()
+        return self.character:getInventory():contains(self.item) and (self.character:HasTrait('InjuredPvP') or md.LifePoints < 100)
     end
 end
 
