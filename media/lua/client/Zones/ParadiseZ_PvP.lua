@@ -124,8 +124,9 @@ function ParadiseZ.pvpHeal(player, context, items)
     local opt = context:addOption("Apply PvP Medkit", item, function(it)
         ISTimedActionQueue.add(ISApplyMedkitPvP:new(pl, it))
     end)
-
-    if not pl:HasTrait("InjuredPvP") then
+    local md = pl:getModData()
+    
+    if not pl:HasTrait("InjuredPvP") and md.LifePoints >= 100 then
         opt.notAvailable = true
         local tt = ISToolTip:new()
         tt:initialise()
