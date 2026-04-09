@@ -13,7 +13,7 @@ function ParadiseZ.duckDrop(zed)
     if not chance then return end
     local half = chance * 0.5
     if pl:getTraits():contains("Lucky") then
-        chance = math.min(100, math.max(0, chance + half))
+        chance = math.min(100, math.max(0, chance + 1))
     elseif pl:getTraits():contains("Unlucky") then
         chance = math.min(100, math.max(0, chance - half))
     end

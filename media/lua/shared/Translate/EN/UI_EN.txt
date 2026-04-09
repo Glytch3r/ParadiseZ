@@ -9,6 +9,11 @@ UI_EN = {
 
     UI_trait_PvE = "PvE",
     UI_trait_PvE_desc = "Cannot Enter PvP Zone. Will not be able to engage in PvP",
+
+
+    UI_trait_InjuredPvP =     "PvP Injured",
+    UI_trait_InjuredPvP_desc =  "Use PvP Medkit ",
+
     
 
     UI_Intro1 = "From the ashes of the old world we rise",

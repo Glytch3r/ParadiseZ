@@ -7,6 +7,9 @@ Events.OnGameBoot.Add(function()
 	local traitStr = "TheRangeStaff"
 	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), 0, getText("UI_trait_"..traitStr.."_desc"), true)
 
+	local traitStr = "InjuredPvP"
+	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), 0, getText("UI_trait_"..traitStr.."_desc"), true)
+
 	local traitStr = "PvE"
 	TraitFactory.addTrait(traitStr, getText("UI_trait_"..traitStr), -1, getText("UI_trait_"..traitStr.."_desc"), false)
 

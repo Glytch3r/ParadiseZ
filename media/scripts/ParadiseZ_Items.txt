@@ -3,6 +3,28 @@
 module ParadiseZ {
     imports { Base }
     /* getPlayer():getInventory():AddItem('ParadiseZ.TheRangeCard') */
+
+	model MedkitPvP_Ground
+    {
+        mesh = WorldItems/Clothing/DuffelBag_Ground,
+        texture = WorldItems/MedkitPvP,
+        scale = 0.3,
+    }
+
+	item MedkitPvP
+	{
+		DisplayName	     = PvP Medkit,
+		Icon	         = MedkitPvP,
+		Weight	         = 1,
+	    DisplayCategory  = Material,
+		Type	         = Normal,
+        WorldStaticModel = MedkitPvP_Ground,
+        Tooltip          = Heals PvP Injury and recover HP,
+
+	}
+	
+    
+
 	item PiggyBank
 	{
 		DisplayName	     = Piggy Bank,

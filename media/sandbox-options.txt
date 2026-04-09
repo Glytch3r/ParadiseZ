@@ -202,6 +202,14 @@ option ParadiseZ.BombZoneRad
 
 
 
+
+
+option ParadiseZpvp.PvPInjuryChance
+{
+	type = double,	 min = 0,  max = 100,  default = 10,
+	page = ParadiseZpvp, translation = ParadiseZpvp_PvPInjuryChance,
+}
+
 option ParadiseZpvp.VanillaNonPvpZone
 {
 	type = boolean, default = false,
@@ -216,10 +224,6 @@ option ParadiseZpvp.ExileCoords
 
 
 
-
-
-
-
 option ParadiseZpvp.HitFlashDecay
 {
 	type = double,	 min = 0.000,  max = 5,  default = 1.8,
@@ -230,6 +234,18 @@ option ParadiseZpvp.LifeBarRecovery
 {
 	type = string, default =  0.005,
 	page = ParadiseZpvp, translation = ParadiseZpvp_LifeBarRecovery,
+}
+
+option ParadiseZpvp.InjuryDrain
+{
+	type = string, default =  0.001,
+	page = ParadiseZpvp, translation = ParadiseZpvp_InjuryDrain,
+}
+
+option ParadiseZpvp.MedkitHeal
+{
+	type = double,	 min = 0.00,  max = 100,  default = 50,
+	page = ParadiseZpvp, translation = ParadiseZpvp_MedkitHeal,
 }
 
 

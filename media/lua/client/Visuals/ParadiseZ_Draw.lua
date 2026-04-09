@@ -1,4 +1,5 @@
 --client\ParadiseZ_Draw.lua
+
 ParadiseZ = ParadiseZ or {}
 
 ParadiseZ.showZoneInfo = true
@@ -42,7 +43,6 @@ function ParadiseZ.getZoneInfo(pl)
 
     return table.concat(info, "\n")
 end
-
 
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
@@ -119,7 +119,6 @@ function ParadiseZ.getDrawStr(char)
     return zoneKey, reboundText
 end
 
-
 function ParadiseZ.getReboundInfo()
     local pl = getPlayer()
     if not pl then return "" end
@@ -140,7 +139,6 @@ function ParadiseZ.getReboundInfo()
         .. tostring(round(rebound.y)) .. ", "
         .. tostring(rebound.z) .. "\n"
 end
-
 
 ParadiseZ.lastZone = nil
 function ParadiseZ.doDrawZone()
@@ -216,15 +214,13 @@ function ParadiseZ.doDrawZone()
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
 
     if zoneKey == "Hunt" then
-        if  TheRange.isMember(pl) then
+        if TheRange.isMember(pl) then
             local card = TheRange.getMembershipCard(pl)
             if card then
                 zoneInfo = zoneInfo .. TheRange.getCardTotalsString(pl)
             end
         end
     end
-
-
 
     getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
 
@@ -235,9 +231,14 @@ function ParadiseZ.doDrawZone()
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
     end
-end
 
+    if pl:HasTrait("InjuredPvP") then
+        local injuredTex = getTexture("media/textures/ParadiseZ_PvP_Injured.png")
+        if injuredTex then
+            UIManager.DrawTexture(injuredTex, 50, 50, 24, 24, 1)
+        end
+    end
+end
 
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)
-

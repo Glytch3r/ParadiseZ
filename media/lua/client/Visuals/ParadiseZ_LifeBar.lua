@@ -37,9 +37,12 @@ function LifeBarUI.UI:render()
     self:drawRect(0, 0, w, h, 1, 0, 0, 0)
     self:drawRect(0, 0, barW, h, 1, col.r, col.g, col.b)
     self:drawRectBorder(0, 0, w, h, 1, 1, 1, 1)
+    local rec = md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery)
+    if pl:HasTrait("InjuredPvP") then 
+        rec = md.LifePoints - tonumber(SandboxVars.ParadiseZpvp.InjuryDrain)
+    end
+    md.LifePoints = math.max(0, math.min(100, rec))
     
-    md.LifePoints = math.min(100, md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery))
-
 end
 
 function LifeBarUI.UI:new(x, y, width, height)

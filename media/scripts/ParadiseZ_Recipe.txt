@@ -1,0 +1,34 @@
+module Base {
+    imports { Base }
+
+    recipe Make Gunpowder
+    {
+        CompostBag=4,
+        Charcoal=10,
+        [Recipe.GetItemTypes.Petrol]=10,
+        keep Saucepan/Pot/BucketEmpty,
+        keep WoodenStick/Poolcue/Mop/Broom/HockeyStick/IceHockeyStick/CanoePadel/LeafRake/Rake/Paintbrush/TreeBranch/Plank,
+
+        Result:GunPowder=50,
+        Time:500.0,
+        Sound:Dismantle,
+        AnimNode : Disassemble,
+        Prop1 : WoodenStick,
+        Category:Engineer,
+        NeedToBeLearn:true,
+        CanBeDoneFromFloor : TRUE,
+    }
+    
+    recipe Make PvP Medkit
+    {
+        AlcoholRippedSheets=3,
+        Result:ParadiseZ.MedkitPvP,
+        Time:500.0,
+        Sound:ClothesRipping,
+        AnimNode : Disassemble,
+        Category:Health,
+        CanBeDoneFromFloor : TRUE,
+    
+    }
+
+}

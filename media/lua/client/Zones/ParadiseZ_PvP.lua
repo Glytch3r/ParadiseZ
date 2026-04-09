@@ -53,6 +53,8 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
     local isHasZed = instanceof(char, 'IsoZombie') or instanceof(targ, 'IsoZombie')
     local pvpDmg = true
 
+    local isFirearm = ParadiseZ.isFirearm(wpn)
+
     if isHasPveTrait or isHasPveZone then
         pvpDmg = false
     end
@@ -74,7 +76,14 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         
         md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg+bonus))
         md.LifeBarFlash = 0.4
-        
+        if ParadiseZ.doRoll(SandboxVars.ParadiseZpvp.PvPInjuryChance) and isFirearm then
+            if not targ:HasTrait('InjuredPvP') then
+                targ:getTraits():add('InjuredPvP')
+                targ:addLineChatElement('PvP Injured')
+
+            end
+        end
+
         if md.LifePoints <= 0 then
             if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
                 targ:Kill(char)
@@ -84,6 +93,52 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
+
+
+function ParadiseZ.pvpHeal(player, context, items)
+    local pl = getSpecificPlayer(player)
+    if not pl then return end
+
+    local item
+
+    if instanceof(items, "InventoryItem") then
+        if items:getFullType() == "ParadiseZ.MedkitPvP" then
+            item = items
+        end
+    else
+        for i=1,#items do
+            local entry = items[i]
+            local it = entry
+            if type(entry) == "table" and entry.items then
+                it = entry.items[1]
+            end
+            if it and it:getFullType() == "ParadiseZ.MedkitPvP" then
+                item = it
+                break
+            end
+        end
+    end
+
+    if not item then return end
+
+    local opt = context:addOption("Apply PvP Medkit", item, function(it)
+        ISTimedActionQueue.add(ISApplyMedkitPvP:new(pl, it))
+    end)
+
+    if not pl:HasTrait("InjuredPvP") then
+        opt.notAvailable = true
+        local tt = ISToolTip:new()
+        tt:initialise()
+        tt:setVisible(false)
+        tt.description = "You are not Injured"
+        opt.toolTip = tt
+    end
+end
+
+Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.pvpHeal)
+
+
+
 
 --[[ 
 function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)
