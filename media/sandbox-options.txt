@@ -44,13 +44,6 @@ option ParadiseZ.isSafeAllowActions
 	page = ParadiseZ, translation = ParadiseZ_isSafeAllowActions,
 }
 
-option ParadiseZ.BlockedList  
-{
-	type = string, default =  Sample Lock;Sample Lock 2,
-	page = ParadiseZ, translation = ParadiseZ_BlockedList,
-}
-
-
 option ParadiseZ.Glytch3rGift  
 {
 	type = string, default =  Base.Bleach,

@@ -21,6 +21,9 @@ local Point1_TEX = getTexture("media/ui/Paradise/Point1.png")
 local Point2_TEX = getTexture("media/ui/Paradise/Point2.png")
 local sync_TEX_ON = getTexture("media/ui/Paradise/sync_on.png")
 local sync_TEX_OFF = getTexture("media/ui/Paradise/sync.png")
+
+local backup_TEX = getTexture("media/ui/Paradise/backup.png")
+
 local reset_TEX = getTexture("media/ui/Paradise/reset.png")
 local reset_TEX_ON = getTexture("media/ui/Paradise/reset_on.png")
 local reset_TEX_OFF = getTexture("media/ui/Paradise/reset_off.png")
@@ -161,8 +164,8 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self.btnDelete.enable = false
     self.btnDelete.borderColor = self.buttonBorderColor
     self:addChild(self.btnDelete)
-    btnX = btnX + btnWid + btnSpacing
-    
+    btnX = (btnX + btnWid + btnSpacing)
+    btnWid = btnWid / 2
     self.btnReset = ISButton:new(btnX, btnY, btnWid, btnHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
     self.btnReset.internal = "RESET"
     self.btnReset.tooltip = "RESET"
@@ -174,6 +177,21 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     self:addChild(self.btnReset)
     btnX = btnX + btnWid + btnSpacing
     
+    self.btnBackup = ISButton:new(btnX, btnY, btnWid, btnHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
+    self.btnBackup.internal = "BACKUP"
+    self.btnBackup.tooltip = "BACKUP"
+    self.btnBackup:initialise()
+    self.btnBackup:instantiate()
+    self.btnBackup:setImage(backup_TEX)
+    self.btnBackup.enable = true
+    self.btnBackup.borderColor = self.buttonBorderColor
+    self:addChild(self.btnBackup)
+    btnWid = btnWid * 2
+    btnX = btnX + btnWid + btnSpacing
+
+
+
+
     self.btnRadiation = ISButton:new(btnX, btnY, btnSWid, btnSHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
     self.btnRadiation.internal = "RADIATION"
     self.btnRadiation.tooltip = "RADIATION"
@@ -686,33 +704,34 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     --if not zone then return end
     if string.lower(pl:getAccessLevel()) == "admin" then
         if button.internal == "RESET" then
-            local function resetModal(targ, button)
-                if button == 'YES' then    
+            local function modalPress(target, btn, param1, param2)
+                if btn.internal == 'YES' then    
+
+
+                    ParadiseZ.doRestoreZones()
                     ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
-                    self.ZoneData = ParadiseZ.ZoneData
-                    ModData.add("ParadiseZ_ZoneData", ParadiseZ.ZoneData)
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
-                    self.shouldSync = false
-                    self:refreshList()
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
                     end)
                     timer:Simple(1.2, function()
                         self.btnReset:setImage(reset_TEX)
-                    end)
-             --[[        timer:Simple(2, function()
-                        self:close()
-                    end) ]]
-                else
-                    self.btnReset:setImage(reset_TEX)                    
+                    end)       
                 end
             end
-            local modal = ISModalDialog:new(0, 0, 350, 150, "Confirm Reset?", true, nil, resetModal)
-            modal:initialise()
-            modal:addToUIManager()
+            self.modal = ISModalDialog:new(0, 0, 350, 150, "Confirm Reset?", true, nil, modalPress)
+            self.modal:initialise()
+            self.modal:addToUIManager()
+            self.modal.onclick = modalPress
+            
             self.btnReset:setImage(reset_TEX)
         end
 
+        if button.internal == "BACKUP" then
+            ParadiseZ.doBackupZones()
+        	pl:addLineChatElement('ParadiseZ.ZoneDataBackup Saved to ZoneDataBackup.ini')
+        end
+        
         if button.internal == "ADD" then
             local name = self.newZoneName:getText()
             if name == "" then
@@ -753,12 +772,10 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             self.newZoneY2:setText("")
             self.shouldSync = false
             self:refreshList()
-            print('auto synced')
     
 
         elseif button.internal == "SAVE" then
             
-            print('ParadiseZ.saveZoneData')
             local zones = {}
             for i = 1, #self.datas.items do
                 local entry = self.datas.items[i]

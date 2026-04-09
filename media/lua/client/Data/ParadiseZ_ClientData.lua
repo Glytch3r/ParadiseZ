@@ -50,36 +50,20 @@ function ParadiseZ.ClientSync(module, command, args)
     if module ~= "ParadiseZ" then return end
 
     if command == "Sync" and args.data then
-        for k, _ in pairs(ParadiseZ.ZoneData) do ParadiseZ.ZoneData[k] = nil end
+        for k, _ in pairs(ParadiseZ.ZoneData) do 
+            ParadiseZ.ZoneData[k] = nil 
+        end
 
         for k, v in pairs(args.data) do
             ParadiseZ.ZoneData[k] = v
         end
-
-    --[[     ParadiseZ.ZoneData["Monmouth County Power Station"] = {
-            name = "Monmouth County Power Station",
-            x1 = 11809,
-            y1 = 7876,
-            x2 = 11870,
-            y2 = 7943,
-            isKos = SandboxVars.ParadiseZ.RadZoneisKos or false,
-            isPvE = SandboxVars.ParadiseZ.RadZoneisPvE or false,
-            isSafe = SandboxVars.ParadiseZ.RadZoneisSafe or false,
-            isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
-            isRad = true,
-        }
- ]]
-
+        
+        
         print("ParadiseZ: Client synced.")
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()
 		end
-  --[[   elseif command == "Utility" and args.data then
-        for k, _ in pairs(ParadiseZ.UtilityData) do ParadiseZ.UtilityData[k] = nil end
-
-        for k, v in pairs(args.data) do
-            ParadiseZ.UtilityData[k] = v
-        end ]]
+ 
     elseif command == "Gift" and args.user then        
         ParadiseZ_Gift[args.user] = true
     end

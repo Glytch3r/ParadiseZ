@@ -1,7 +1,6 @@
 
 ParadiseZ = ParadiseZ or {}
 -----------------------            ---------------------------
--- print(ParadiseZ.ZoneData["Louisville"].isBlocked)
 
 ParadiseZ.ZoneDataBackup = {
     ["Bedford Falls"] = { name="Bedford Falls", x1=12601, y1=9586, x2=14399, y2=11708, isKos=false, isPvE=false, isSafe=false, isBlocked=false, isRad=false, isHunt=false, isBlaze=false, isFrost=false, isBomb=false, isMine=false, isNoCamp=false, isNoFire=false, isCage=false, isParty=false, isRally=false, isSpecial=false, isTrade=false, isSprint=false },
@@ -45,27 +44,3 @@ ParadiseZ.ZoneDataBackup = {
     ["West Point"] = { name="West Point", x1=9901, y1=6510, x2=12299, y2=7199, isKos=false, isPvE=false, isSafe=false, isBlocked=false, isRad=false, isHunt=false, isBlaze=false, isFrost=false, isBomb=false, isMine=false, isNoCamp=false, isNoFire=false, isCage=false, isParty=false, isRally=false, isSpecial=false, isTrade=false, isSprint=false },
     ["i-DAB Faction HQ"] = { name="i-DAB Faction HQ", x1=9179, y1=10368, x2=9258, y2=10435, isKos=false, isPvE=false, isSafe=false, isBlocked=false, isRad=false, isHunt=false, isBlaze=false, isFrost=false, isBomb=false, isMine=false, isNoCamp=false, isNoFire=false, isCage=false, isParty=false, isRally=false, isSpecial=false, isTrade=false, isSprint=false },
 }
---ParadiseZ.ZoneData = ParadiseZ.ZoneData or ParadiseZ.ZoneDataBackup
-
-function ParadiseZ.parseZone(strList)
-    strList = strList or SandboxVars.ParadiseZ.BlockedList
-
-    for k,v in pairs(ParadiseZ.ZoneData) do
-        v.isBlocked = false
-    end
-
-    for str in string.gmatch(strList, "[^;]+") do
-        str = str:match("^%s*(.-)%s*$")
-        if ParadiseZ.ZoneData[str] then
-            ParadiseZ.ZoneData[str].isBlocked = true
-        end
-    end
-end
-
-
-
-function ParadiseZ.init()
-    ParadiseZ.parseZone()
-end
-Events.OnCreatePlayer.Remove(ParadiseZ.init)
---Events.OnCreatePlayer.Add(ParadiseZ.init)

@@ -120,12 +120,12 @@ function ParadiseZ.pvpHeal(player, context, items)
     end
 
     if not item then return end
-
+    if not pl:getInventory():contains(item) then return end
+    
     local opt = context:addOption("Apply PvP Medkit", item, function(it)
         ISTimedActionQueue.add(ISApplyMedkitPvP:new(pl, it))
     end)
     local md = pl:getModData()
-    
     if not pl:HasTrait("InjuredPvP") and md.LifePoints >= 100 then
         opt.notAvailable = true
         local tt = ISToolTip:new()
@@ -137,7 +137,6 @@ function ParadiseZ.pvpHeal(player, context, items)
 end
 
 Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.pvpHeal)
-
 
 
 
