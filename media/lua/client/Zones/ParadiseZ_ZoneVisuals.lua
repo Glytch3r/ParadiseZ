@@ -15,10 +15,23 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
     local isometric = self.mapAPI:getBoolean("Isometric")
 
+    local mx = self:getMouseX()
+    local my = self:getMouseY()
+    local wx = self.mapAPI:uiToWorldX(mx, my)
+    local wy = self.mapAPI:uiToWorldY(mx, my)
+
+    local hoverText
+
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
             local r,g,b,a = ParadiseZ.getColor(z)
             a = 0.05
+
+            if wx and wy then
+                if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
+                    hoverText = ParadiseZ.getZoneName(wx, wy)
+                end
+            end
             
             if isometric then
                 local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
@@ -49,7 +62,12 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
             end
         end
     end
+
+    if hoverText then
+        self:drawText(hoverText, mx + 12, my + 12, 1, 1, 1, 1, UIFont.Small)
+    end
 end
+
 function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
     local playerNum = 0
     local context = getPlayerContextMenu(playerNum)
@@ -61,6 +79,7 @@ function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
 
     context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
 end
+
 function ParadiseZ.ZoneVisuals.hookWorldMap()
     local hookrender = ISWorldMap.render
     ISWorldMap.render = function(self, ...)

@@ -1,7 +1,9 @@
 --client\ParadiseZ_Draw.lua
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.showZoneInfo = true
-function ParadiseZ.getZoneInfo(pl)
+ParadiseZ.lastZone = nil
+
+function ParadiseZ.getZoneHeader(pl)
     pl = pl or getPlayer()
     if not pl then return end
     local name = ParadiseZ.getZoneName(pl)
@@ -13,6 +15,21 @@ function ParadiseZ.getZoneInfo(pl)
         zoneName = zoneName .. " (Border)"
     end
     local info = { zoneName }
+    table.insert(info, "X: " .. tostring(round(x)) .. "    Y: " .. tostring(round(y)))
+    return table.concat(info, "\n")
+end
+function ParadiseZ.getZoneInfo(pl)
+    pl = pl or getPlayer()
+    if not pl then return end
+    local name = ParadiseZ.getZoneName(pl)
+    local x, y = ParadiseZ.getXY(pl)
+    if not (x and y) then return end
+    local zoneName = name
+    if name ~= tostring(SandboxVars.ParadiseZ.OutsideStr)
+        and ParadiseZ.isXYZoneOuter(x, y, name) then
+        zoneName = zoneName .. " (Border)"
+    end
+    local info = { }
     if ParadiseZ.isKosZone(pl) then table.insert(info, "KosZone") end
     if ParadiseZ.isPveZone(pl) then table.insert(info, "PvE") end
     if ParadiseZ.isBlockedZone(pl) then table.insert(info, "Blocked") end
@@ -31,7 +48,6 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isSpecialZone(pl) then table.insert(info, "Special") end
     if ParadiseZ.isTradeZone(pl) then table.insert(info, "Trade") end
     if ParadiseZ.isSprintZone(pl) then table.insert(info, "Sprint") end
-    table.insert(info, "X: " .. tostring(round(x)) .. "    Y: " .. tostring(round(y)))
     return table.concat(info, "\n")
 end
 function ParadiseZ.getDrawStr(char)
@@ -119,72 +135,72 @@ function ParadiseZ.getReboundInfo()
         .. tostring(round(rebound.y)) .. ", "
         .. tostring(rebound.z) .. "\n"
 end
-ParadiseZ.lastZone = nil
+
 function ParadiseZ.getZoneIcons(pl)
     local icons = {}
     if ParadiseZ.isKosZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), type = "PvP" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), label = "PvP", color = { r = 0.9, g = 0.2, b = 0.2 } })
     end
     if ParadiseZ.isPveZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"), type = "NonPvp" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"), label = "NonPvp", color = { r = 0, g = 1, b = 0 } })
     end
     if ParadiseZ.isBlockedZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"), type = "Blocked" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blocked.png"), label = "Blocked", color = { r = 0.13, g = 0.13, b = 0.13 } })
     end
     if ParadiseZ.isSafeZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"), type = "Protected" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Protected.png"), label = "Protected", color = { r = 0.84, g = 0.76, b = 0.67 } })
     end
     if ParadiseZ.isRadZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"), type = "Radiation" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rad.png"), label = "Radiation", color = { r = 1, g = 1, b = 1 } })
     end
     if ParadiseZ.isHuntZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"), type = "Hunt" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Hunt.png"), label = "Hunt", color = { r = 1, g = 0, b = 0 } })
     end
     if ParadiseZ.isBlazeZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"), type = "Blaze" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Blaze.png"), label = "Blaze", color = { r = 1, g = 0, b = 0 } })
     end
     if ParadiseZ.isFrostZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"), type = "Frost" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Frost.png"), label = "Frost", color = { r = 0.5, g = 0.4, b = 1 } })
     end
     if ParadiseZ.isBombZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"), type = "Bomb" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Bomb.png"), label = "Bomb", color = { r = 1, g = 0, b = 0 } })
     end
     if ParadiseZ.isMineZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_MineField.png"), type = "MineField" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_MineField.png"), label = "MineField", color = { r = 1, g = 0, b = 0 } })
     end
     if ParadiseZ.isNoCampZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoCamp.png"), type = "NoCamp" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoCamp.png"), label = "NoCamp", color = { r = 0.7, g = 0.7, b = 0.7 } })
     end
     if ParadiseZ.isNoFireZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoFire.png"), type = "NoFire" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NoFire.png"), label = "NoFire", color = { r = 0.8, g = 0.8, b = 0.8 } })
     end
     if ParadiseZ.isCageZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Cage.png"), type = "Cage" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Cage.png"), label = "Cage", color = { r = 0.7, g = 0.7, b = 0.7 } })
     end
     if ParadiseZ.isPartyZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Party.png"), type = "Party" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Party.png"), label = "Party", color = { r = 1, g = 1, b = 0.6 } })
     end
     if ParadiseZ.isRallyZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rally.png"), type = "Rally" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Rally.png"), label = "Rally", color = { r = 0, g = 1, b = 0 } })
     end
     if ParadiseZ.isSpecialZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"), type = "Special" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Special.png"), label = "Special", color = { r = 0.9, g = 0.4, b = 0.9 } })
     end
     if ParadiseZ.isTradeZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"), type = "Trade" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"), label = "Trade", color = { r = 0, g = 1, b = 0 } })
     end
     if ParadiseZ.isSprintZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"), type = "Sprint" })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"), label = "Sprint", color = { r = 1, g = 0.7, b = 0.7 } })
     end
     return icons
 end
 function ParadiseZ.getStatusIcons(pl)
     local icons = {}
     if pl:HasTrait("InjuredPvP") then
-        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_InjuredPvP.png"), type = "Injured" })
+        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_InjuredPvP.png"), label = "Injured" })
     end 
     if pl:HasTrait("Caged") then
-        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_Caged.png"), type = "Caged" })
+        table.insert(icons, { texture = getTexture("media/ui/Traits/trait_Caged.png"), label = "Caged" })
     end
     return icons
 end
@@ -223,34 +239,11 @@ function ParadiseZ.doDrawZone()
         Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
         Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
     }
-    local colors = {
-        HQ = { r = 0, g = 0, b = 1 },
-        Outside = { r = 1, g = 0.4, b = 0 },
-        Zone = { r = 1, g = 1, b = 1 },
-        NonPvp = { r = 0, g = 1, b = 0 },
-        PvP = { r = 0.9, g = 0.2, b = 0.2 },
-        Blocked = { r = 0.13, g = 0.13, b = 0.13 },
-        Protected = { r = 0.84, g = 0.76, b = 0.67 },
-        Radiation = { r = 1, g = 1, b = 1 },
-        Hunt = { r = 1, g = 0, b = 0 },
-        Blaze = { r = 1, g = 0, b = 0 },
-        Frost = { r = 0.5, g = 0.4, b = 1 },
-        Bomb = { r = 1, g = 0, b = 0 },
-        MineField = { r = 1, g = 0, b = 0 },
-        NoCamp = { r = 0.7, g = 0.7, b = 0.7 },
-        NoFire = { r = 0.8, g = 0.8, b = 0.8 },
-        Cage = { r = 0.7, g = 0.7, b = 0.7 },
-        Party = { r = 1, g = 1, b = 0.6 },
-        Rally = { r = 0, g = 1, b = 0 },
-        Special = { r = 0.9, g = 0.4, b = 0.9 },
-        Trade = { r = 0, g = 1, b = 0 },
-        Sprint = { r = 1, g = 0.7, b = 0.7 },
-    }
     local texture = textures[zoneKey]
-    local color = colors[zoneKey] or { r = 1, g = 1, b = 1 }
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-    local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
+    local zoneHeader = ParadiseZ.getZoneHeader(pl) or ""
     local zoneInfo = ParadiseZ.getZoneInfo(pl) or ""
+
     if zoneKey == "Hunt" then
         if TheRange.isMember(pl) then
             local card = TheRange.getMembershipCard(pl)
@@ -259,44 +252,50 @@ function ParadiseZ.doDrawZone()
             end
         end
     end
-    getTextManager():DrawString(UIFont.Medium, 68, 100, zoneInfo, color.r, color.g, color.b, alpha)
     
-    local hpBarRight = getCore():getScreenWidth() - 140
-    local hpBarTop = 35
-    
-    local zoneIcons = ParadiseZ.getZoneIcons(pl)
-    local iconX = hpBarRight
-    for i = 1, #zoneIcons do
-        if zoneIcons[i].texture then
-            UIManager.DrawTexture(zoneIcons[i].texture, iconX, hpBarTop, 24, 24, 0.8)
-            iconX = iconX - 26
-        end
-    end
-    
-    local statusIcons = ParadiseZ.getStatusIcons(pl)
-    local statusIconY = hpBarTop + 26
-    iconX = hpBarRight
-    for i = 1, #statusIcons do
-        if statusIcons[i].texture then
-            UIManager.DrawTexture(statusIcons[i].texture, iconX, statusIconY, 24, 24, 1)
-            iconX = iconX - 26
-        end
-    end
-    
-    local textYOffset = 100
-    if zoneIcons and #zoneIcons > 0 then
-        textYOffset = textYOffset + 28
-    end
-    if statusIcons and #statusIcons > 0 then
-        textYOffset = textYOffset + 28
-    end
-    
-    if reboundText and reboundText ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, textYOffset + 50, reboundText, color.r, color.g, color.b, alpha)
-    end
-    
+    local r, g, b, a = ParadiseZ.getColor(zoneKey)
+    local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
+
+    local headerY = 73
+    getTextManager():DrawString(UIFont.Large, 68, headerY, zoneHeader, r, g, b, alpha)
+
+    --[[ 
     if texture then
         UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
+    end
+     ]]
+    local iconX = 68
+    local iconY = headerY + 50
+    local spacer = 24
+    local strX = iconX + spacer
+    local strY = iconY + spacer
+
+    local currentY = iconY
+    local traitsX = 230
+
+    local zoneIcons = ParadiseZ.getZoneIcons(pl)
+    for i = 1, #zoneIcons do
+        if zoneIcons[i].texture then
+            UIManager.DrawTexture(zoneIcons[i].texture, iconX, currentY, 24, 24, 0.8)
+            local label = tostring(zoneIcons[i].label)
+            local r, g, b = ParadiseZ.getZoneSandboxColor(label)
+            getTextManager():DrawString(UIFont.Medium, strX + spacer, currentY, label, r, g, b, alpha)
+            currentY = currentY + 26
+        end
+    end
+
+    local statusIcons = ParadiseZ.getStatusIcons(pl)
+    for i = 1, #statusIcons do
+        if statusIcons[i].texture then
+            UIManager.DrawTexture(statusIcons[i].texture, traitsX, 50, 24, 24, 1)
+            traitsX = traitsX + 26
+            currentY = currentY + 26
+        end
+    end
+    
+    local reboundY = 100 + (currentY - iconY)
+    if reboundText and reboundText ~= "" then
+        getTextManager():DrawString(UIFont.Small, 68, reboundY, reboundText, r, g, b, alpha)
     end
 end
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)

@@ -15,7 +15,7 @@ module ParadiseZ {
 	{
 		DisplayName	     = PvP Medkit,
 		Icon	         = MedkitPvP,
-		Weight	         = 1,
+		Weight	         = 0.3,
 	    DisplayCategory  = Material,
 		Type	         = Normal,
         WorldStaticModel = MedkitPvP_Ground,

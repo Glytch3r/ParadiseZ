@@ -20,25 +20,33 @@ function LifeBarUI.UI:render()
     if not pl then return end
 
     if ParadiseZ.isPvE(pl) then 
+        if pl:HasTrait("InjuredPvP") then 
+            pl:getTraits():remove('InjuredPvP')
+        end
         return 
     end
-
+    
     local md = pl:getModData()
     md.LifePoints = md.LifePoints or 100
     md.LifeBarFlash = md.LifeBarFlash or 0
-
+    
     local life = md.LifePoints
     local w = self.width - 4
     local h = self.height - 4
     local barW = (life / LifeBarUI.maxValue) * w
 
     local col = ParadiseZ.getConditionRGB(life)
-
     self:drawRect(0, 0, w, h, 1, 0, 0, 0)
     self:drawRect(0, 0, barW, h, 1, col.r, col.g, col.b)
     self:drawRectBorder(0, 0, w, h, 1, 1, 1, 1)
     local rec = md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery)
     if pl:HasTrait("InjuredPvP") then 
+        if ParadiseZ.doRoll(1) then
+            local sq = pl:getSquare() 
+            if sq then
+                addBloodSplat(sq, 15)
+            end
+        end
         rec = md.LifePoints - tonumber(SandboxVars.ParadiseZpvp.InjuryDrain)
     end
     md.LifePoints = math.max(0, math.min(100, rec))

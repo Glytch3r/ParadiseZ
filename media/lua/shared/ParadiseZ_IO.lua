@@ -15,7 +15,6 @@ function ParadiseZ.doRestoreZones()
         ParadiseZ.IO(filename, ParadiseZ.ZoneDataBackup, false)
     end
 end
-
 Events.OnInitGlobalModData.Add(ParadiseZ.doRestoreZones)
 
 function ParadiseZ.IO(filename, tbl, isLoad)

@@ -424,3 +424,162 @@ option ParadiseZ.ScoreboardSlowerRefresh
 
 
 
+option ParadiseZcolor.Outside
+{
+    type = enum, numValues = 11, default = 9,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Outside,
+    valueTranslation = ParadiseZcolor_Outside,
+}
+
+option ParadiseZcolor.Zone
+{
+    type = enum, numValues = 11, default = 9,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Zone,
+    valueTranslation = ParadiseZcolor_Zone,
+}
+
+option ParadiseZcolor.NonPvp
+{
+    type = enum, numValues = 11, default = 5,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_NonPvp,
+    valueTranslation = ParadiseZcolor_NonPvp,
+}
+
+option ParadiseZcolor.PvP
+{
+    type = enum, numValues = 11, default = 2,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_PvP,
+    valueTranslation = ParadiseZcolor_PvP,
+}
+
+option ParadiseZcolor.Blocked
+{
+    type = enum, numValues = 11, default = 8,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Blocked,
+    valueTranslation = ParadiseZcolor_Blocked,
+}
+
+option ParadiseZcolor.Protected
+{
+    type = enum, numValues = 11, default = 1,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Protected,
+    valueTranslation = ParadiseZcolor_Protected,
+}
+
+option ParadiseZcolor.Radiation
+{
+    type = enum, numValues = 11, default = 2,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Radiation,
+    valueTranslation = ParadiseZcolor_Radiation,
+}
+
+option ParadiseZcolor.Hunt
+{
+    type = enum, numValues = 11, default = 3,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Hunt,
+    valueTranslation = ParadiseZcolor_Hunt,
+}
+
+option ParadiseZcolor.Blaze
+{
+    type = enum, numValues = 11, default = 2,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Blaze,
+    valueTranslation = ParadiseZcolor_Blaze,
+}
+
+option ParadiseZcolor.Frost
+{
+    type = enum, numValues = 11, default = 6,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Frost,
+    valueTranslation = ParadiseZcolor_Frost,
+}
+
+option ParadiseZcolor.Bomb
+{
+    type = enum, numValues = 11, default = 7,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Bomb,
+    valueTranslation = ParadiseZcolor_Bomb,
+}
+
+option ParadiseZcolor.MineField
+{
+    type = enum, numValues = 11, default = 2,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_MineField,
+    valueTranslation = ParadiseZcolor_MineField,
+}
+
+option ParadiseZcolor.NoCamp
+{
+    type = enum, numValues = 11, default = 1,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_NoCamp,
+    valueTranslation = ParadiseZcolor_NoCamp,
+}
+
+option ParadiseZcolor.NoFire
+{
+    type = enum, numValues = 11, default = 3,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_NoFire,
+    valueTranslation = ParadiseZcolor_NoFire,
+}
+
+option ParadiseZcolor.Cage
+{
+    type = enum, numValues = 11, default = 7,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Cage,
+    valueTranslation = ParadiseZcolor_Cage,
+}
+
+option ParadiseZcolor.Party
+{
+    type = enum, numValues = 11, default = 4,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Party,
+    valueTranslation = ParadiseZcolor_Party,
+}
+
+option ParadiseZcolor.Rally
+{
+    type = enum, numValues = 11, default = 5,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Rally,
+    valueTranslation = ParadiseZcolor_Rally,
+}
+
+option ParadiseZcolor.Special
+{
+    type = enum, numValues = 11, default = 10,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Special,
+    valueTranslation = ParadiseZcolor_Special,
+}
+
+option ParadiseZcolor.Trade
+{
+    type = enum, numValues = 11, default = 6,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Trade,
+    valueTranslation = ParadiseZcolor_Trade,
+}
+
+option ParadiseZcolor.Sprint
+{
+    type = enum, numValues = 11, default = 9,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Sprint,
+    valueTranslation = ParadiseZcolor_Sprint,
+}

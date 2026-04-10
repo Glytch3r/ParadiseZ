@@ -23,6 +23,7 @@ local sync_TEX_ON = getTexture("media/ui/Paradise/sync_on.png")
 local sync_TEX_OFF = getTexture("media/ui/Paradise/sync.png")
 
 local backup_TEX = getTexture("media/ui/Paradise/backup.png")
+local saving_TEX = getTexture("media/ui/Paradise/saving.png")
 
 local reset_TEX = getTexture("media/ui/Paradise/reset.png")
 local reset_TEX_ON = getTexture("media/ui/Paradise/reset_on.png")
@@ -725,7 +726,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             
             self.btnReset:setImage(reset_TEX)
         end
-
+        
         if button.internal == "BACKUP" then
             local zones = {}
             for i = 1, #self.datas.items do
@@ -757,11 +758,14 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                     isSprint = z.isSprint or false,
                 }
             end
-            
+            self.btnBackup:setImage(saving_TEX)
+            timer:Simple(2, function()
+                self.btnBackup:setImage(backup_TEX)
+            end)
+            print("Backup Saved to %userprofile%/Zomboid/Lua/ZoneDataBackup.ini")
             ParadiseZ.ZoneDataBackup = zones
             ParadiseZ.IO("ZoneDataBackup.ini", zones, false)
-
-            pl:addLineChatElement('ParadiseZ.ZoneDataBackup Saved to ZoneDataBackup.ini')
+            pl:addLineChatElement('Backup Saved to %userprofile%/Zomboid/Lua/ZoneDataBackup.ini')
         end
         
         if button.internal == "ADD" then
