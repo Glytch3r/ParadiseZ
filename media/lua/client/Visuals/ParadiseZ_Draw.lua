@@ -1,4 +1,3 @@
---client\ParadiseZ_Draw.lua
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.showZoneInfo = true
 ParadiseZ.lastZone = nil
@@ -18,6 +17,7 @@ function ParadiseZ.getZoneHeader(pl)
     table.insert(info, "X: " .. tostring(round(x)) .. "    Y: " .. tostring(round(y)))
     return table.concat(info, "\n")
 end
+
 function ParadiseZ.getZoneInfo(pl)
     pl = pl or getPlayer()
     if not pl then return end
@@ -50,6 +50,7 @@ function ParadiseZ.getZoneInfo(pl)
     if ParadiseZ.isSprintZone(pl) then table.insert(info, "Sprint") end
     return table.concat(info, "\n")
 end
+
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
     local pl = ParadiseZ.getPl(char)
@@ -73,20 +74,18 @@ function ParadiseZ.getDrawStr(char)
         zoneKey = "Radiation"
     elseif ParadiseZ.isHuntZone(pl) then
         zoneKey = "Hunt"
-    if ParadiseZ.isBlazeZone(pl) then 
+    elseif ParadiseZ.isBlazeZone(pl) then
         if ParadiseZ.isBlazeZoneFromSquare(sq) and EnvColor.isDay() then
             zoneKey = "Blaze ACTIVE"
         else
             zoneKey = "Blaze"
-        end  
-    end
-    if ParadiseZ.isFrostZone(pl) then
+        end
+    elseif ParadiseZ.isFrostZone(pl) then
         if ParadiseZ.isFrostZoneFromSquare(sq) and EnvColor.isNight() then
             zoneKey = "Frost ACTIVE"
         else
             zoneKey = "Frost"
-        end        
-    end
+        end
     elseif ParadiseZ.isBombZone(pl) then
         zoneKey = "Bomb"
     elseif ParadiseZ.isMineZone(pl) then
@@ -118,6 +117,7 @@ function ParadiseZ.getDrawStr(char)
     end
     return zoneKey, reboundText
 end
+
 function ParadiseZ.getReboundInfo()
     local pl = getPlayer()
     if not pl then return "" end
@@ -194,6 +194,7 @@ function ParadiseZ.getZoneIcons(pl)
     end
     return icons
 end
+
 function ParadiseZ.getStatusIcons(pl)
     local icons = {}
     if pl:HasTrait("InjuredPvP") then
@@ -204,6 +205,7 @@ function ParadiseZ.getStatusIcons(pl)
     end
     return icons
 end
+
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
@@ -253,17 +255,11 @@ function ParadiseZ.doDrawZone()
         end
     end
     
-    local r, g, b, a = ParadiseZ.getColor(zoneKey)
     local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
 
     local headerY = 73
-    getTextManager():DrawString(UIFont.Large, 68, headerY, zoneHeader, r, g, b, alpha)
+    getTextManager():DrawString(UIFont.Large, 68, headerY, zoneHeader, 1, 1, 1, alpha)
 
-    --[[ 
-    if texture then
-        UIManager.DrawTexture(texture, 68, 70, 32, 32, 0.8)
-    end
-     ]]
     local iconX = 68
     local iconY = headerY + 50
     local spacer = 24
@@ -289,14 +285,14 @@ function ParadiseZ.doDrawZone()
         if statusIcons[i].texture then
             UIManager.DrawTexture(statusIcons[i].texture, traitsX, 50, 24, 24, 1)
             traitsX = traitsX + 26
-            currentY = currentY + 26
         end
     end
     
     local reboundY = 100 + (currentY - iconY)
     if reboundText and reboundText ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, reboundY, reboundText, r, g, b, alpha)
+        getTextManager():DrawString(UIFont.Small, 68, reboundY, reboundText, 1, 1, 1, alpha)
     end
 end
+
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)

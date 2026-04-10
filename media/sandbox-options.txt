@@ -1,5 +1,6 @@
 VERSION = 1,
 
+
 option ParadiseZ.ClonerDisplayName
 {
 	type = boolean, default = true,
@@ -50,12 +51,14 @@ option ParadiseZ.Glytch3rGift
 	page = ParadiseZ, translation = ParadiseZ_Glytch3rGift,
 }
 
-option ParadiseZ.HideAvatar {
+option ParadiseZ.HideAvatar 
+{
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_HideAvatar,
 }
 
-option ParadiseZ.AutoInvisible  {
+option ParadiseZ.AutoInvisible  
+{
 	type = boolean, default = false,
 	page = ParadiseZ, translation = ParadiseZ_AutoInvisible,
 }
@@ -193,6 +196,13 @@ option ParadiseZ.BombZoneRad
 	page = ParadiseZ, translation = ParadiseZ_BombZoneRad,
 }
 
+option ParadiseZ.ScoreboardSlowerRefresh
+{
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_ScoreboardSlowerRefresh,
+}
+
+
 
 
 
@@ -214,8 +224,6 @@ option ParadiseZpvp.ExileCoords
 	type = string, default = 11641;8324;0, 
 	page = ParadiseZpvp, translation = ParadiseZpvp_ExileCoords,
 }
-
-
 
 option ParadiseZpvp.HitFlashDecay
 {
@@ -247,8 +255,6 @@ option ParadiseZpvp.teleportPvpDeath
 	type = boolean, default = true,
 	page = ParadiseZpvp, translation = ParadiseZpvp_teleportPvpDeath,
 }
-
-
 
 option ParadiseZpvp.pvpDmgMult
 {
@@ -291,8 +297,6 @@ option ParadiseZpvp.ShotgunList
 	type = string, default = Base.Shotgun;Base.Spas12;Base.Spas12Folded;Base.ShotgunSemi;Base.Shotgun2;Base.ShotgunSawnoff;Base.ShotgunSawnoffNoStock;Base.DoubleBarrelShotgun;Base.DoubleBarrelShotgunSawnoff;Base.DoubleBarrelShotgunSawnoffNoStock;SpoonEngineerStuff.ScrappyBlunderbuss;Base.AssaultRifleMasterkeyShotgun;Base.M2400_Shotgun,
 	page = ParadiseZpvp, translation = ParadiseZpvp_ShotgunList,
 }
-
-
 
 option ParadiseZpvp.PerkModifierShotgun
 {
@@ -411,13 +415,6 @@ option TheRange.ExchangePercent
 	type = double,	 min = 0.00,  max = 100,  default = 0.02,
 	page = TheRange, translation = TheRange_ExchangePercent,
 }
-
-option ParadiseZ.ScoreboardSlowerRefresh
-{
-	type = boolean, default = false,
-	page = ParadiseZ, translation = ParadiseZ_ScoreboardSlowerRefresh,
-}
-
 
 
 
@@ -582,4 +579,42 @@ option ParadiseZcolor.Sprint
     page = ParadiseZcolor,
     translation = ParadiseZcolor_Sprint,
     valueTranslation = ParadiseZcolor_Sprint,
+}
+option ParadiseZmapVisual.offsetX
+{
+	type = double,	 min = 0,  max = 999999,  default = 32,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_offsetX,
+}
+option ParadiseZmapVisual.offsetY
+{
+	type = double,	 min = 0,  max = 999999,  default = 42,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_offsetY,
+}
+option ParadiseZmapVisual.colR
+{
+	type = double,	 min = 0.00,  max = 1,  default = 0.4,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_colR,
+}
+option ParadiseZmapVisual.colG
+{
+	type = double,	 min = 0.00,  max = 1,  default = 0,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_colG,
+}
+option ParadiseZmapVisual.colB
+{	
+	type = double,	 min = 0.00,  max = 1,  default = 0,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_colB,
+
+}
+option ParadiseZmapVisual.isInvertedX
+{	
+	type = boolean, default = true,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_isInvertedX,
+
+}
+option ParadiseZmapVisual.isInvertedY
+{	
+	type = boolean, default = true,
+	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_isInvertedY,
+
 }

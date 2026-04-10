@@ -88,31 +88,12 @@ end
 local cageTicks = 0
 local cageTpCooldown = false
 
-
 function ParadiseZ.cageHandler(pl)
     cageTicks = cageTicks + 1
-    pl:getModData()['isCaged'] = pl:getModData()['isCaged'] or false
-    
-    if ParadiseZ.isCaged(pl) and pl:getModData()['isCaged'] == false then    
-        if not ParadiseZ.isCageZone(pl) then
-            local x, y, z = round(pl:getX()),  round(pl:getY()),  pl:getZ()
-            pl:getModData()['CageReturnPoint'] = {x=x,y=y,z=z}
-        end
-        pl:getModData()['isCaged'] = true
-    end
-    if not ParadiseZ.isCaged(pl) and pl:getModData()['isCaged'] == true then 
-        local CageReturnPoint = pl:getModData()['CageReturnPoint']
-        if CageReturnPoint then
-            local x, y, z = CageReturnPoint.x, CageReturnPoint.y, CageReturnPoint.z
-            ParadiseZ.doTp(pl, x, y, z)
-        end
-        pl:getModData()['isCaged'] = false
-    end
     if cageTicks % 3 == 0 then
-        
         if not pl then return end
         if not pl:isAlive() then return end
-
+        if not ParadiseZ.isCaged(pl) then return end
         if cageTpCooldown then return end
 
         local plX, plY = ParadiseZ.getXY(pl)
