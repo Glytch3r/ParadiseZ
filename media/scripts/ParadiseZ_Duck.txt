@@ -71,8 +71,42 @@ module ParadiseZ {
         texture = duck_glytch3r,
         scale = 0.8,
     }
-    /*  -----------------------     119       --------------------------- */
+    /*  -----------------------            --------------------------- */
+	item Duckhunt_kit
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 119,
+        Icon	=  duck_kit,
+        WorldStaticModel = duck_kit,
+    }
 
+	model duck_kit
+    {
+		mesh = WorldItems/duck_kit,
+        texture = duck_kit,
+        scale = 0.8,
+    }
+    /*  -----------------------            --------------------------- */
     
+	item Duckhunt_fooze
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 120,
+        Icon	=  duck_fooze,
+        WorldStaticModel = duck_fooze,
+    }
+
+	model duck_fooze
+    {
+		mesh = WorldItems/duck_fooze,
+        texture = duck_fooze,
+        scale = 0.8,
+    }
+
+
     
 }

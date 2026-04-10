@@ -5,6 +5,8 @@ ParadiseZ.duckItems =  {
     "goro",
     "tenorphans",
     "glytch3r",
+    "kit",
+    "fooze",
 }
 
 function ParadiseZ.duckDrop(zed)
