@@ -2,7 +2,6 @@ ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneVisuals = ParadiseZ.ZoneVisuals or {}
 
 ParadiseZ.ZoneVisuals.enabled = true
-
 function ParadiseZ.ZoneVisuals.getData()
     return ModData.get("ParadiseZ_ZoneData") or {}
 end
@@ -21,15 +20,15 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
     local wy = self.mapAPI:uiToWorldY(mx, my)
 
     local hoverText
+    local r,g,b,a = 1,1,1,1
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
-            local r,g,b,a = ParadiseZ.getColor(z)
             a = 0.05
 
             if wx and wy then
                 if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
-                    hoverText = ParadiseZ.getZoneName(wx, wy)
+                    hoverText = ParadiseZ.getZoneName(wx, wy) 
                 end
             end
             
@@ -62,9 +61,18 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
             end
         end
     end
+    if not hoverText then
+        hoverText = SandboxVars.ParadiseZ.OutsideStr
+    end
 
     if hoverText then
-        self:drawText(hoverText, mx + 12, my + 12, 1, 1, 1, 1, UIFont.Small)
+        local coordStr = "\nX: "..tostring(round(wx)).."  |  Y: "..tostring(round(wy))
+        local font = UIFont.Small
+        if hoverText ~= SandboxVars.ParadiseZ.OutsideStr then
+            font = UIFont.Large
+        end
+        self:drawText(hoverText, mx+64, my-64, 1, 1, 1, 1, font)
+        self:drawText(tostring(coordStr), mx+64, my-64, 1, 1, 1, 1, UIFont.Medium)
     end
 end
 
@@ -76,7 +84,6 @@ function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
     local option = context:addOption("Zone Visuals", self, function()
         ParadiseZ.ZoneVisuals.enabled = not ParadiseZ.ZoneVisuals.enabled
     end)
-
     context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
 end
 

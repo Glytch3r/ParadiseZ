@@ -1,0 +1,78 @@
+
+
+module ParadiseZ {
+    imports { Base }
+
+	item Duckhunt_jim
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 50,
+        Icon	=  duck_jim,
+        WorldStaticModel = duck_jim,
+    }
+
+	model duck_jim
+    {
+		mesh = WorldItems/duck_jim,
+        texture = duck_jim,
+        scale = 0.8,
+    }
+    /*  -----------------------            --------------------------- */
+	item Duckhunt_goro
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 116,
+        Icon	=  duck_goro,
+        WorldStaticModel = duck_goro,
+    }
+
+	model duck_goro
+    {
+		mesh = WorldItems/duck_goro,
+        texture = duck_goro,
+        scale = 0.9,
+    }
+     
+    /*  -----------------------            --------------------------- */
+	item Duckhunt_tenorphans
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 117,
+        Icon	=  duck_tenorphans,
+        WorldStaticModel = duck_tenorphans,
+    }
+
+	model duck_tenorphans
+    {
+		mesh = WorldItems/duck_tenorphans,
+        texture = duck_tenorphans,
+        scale = 0.8,
+    }
+    /*  -----------------------           --------------------------- */
+	item Duckhunt_glytch3r
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 118,
+        Icon	=  duck_glytch3r,
+        WorldStaticModel = duck_glytch3r,
+    }
+
+	model duck_glytch3r
+    {
+		mesh = WorldItems/duck_glytch3r,
+        texture = duck_glytch3r,
+        scale = 0.8,
+    }
+    /*  -----------------------     119       --------------------------- */
+
+    
+    
+}

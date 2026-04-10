@@ -22,9 +22,7 @@ module ParadiseZ {
         Tooltip          = Heals PvP Injury and recover HP,
 
 	}
-	
     
-
 	item PiggyBank
 	{
 		DisplayName	     = Piggy Bank,
@@ -59,20 +57,5 @@ module ParadiseZ {
 		scale = 0.6,
 	}
 
-	item Duckhunt_jim
-    {
-        DisplayCategory = Junk,
-        Weight   =   0.1,
-        Type    =   Normal,
-        DisplayName = Duck hunt 50,
-        Icon	=  Rubberducky,
-        WorldStaticModel = duck_jim,
-    }
 
-	model duck_jim
-    {
-		mesh = WorldItems/duck_jim,
-        texture = duck_jim,
-        scale = 0.8,
-    }
 }

@@ -1,4 +1,12 @@
 ParadiseZ = ParadiseZ or {}
+
+ParadiseZ.duckItems =  {
+    "jim",
+    "goro",
+    "tenorphans",
+    "glytch3r",
+}
+
 function ParadiseZ.duckDrop(zed)
     if not zed then return end
     local inv = zed:getInventory()
@@ -18,8 +26,11 @@ function ParadiseZ.duckDrop(zed)
         chance = math.min(100, math.max(0, chance - half))
     end
 
-    if ParadiseZ.doRoll(chance) then     
-        inv:AddItem("ParadiseZ.Duckhunt_jim");
-    end    
+    if ParadiseZ.doRoll(chance) then
+        local duckChar = ParadiseZ.getStrFromList(ParadiseZ.duckItems)
+        if duckChar then
+            inv:AddItem("ParadiseZ.Duckhunt_" .. tostring(duckChar))
+        end
+    end 
 end
 Events.OnZombieDead.Add(ParadiseZ.duckDrop);

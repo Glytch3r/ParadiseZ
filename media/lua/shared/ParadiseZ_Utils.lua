@@ -23,6 +23,12 @@ ParadiseZ.ZoneColorList = {
     Trade = { r = 0, g = 1, b = 0 },
     Sprint = { r = 1, g = 0.7, b = 0.7 },
 }
+
+function ParadiseZ.getStrFromList(list)
+    if not list or #list == 0 then return nil end
+    return list[ZombRand(#list) + 1]
+end
+
 function ParadiseZ.echo(var, isClip)
 	var = tostring(var)
 	local pl = getPlayer() 
