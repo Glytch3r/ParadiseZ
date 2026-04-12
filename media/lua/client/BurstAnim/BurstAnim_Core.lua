@@ -71,38 +71,39 @@ function BurstAnim.doExplosionDamage(x, y, z)
                         local obj = moving:get(i)
                         local dmg = 0
                         local isFront = false
+                        local isZed = instanceof(obj, "IsoZombie")
+                        local isPl = instanceof(obj, "IsoPlayer")
 
-                        if instanceof(obj, "IsoZombie") or instanceof(obj, "IsoPlayer") then
+                        if isZed or isPl then
                             local maxDmg = SandboxVars.BurstAnim.BurstDmg or 50
                             dmg = ZombRand(maxDmg / 2, maxDmg + 1)
                             isFront = BurstAnim.isSqInFront(obj, getCell():getGridSquare(x, y, z))
-                        end
+                            if isZed and obj:isAlive() then
+                                local isKnockDown = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
+                                local isCrawler = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
 
-                        if instanceof(obj, "IsoZombie") then
-                            local isKnockDown = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
-                            local isCrawler = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
-
-                            if dmg > 0 then
-                                local newHealth = math.max(0, obj:getHealth() - dmg)
-                                obj:setHealth(newHealth)
-                                obj:update()
-                            end
-
-                            if isKnockDown then
-                                if isClient() then
-                                    sendClientCommand("BurstAnim", "triggerZKnockDown", { zId = obj:getOnlineID(), isFront = isFront, isCrawler = isCrawler })
-                                else
-                                    BurstAnim.zKnockDown(obj, isFront, isCrawler)
+                                if dmg > 0 then
+                                    local newHealth = math.max(0, obj:getHealth() - dmg)
+                                    obj:setHealth(newHealth)
+                                    obj:update()
                                 end
-                            end
 
-                        elseif instanceof(obj, "IsoPlayer") then
-                            local isStagger = ParadiseZ.doRoll(SandboxVars.BurstAnim.PlayerStaggerPercent or 0)
+                                if isKnockDown then
+                                    if isClient() then
+                                        sendClientCommand("BurstAnim", "triggerZKnockDown", { zId = obj:getOnlineID(), isFront = isFront, isCrawler = isCrawler })
+                                    else
+                                        BurstAnim.zKnockDown(obj, isFront, isCrawler)
+                                    end
+                                end
 
-                            if isClient() then
-                                sendClientCommand("BurstAnim", "triggerPlStagger", { pId = obj:getOnlineID(), isFront = isFront, dmg = dmg, isStagger = isStagger })
-                            else
-                                BurstAnim.plDmg(obj, isFront, dmg, isStagger)
+                            elseif isPl and obj:isAlive() then
+                                local isStagger = ParadiseZ.doRoll(SandboxVars.BurstAnim.PlayerStaggerPercent or 0)
+
+                                if isClient() then
+                                    sendClientCommand("BurstAnim", "triggerPlStagger", { pId = obj:getOnlineID(), isFront = isFront, dmg = dmg, isStagger = isStagger })
+                                else
+                                    BurstAnim.plDmg(obj, isFront, dmg, isStagger)
+                                end
                             end
                         end
                     end
