@@ -26,13 +26,6 @@ local Commands = {}
 Commands.BurstAnim = {}
 
 
-function BurstAnim.doRoll(percent)
-    percent = percent or 50
-
-	if percent <= 0 then return false end
-	if percent >= 100 then return true end
-	return percent >= ZombRand(1, 101)
-end
 
 function BurstAnim.findZedByID(id)
     local list = getCell():getZombieList()
@@ -55,7 +48,7 @@ function BurstAnim.zKnockDown(zed, isFront, isCrawler)
     zed:setCanWalk(not isCrawler)
 end
 
-function BurstAnim.plDmg(pl, isFront, dmg)
+function BurstAnim.plDmg(pl, isFront, dmg, isStagger)
     isFront = isFront or true
     pl = pl or getPlayer()
 
@@ -89,11 +82,13 @@ Commands.BurstAnim.triggerZKnockDown = function(args)
 end
 
 Commands.BurstAnim.triggerBurst = function(args)
-    BurstAnim.doBurst(args.x, args.y, args.z, args.dir)
+    local dir = args.dir or nil
+    BurstAnim.doBurst(args.x, args.y, args.z, dir)
 end
 
+
 Events.OnServerCommand.Add(function(module, command, args)
-    if Commands[module] and Commands[module][command] then
-        Commands[module][command](args)
-    end
+	if Commands[module] and Commands[module][command] then
+		Commands[module][command](args)
+	end
 end)

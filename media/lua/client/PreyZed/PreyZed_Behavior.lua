@@ -178,12 +178,12 @@ function PreyZed.BreakBlocker(zed)
     if obj then
 
         if instanceof(obj, "IsoDoor") or (instanceof(obj, "IsoThumpable") and obj:isDoor()) then
-            PreyZed.doSledge(obj)
+            doSledge(obj)
 
             return true
         elseif instanceof(obj, "IsoWindow") or (instanceof(obj, "IsoThumpable") and obj:isWindow()) then
 
-            PreyZed.doSledge(obj)
+            doSledge(obj)
 
             return true
         end
@@ -232,21 +232,6 @@ function PreyZed.goIndoor(zed)
         end
     end
 
-end
-
-function PreyZed.doSledge(obj)
-
-    if isClient() then
-        sledgeDestroy(obj)
-    else
-        local sq = obj:getSquare()
-        if sq then
-            sq:RemoveTileObject(obj);
-            sq:getSpecialObjects():remove(obj);
-            sq:getObjects():remove(obj);
-            sq:transmitRemoveItemFromSquare(obj)
-        end
-    end
 end
 
 function PreyZed.isSameRoom(zed, targ)

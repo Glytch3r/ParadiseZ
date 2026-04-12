@@ -19,13 +19,9 @@
 ----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
 -----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
 ----------------------------------------------------------------
+
 BurstAnim = BurstAnim or {}
 ParadiseZ = ParadiseZ or {}
-BurstAnim.mineList = {
-   ["ParadiseTiles_6"]=true,
-   ["ParadiseTiles_7"]=true,
-}
-
 
 
 function BurstAnim.isSqInFront(targ, sq)
@@ -53,22 +49,18 @@ function BurstAnim.isSqInFront(targ, sq)
     return (dx * fx + dy * fy) >= 0
 end
 
-
-function BurstAnim.triggerBurst(pl)
-    pl = pl or getPlayer()
-    if not pl then return end
-
-    local sq = pl:getCurrentSquare()
-    if not sq then return end
-
-    local x, y, z = sq:getX(), sq:getY(), sq:getZ()
-    local dir = tostring(pl:getDir())
-
-
-
+function BurstAnim.doExplosionDamage(x, y, z)
     local rad = SandboxVars.BurstAnim.ExplosionRadius or 2
     local cell = getCell()
-
+    local sq = cell:getOrCreateGridSquare(x, y, z) 
+    local pl = getPlayer() 
+    if sq then
+        if pl then
+            addSound(pl, x, y, z, 35, 50)
+        end
+        getSoundManager():PlayWorldSound('PipeBombExplode', sq, 0, 5, 5, false)
+        getSoundManager():PlayWorldSound('BurnedObjectExploded', sq, 0, 5, 5, false)
+    end
     for dx = -rad, rad do
         for dy = -rad, rad do
             local tsq = cell:getGridSquare(x + dx, y + dy, z)
@@ -83,12 +75,12 @@ function BurstAnim.triggerBurst(pl)
                         if instanceof(obj, "IsoZombie") or instanceof(obj, "IsoPlayer") then
                             local maxDmg = SandboxVars.BurstAnim.BurstDmg or 50
                             dmg = ZombRand(maxDmg / 2, maxDmg + 1)
-                            isFront = BurstAnim.isSqInFront(obj, sq)
+                            isFront = BurstAnim.isSqInFront(obj, getCell():getGridSquare(x, y, z))
                         end
 
                         if instanceof(obj, "IsoZombie") then
-                            local isKnockDown = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
-                            local isCrawler = BurstAnim.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
+                            local isKnockDown = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
+                            local isCrawler = ParadiseZ.doRoll(SandboxVars.BurstAnim.ZedCrawlerPercent or 0)
 
                             if dmg > 0 then
                                 local newHealth = math.max(0, obj:getHealth() - dmg)
@@ -100,15 +92,15 @@ function BurstAnim.triggerBurst(pl)
                                 if isClient() then
                                     sendClientCommand("BurstAnim", "triggerZKnockDown", { zId = obj:getOnlineID(), isFront = isFront, isCrawler = isCrawler })
                                 else
-                                    BurstAnim.zKnockDown(obj, isFront, isCrawler) 
+                                    BurstAnim.zKnockDown(obj, isFront, isCrawler)
                                 end
                             end
 
                         elseif instanceof(obj, "IsoPlayer") then
-                            local isStagger = BurstAnim.doRoll(SandboxVars.BurstAnim.PlayerStaggerPercent or 0)
+                            local isStagger = ParadiseZ.doRoll(SandboxVars.BurstAnim.PlayerStaggerPercent or 0)
 
                             if isClient() then
-                                sendClientCommand("BurstAnim", "triggerPlStagger", { pId = obj:getOnlineID(), isFront = isFront, dmg = dmg, isStagger = isStagger })  
+                                sendClientCommand("BurstAnim", "triggerPlStagger", { pId = obj:getOnlineID(), isFront = isFront, dmg = dmg, isStagger = isStagger })
                             else
                                 BurstAnim.plDmg(obj, isFront, dmg, isStagger)
                             end
@@ -117,16 +109,5 @@ function BurstAnim.triggerBurst(pl)
                 end
             end
         end
-    end
-
-    if isClient() then
-        sendClientCommand("BurstAnim", "triggerBurst", {
-            x = x,
-            y = y,
-            z = z,
-            dir = dir,
-        })
-    else
-        BurstAnim.doBurst(x, y, z, dir)
     end
 end

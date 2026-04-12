@@ -59,6 +59,7 @@ function BurstAnim:render()
     end
 end
 
+
 function BurstAnim.doBurst(wx, wy, wz, dir)
     local pl = getPlayer()
     if not pl then return end
@@ -91,8 +92,8 @@ function BurstAnim.doBurst(wx, wy, wz, dir)
 
     local adjustedX = screenX / zoom
     local adjustedY = screenY / zoom
-
     local effect = BurstAnim:new(adjustedX - 128, adjustedY - 128, fx, fy, wz)
+    
     effect:initialise()
     effect:addToUIManager()
 end
