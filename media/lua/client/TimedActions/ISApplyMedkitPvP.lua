@@ -52,7 +52,7 @@ function ISApplyMedkitPvP:perform()
         md.LifePoints = math.min(100, md.LifePoints + SandboxVars.ParadiseZpvp.MedkitHeal)
     end
     
-    self.character:getXp():AddXP(Perks.Doctor, 5);
+    self.character:getXp():AddXP(Perks.Doctor, 0.5);
     self.character:getInventory():Remove(self.item);
 end
 
