@@ -81,7 +81,7 @@ function ParadiseZ.isRadZone(plOrSq)
     if instanceof(plOrSq, "IsoGridSquare") then
         sq = plOrSq
     else
-        local targ = ParadiseZ.getPl(plOrSq)
+        local targ = ParadiseZ.getPlOrSq(plOrSq)
         if not targ then return false end
         sq = targ:getSquare()
         if not sq then return false end

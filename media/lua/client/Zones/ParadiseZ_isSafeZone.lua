@@ -3,7 +3,7 @@ ParadiseZ = ParadiseZ or {}
 
 
 --[[ function ParadiseZ.isSafeZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
@@ -19,7 +19,7 @@ function ParadiseZ.isSafeZone(plOrSq)
     if instanceof(plOrSq, "IsoGridSquare") then
         sq = plOrSq
     else
-        local targ = ParadiseZ.getPl(plOrSq)
+        local targ = ParadiseZ.getPlOrSq(plOrSq)
         if not targ then return false end
         sq = targ:getSquare()
         if not sq then return false end

@@ -7,7 +7,7 @@ LuaEventManager.AddEvent("OnZoneCrossed")
 
 --[[ 
 function ParadiseZ.isRestricted(sq, pl)
-    pl = ParadiseZ.getPl(pl)
+    pl = ParadiseZ.getPlOrSq(pl)
     if not pl then return false end
     sq = sq or pl:getCurrentSquare()
     if not sq then return false end
@@ -332,7 +332,7 @@ end
 
 
 function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local px, py = ParadiseZ.getXY(targ)
     if not px or not py then return false end

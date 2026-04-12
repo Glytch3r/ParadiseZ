@@ -66,7 +66,28 @@ function ParadiseZ.findzedID(int)
 	end
 	return nil
 end
+function ParadiseZ.getTypeFromOutfit(zed)
+    if not zed then return 1 end
+    local outfit = zed:getOutfitName()
+    if not outfit then return 1 end
+    
+    local hash = 0
+    for i = 1, #outfit do
+        hash = (hash + string.byte(outfit, i) * i) % 2147483647
+    end
 
+    return (hash % 5) + 1
+end
+
+function ParadiseZ.setSprinter(zed)
+    zed:setWalkType("sprint"..tostring(ParadiseZ.getTypeFromOutfit(zed)))
+--[[     zed:makeInactive(true)
+    zed:makeInactive(false)      ]]   
+end
+
+
+
+--[[ 
 function ParadiseZ.setSprinter(zed, num)
 	local sandOpt = getSandboxOptions()
 	local zSpeed = sandOpt:getOptionByName("ZombieLore.Speed"):getValue()
@@ -79,16 +100,19 @@ function ParadiseZ.setSprinter(zed, num)
 	zed:DoZombieStats()
 	sandOpt:set("ZombieLore.Speed", zSpeed)
 end
+ ]]
 
 function ParadiseZ.isSprinter(zed)
-	local walk = ParadiseZ.getWalkType(zed)
+	if not zed then return end
+	local walk = zed:getVariableString("zombieWalkType")
 	if walk then
-		if tostring(walk:contains('sprint')) or luautils.stringStarts(walk, "sprint") then
+		if walk:contains('sprint') or luautils.stringStarts(walk, "sprint") then
 			return true
 		end
 	end
 	return false
 end
+
 function ParadiseZ.isSprintZoneFromSquare(sq)
     if not sq then return false end
     local zoneName = ParadiseZ.getZoneName(sq)
@@ -98,13 +122,13 @@ function ParadiseZ.isSprintZoneFromSquare(sq)
     return zone.isSprint == true
 end
 
-function ParadiseZ.sprinterHandler(zed)   
-    local pl = getPlayer() 
-    if not pl then return end
-    if zed and zed:isAlive() and not ParadiseZ.isSprinter(zed) then
-        if ParadiseZ.isClosestPl(pl, zed) then
-            ParadiseZ.setSprinter(zed, ZombRand(1,6))
-        end
+function ParadiseZ.sprinterHandler(zed)
+    if zed and zed:isAlive() then
+        local sq = zed:getSquare() 
+        if not sq then return end
+        if ParadiseZ.isSprintZoneFromSquare(sq) and not ParadiseZ.isSprinter(zed) then
+            ParadiseZ.setSprinter(zed)
+        end        
     end
 end
 Events.OnZombieUpdate.Add(ParadiseZ.sprinterHandler)

@@ -53,7 +53,7 @@ end
 
 function ParadiseZ.getDrawStr(char)
     if not isIngameState() then return end
-    local pl = ParadiseZ.getPl(char)
+    local pl = ParadiseZ.getPlOrSq(char)
     if not pl then return end
     local sq = pl:getCurrentSquare()
     if not sq then return end

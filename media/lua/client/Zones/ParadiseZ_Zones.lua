@@ -1,7 +1,7 @@
 --client\ParadiseZ_Zones.lua
 ParadiseZ = ParadiseZ or {}
 
-function ParadiseZ.getPl(char)
+function ParadiseZ.getPlOrSq(char)
     if not char then return getPlayer() end
     if type(char) == "string" then
         return getPlayerFromUsername(char)
@@ -21,13 +21,13 @@ function ParadiseZ.getXY(pl)
 end
 
 function ParadiseZ.isOutside(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     return ParadiseZ.getZoneName(targ) == tostring(SandboxVars.ParadiseZ.OutsideStr)
 end
 --[[ 
 function ParadiseZ.isRegularZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
 
     local isKosZone = ParadiseZ.isKosZone(targ)
@@ -47,7 +47,7 @@ end
  ]]
 -----------------------            ---------------------------
 function ParadiseZ.isHuntZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
@@ -67,7 +67,7 @@ end
 -----------------------            ---------------------------
 
 function ParadiseZ.isPveZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
 
     if SandboxVars.ParadiseZpvp.VanillaNonPvpZone then
@@ -85,7 +85,7 @@ function ParadiseZ.isPveZone(pl)
 end
 
 function ParadiseZ.isKosZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
@@ -95,7 +95,7 @@ function ParadiseZ.isKosZone(pl)
 end
 
 function ParadiseZ.isBlockedZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
@@ -107,7 +107,7 @@ end
 -----------------------            ---------------------------
 
 function ParadiseZ.isRegularZone(pl)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
     if zoneName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
@@ -126,7 +126,7 @@ function ParadiseZ.isRegularZone(pl)
 end
 
 function ParadiseZ.checkZoneFlag(pl, flag)
-    local targ = ParadiseZ.getPl(pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
 
     local zoneName = ParadiseZ.getZoneName(targ)
