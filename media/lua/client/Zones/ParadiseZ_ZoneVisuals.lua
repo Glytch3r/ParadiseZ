@@ -19,8 +19,10 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
     local wx = self.mapAPI:uiToWorldX(mx, my)
     local wy = self.mapAPI:uiToWorldY(mx, my)
 
-    local hoverText
+    local zName
     local r,g,b,a = 1,1,1,1
+
+
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
@@ -28,13 +30,18 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
             if wx and wy then
                 if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
-                    hoverText = ParadiseZ.getZoneName(wx, wy) 
+                    zName = ParadiseZ.getZoneName(wx, wy) 
                 end
             end
-            local borderA =  0.2
-            if hoverText then 
-                borderA =  0.3
+
+            if zName then
+                r,g,b,a = ParadiseZ.getZoneDataColor(zName)
             end
+            
+            local borderA =  0.2
+      --[[       if zName then 
+                borderA =  0.3
+            end ]]
             if isometric then
                 local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                 local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
@@ -63,14 +70,14 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
             end
         end
     end
-    if not hoverText then
-        hoverText = SandboxVars.ParadiseZ.OutsideStr
+    if not zName then
+        zName = SandboxVars.ParadiseZ.OutsideStr
     end
 
-    if hoverText then
+    if zName then
         local coordStr = "\nX: "..tostring(round(wx)).."  |  Y: "..tostring(round(wy))
         local font = UIFont.Small
-        if hoverText ~= SandboxVars.ParadiseZ.OutsideStr then
+        if zName ~= SandboxVars.ParadiseZ.OutsideStr then
             font = UIFont.Large
         end
 
@@ -92,17 +99,17 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
             drawY = my - offsetY
         end
         
-        self:drawText(hoverText, drawX, drawY, colR, colG, colB, 1, font)
+        self:drawText(zName, drawX, drawY, colR, colG, colB, 1, font)
         self:drawText(tostring(coordStr), drawX, drawY + 15, colR, colG, colB, 1, UIFont.Medium)
     end
 
- --[[    if hoverText then
+ --[[    if zName then
         local coordStr = "\nX: "..tostring(round(wx)).."  |  Y: "..tostring(round(wy))
         local font = UIFont.Small
-        if hoverText ~= SandboxVars.ParadiseZ.OutsideStr then
+        if zName ~= SandboxVars.ParadiseZ.OutsideStr then
             font = UIFont.Large
         end
-        self:drawText(hoverText, mx+64, my-64, 1, 1, 1, 1, font)
+        self:drawText(zName, mx+64, my-64, 1, 1, 1, 1, font)
         self:drawText(tostring(coordStr), mx+64, my-64, 1, 1, 1, 1, UIFont.Medium)
     end ]]
 end

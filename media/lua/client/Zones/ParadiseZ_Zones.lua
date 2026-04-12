@@ -125,6 +125,7 @@ function ParadiseZ.isRegularZone(pl)
     return true
 end
 
+
 function ParadiseZ.checkZoneFlag(pl, flag)
     local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end

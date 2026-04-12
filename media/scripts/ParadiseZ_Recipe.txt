@@ -31,4 +31,26 @@ module Base {
     
     }
 
+    recipe Make AirTank
+    {
+        keep [Recipe.GetItemTypes.WeldingMask],
+        keep Wrench/PipeWrench,
+        Prop1:Source=2,
+
+        Result:TW.AirTank,
+        Extinguisher/LyingExtinguisher,
+        BlowTorch=2,
+
+        AnimNode:Disassemble,
+        Time:250.0,
+        Category:Welding,
+    }
+
+
+
+
+
+
+
+
 }

@@ -106,8 +106,6 @@ function ParadiseZ.getDrawStr(char)
         zoneKey = "Trade"
     elseif ParadiseZ.isSprintZone(pl) then
         zoneKey = "Sprint"
-    elseif ParadiseZ.isRegularZone(pl) then
-        zoneKey = "Zone"
     end
     zoneKey = zoneKey or ""
     local reboundText = ""

@@ -23,7 +23,7 @@
 ParadiseZ = ParadiseZ or {}
 --client\ParadiseZ_Color.lua
 
-local colorValues = {
+ParadiseZ.colorValues = {
     { r = 0.5, g = 0.5, b = 0.5 }, --1 Gray
     { r = 1, g = 0, b = 0 },       --2 Red
     { r = 1, g = 0.5, b = 0 },     --3 Orange
@@ -42,8 +42,6 @@ function ParadiseZ.getZoneSandboxColor(zoneType)
         colorIndex = SandboxVars.ParadiseZcolor.HQ or 9
     elseif zoneType == "Outside" then
         colorIndex = SandboxVars.ParadiseZcolor.Outside or 9
-    elseif zoneType == "Zone" then
-        colorIndex = SandboxVars.ParadiseZcolor.Zone or 9
     elseif zoneType == "NonPvp" then
         colorIndex = SandboxVars.ParadiseZcolor.NonPvp or 9
     elseif zoneType == "PvP" then
@@ -86,11 +84,65 @@ function ParadiseZ.getZoneSandboxColor(zoneType)
         return 0, 0, 0, 0
     end
     
-    local color = colorValues[colorIndex] or colorValues[9]
+    local color = ParadiseZ.colorValues[colorIndex] or ParadiseZ.colorValues[9]
     return color.r, color.g, color.b, 1
 end
 
+function ParadiseZ.getZoneDataColor(zName)
+    local zData = ParadiseZ.ZoneData and ParadiseZ.ZoneData[zName]
+    if not zData then return 1,1,1,1 end
 
+    local colorIndex = 9
+
+    if zData.isKos then
+        colorIndex = SandboxVars.ParadiseZcolor.PvP or 9
+    elseif zData.isBlocked then
+        colorIndex = SandboxVars.ParadiseZcolor.Blocked or 9
+    elseif zData.isPvE then
+        colorIndex = SandboxVars.ParadiseZcolor.NonPvp or 9
+    elseif zData.isSpecial then
+        colorIndex = SandboxVars.ParadiseZcolor.Special or 9
+    elseif zData.isCage then
+        colorIndex = SandboxVars.ParadiseZcolor.Cage or 9
+    elseif zData.isHQ then
+        colorIndex = SandboxVars.ParadiseZcolor.HQ or 9
+    elseif zData.isOutside then
+        colorIndex = SandboxVars.ParadiseZcolor.Outside or 9
+    elseif zData.isProtected then
+        colorIndex = SandboxVars.ParadiseZcolor.Protected or 9
+    elseif zData.isRadiation then
+        colorIndex = SandboxVars.ParadiseZcolor.Radiation or 9
+    elseif zData.isHunt then
+        colorIndex = SandboxVars.ParadiseZcolor.Hunt or 9
+    elseif zData.isBlaze then
+        colorIndex = SandboxVars.ParadiseZcolor.Blaze or 9
+    elseif zData.isFrost then
+        colorIndex = SandboxVars.ParadiseZcolor.Frost or 9
+    elseif zData.isBomb then
+        colorIndex = SandboxVars.ParadiseZcolor.Bomb or 9
+    elseif zData.isMineField then
+        colorIndex = SandboxVars.ParadiseZcolor.MineField or 9
+    elseif zData.isNoCamp then
+        colorIndex = SandboxVars.ParadiseZcolor.NoCamp or 9
+    elseif zData.isNoFire then
+        colorIndex = SandboxVars.ParadiseZcolor.NoFire or 9
+    elseif zData.isParty then
+        colorIndex = SandboxVars.ParadiseZcolor.Party or 9
+    elseif zData.isRally then
+        colorIndex = SandboxVars.ParadiseZcolor.Rally or 9
+    elseif zData.isTrade then
+        colorIndex = SandboxVars.ParadiseZcolor.Trade or 9
+    elseif zData.isSprint then
+        colorIndex = SandboxVars.ParadiseZcolor.Sprint or 9
+    end
+
+    if colorIndex == 11 then
+        return 0,0,0,0
+    end
+
+    local color = ParadiseZ.colorValues[colorIndex] or ParadiseZ.colorValues[9]
+    return color.r, color.g, color.b, 1
+end
 --[[ 
 function ParadiseZ.parseColor()
     if ParadiseZ.RoomLight then

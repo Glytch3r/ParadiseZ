@@ -429,14 +429,6 @@ option ParadiseZcolor.Outside
     valueTranslation = ParadiseZcolor_Outside,
 }
 
-option ParadiseZcolor.Zone
-{
-    type = enum, numValues = 11, default = 9,
-    page = ParadiseZcolor,
-    translation = ParadiseZcolor_Zone,
-    valueTranslation = ParadiseZcolor_Zone,
-}
-
 option ParadiseZcolor.NonPvp
 {
     type = enum, numValues = 11, default = 5,
