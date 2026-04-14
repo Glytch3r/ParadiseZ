@@ -1,9 +1,14 @@
-function ParadiseZ.parseCageCoords()
+function ParadiseZ.parseCageCoords(isReturn)
     local strList = SandboxVars.ParadiseZ.DefaultCageCoords
+    if isReturn then
+        strList = SandboxVars.ParadiseZ.DefaultCageReturnCoords
+    end
     local tx, ty, tz = strList:match("^(-?%d+)[;:](-?%d+)[;:](-?%d+)")
     tx, ty, tz = tonumber(tx), tonumber(ty), tonumber(tz)
     return tx, ty, tz
 end
+
+
 
 function ParadiseZ.setCaged(targUser, bool)
     if not targUser then return end
@@ -17,10 +22,25 @@ function ParadiseZ.setCaged(targUser, bool)
     SyncXp(targPl)
 end
 
-function ParadiseZ.isCaged(pl)
+function ParadiseZ.saveCageReturn(pl, name)
     pl = pl or getPlayer()
-    if not pl then return false end
-    return pl:getTraits():contains("Caged")
+    if not pl then return nil end
+    local sq = pl:getCurrentSquare()
+    if not sq then return nil end
+    local sx, sy = sq:getX(), sq:getY()
+    name = name or ParadiseZ.getZoneName(pl)
+    local md = pl:getModData()
+    local tab = {
+        name = name,
+        x = sx + 0.5,
+        y = sy + 0.5,
+        z = pl:getZ(),
+        ax = ParadiseZ.roundN(pl:getX(), 3),
+        ay = ParadiseZ.roundN(pl:getY(), 3)
+    }
+    md['CageReturn'] = tab
+    return tab
+
 end
 
 function ParadiseZ.saveCageRebound(pl, name)
@@ -45,6 +65,8 @@ function ParadiseZ.saveCageRebound(pl, name)
     end
     return nil
 end
+
+
 function ParadiseZ.isHasCageCoords(pl)
     local md = pl:getModData()
     return md['CageRebound'] ~= nil
@@ -58,66 +80,61 @@ function ParadiseZ.getLastCageCoord(pl)
     if rebound and rebound.x and rebound.y and rebound.z then
         return rebound.x, rebound.y, rebound.z
     end
-    local x, y, z = ParadiseZ.parseCageCoords()
+    local x, y, z = ParadiseZ.parseCageCoords(false)
     return x, y, z
 end
 
-function ParadiseZ.doCage(pl)
-    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+function ParadiseZ.getCageReturnCoord(pl)
     pl = pl or getPlayer()
-    if not pl or not pl:isAlive() then return end
-    local x, y, z = ParadiseZ.getLastCageCoord(pl)
-    if not x or not y or not z then return end
-    local car = pl:getVehicle()
-    if car then
-        local seat = car:getSeat(pl)
-        if seat and seat ~= 0 then
-            ParadiseZ.forceExitCar()
-            local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
-            if sq then ParadiseZ.addTempMarker(sq) end
-            return
-        end
-        if ParadiseZ.carTp(pl, car, x, y, z) then return end
+    if not pl then return nil, nil, nil end
+    local md = pl:getModData()
+    local rebound = md['CageReturn']
+    if rebound and rebound.x and rebound.y and rebound.z then
+        return rebound.x, rebound.y, rebound.z
     end
-    ParadiseZ.tp(pl, x, y, z)
-    local sq = getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
-    if sq then ParadiseZ.addTempMarker(sq) end
+    local x, y, z = ParadiseZ.parseCageCoords(true)
+    return x, y, z
 end
-
 
 local cageTicks = 0
 local cageTpCooldown = false
-
 function ParadiseZ.cageHandler(pl)
     cageTicks = cageTicks + 1
-    if cageTicks % 3 == 0 then
-        if not pl then return end
-        if not pl:isAlive() then return end
-        if not ParadiseZ.isCaged(pl) then return end
-        if cageTpCooldown then return end
 
+    if not pl then return end
+    if not pl:isAlive() then return end
+
+    if cageTicks % 3000 == 0 then
+        if not ParadiseZ.isCaged(pl) then 
+            ParadiseZ.saveCageReturn(pl)
+            return 
+        end
+    end
+    if cageTicks % 3 == 0 then
+        if not ParadiseZ.isCaged(pl) then 
+            return 
+        end
+        if cageTpCooldown then return end
+        
         local plX, plY = ParadiseZ.getXY(pl)
         if not plX or not plY then return end
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
         if not sq then return end
         local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
         local x, y, z = ParadiseZ.getLastCageCoord(pl)
-
         --clip("isCageZone="..tostring(ParadiseZ.isCageZone(pl)).." | name="..tostring(name).." | dest="..tostring(x)..","..tostring(y)..","..tostring(z).." | pos="..tostring(plX)..","..tostring(plY))
-
+        
         if not ParadiseZ.isCageZone(pl) then
             if x and y and z then
                 cageTpCooldown = true
-                timer:Simple(1, function()
-                    ParadiseZ.doTp(pl, x, y, z)
-                    timer:Simple(3, function()
-                        cageTpCooldown = false
-                    end)
+                ParadiseZ.doTp(pl, x, y, z)
+                timer:Simple(3, function()
+                    cageTpCooldown = false
                 end)
             end
             return
         end
-
+        
         if ParadiseZ.isXYZoneInner(plX, plY, name) then
             ParadiseZ.saveCageRebound(pl, name)
             if getCore():getDebug() then
@@ -127,7 +144,12 @@ function ParadiseZ.cageHandler(pl)
             if x and y and z then
                 cageTpCooldown = true
                 timer:Simple(1, function()
-                    ParadiseZ.doTp(pl, x, y, z)
+                    local car = pl:getVehicle()
+                    if car then
+                        ParadiseZ.forceExitCar()
+                    else
+                        ParadiseZ.doTp(pl, x, y, z)
+                    end
                     timer:Simple(3, function()
                         cageTpCooldown = false
                     end)
@@ -140,3 +162,40 @@ end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.cageHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.cageHandler)
+
+
+function ParadiseZ.isCaged(pl)
+    pl = pl or getPlayer()
+    if not pl then return false end
+    return pl:getTraits():contains("Caged")
+end
+
+function ParadiseZ.cageSetHandler(pl)
+    if not pl then return end
+    local md = pl:getModData()
+    md['CagedState'] = md['CagedState'] or false
+
+    local isNow = ParadiseZ.isCaged(pl)
+    local was = md['CagedState']
+    
+    if isNow and not was then
+        ParadiseZ.saveCageReturn(pl)
+        timer:Simple(3, function() pl:Say('Caged') end)
+    elseif not isNow and was then
+        local x, y, z = ParadiseZ.getCageReturnCoord(pl)
+        if x and y and z then
+            local car = pl:getVehicle()
+            if car then
+                ParadiseZ.forceExitCar()
+            end
+            ParadiseZ.doTp(pl, x, y, z)
+        end
+        timer:Simple(3, function() pl:Say('No Longer Caged') end)
+    end
+
+    md['CagedState'] = isNow
+end
+Events.OnPlayerUpdate.Remove(ParadiseZ.cageSetHandler)
+Events.OnPlayerUpdate.Add(ParadiseZ.cageSetHandler)
+
+

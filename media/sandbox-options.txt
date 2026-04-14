@@ -92,11 +92,19 @@ option ParadiseZ.Coords
 	type = string, default = 11641;8324;0, 
 	page = ParadiseZ, translation = ParadiseZ_Coords,
 }
+
 option ParadiseZ.DefaultCageCoords 
 {
 	type = string, default = 11641;8324;0, 
 	page = ParadiseZ, translation = ParadiseZ_DefaultCageCoords,
 }
+
+option ParadiseZ.DefaultCageReturnCoords 
+{
+	type = string, default = 11641;8324;0, 
+	page = ParadiseZ, translation = ParadiseZ_DefaultCageReturnCoords,
+}
+
 option ParadiseZ.ShowPvETag
 {
 	type = boolean, default = true,

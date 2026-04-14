@@ -1,0 +1,172 @@
+module JimsPaint
+{
+    imports
+    {
+        Base
+    }
+
+    recipe Make White Paint
+    {
+        WaterPaintbucket,
+        Stone=5,
+        keep MortarPestle,
+
+        Result:PaintWhite,
+        Time:80.0,
+        Category:Carpentry,
+    }
+
+    recipe Make Black Paint
+    {
+        WaterPaintbucket,
+        Charcoal=5,
+        keep MortarPestle,
+
+        Result:PaintBlack,
+        Time:80.0,
+        Category:Carpentry,
+    }
+
+    recipe Make Red Paint
+    {
+        WaterPaintbucket,
+        Cherry=10,
+        keep MortarPestle,
+
+        Result:PaintRed,
+        Time:80.0,
+        Category:Carpentry,
+    }
+
+    recipe Make Yellow Paint
+    {
+        WaterPaintbucket,
+        Dandelions=10,
+        keep MortarPestle,
+
+        Result:PaintYellow,
+        Time:80.0,
+        Category:Carpentry,
+    }
+
+    recipe Make Blue Paint
+    {
+        WaterPaintbucket,
+        BerryBlue=10,
+        keep MortarPestle,
+
+        Result:PaintBlue,
+        Time:80.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Purple Paint
+    {
+        PaintbucketEmpty,
+        PaintRed=5,
+        PaintBlue=5,
+
+        Result:PaintPurple,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Green Paint
+    {
+        PaintbucketEmpty,
+        PaintBlue=5,
+        PaintYellow=5,
+
+        Result:PaintGreen,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Orange Paint
+    {
+        PaintbucketEmpty,
+        PaintRed=5,
+        PaintYellow=5,
+
+        Result:PaintOrange,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Pink Paint
+    {
+        PaintbucketEmpty,
+        PaintRed=5,
+        PaintWhite=5,
+
+        Result:PaintPink,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Grey Paint
+    {
+        PaintbucketEmpty,
+        PaintWhite=5,
+        PaintBlack=5,
+
+        Result:PaintGrey,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Light Blue Paint
+    {
+        PaintbucketEmpty,
+        PaintBlue=5,
+        PaintWhite=5,
+
+        Result:PaintLightBlue,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Brown Paint
+    {
+        PaintbucketEmpty,
+        PaintOrange=5,
+        PaintBlack=5,
+
+        Result:PaintBrown,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Light Brown Paint
+    {
+        PaintbucketEmpty,
+        PaintBrown=5,
+        PaintWhite=5,
+
+        Result:PaintLightBrown,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Cyan Paint
+    {
+        PaintbucketEmpty,
+        PaintGreen=5,
+        PaintWhite=5,
+
+        Result:PaintCyan,
+        Time:40.0,
+        Category:Carpentry,
+    }
+
+    recipe Mix Turquoise Paint
+    {
+        PaintbucketEmpty,
+        PaintBlue=5,
+        PaintGreen=5,
+
+        Result:PaintTurquoise,
+        Time:40.0,
+        Category:Carpentry,
+    }
+}

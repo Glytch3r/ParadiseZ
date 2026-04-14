@@ -84,7 +84,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z, forceAll)
     
     local driver = vehicle:getDriver()
     local driverRestricted = driver and ParadiseZ.isRestricted(driver)
-
+    
     if not forceAll and not driverRestricted then
         if not pl:isDriving() then return false end
     end
