@@ -14,6 +14,7 @@ function ParadiseZ.exileHandler(pl)
     if not pl:isAlive() then return end
     local md = pl:getModData()
     if not md then return end
+    md.LifePoints = md.LifePoints or 100
     if md.LifePoints <= 0  and SandboxVars.ParadiseZpvp.teleportPvpDeath then
         if not teleporting then
             teleporting = true        

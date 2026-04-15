@@ -95,13 +95,13 @@ option ParadiseZ.Coords
 
 option ParadiseZ.DefaultCageCoords 
 {
-	type = string, default = 11641;8324;0, 
+	type = string, default = 5583;12447;0, 
 	page = ParadiseZ, translation = ParadiseZ_DefaultCageCoords,
 }
 
 option ParadiseZ.DefaultCageReturnCoords 
 {
-	type = string, default = 11641;8324;0, 
+	type = string, default = 6694;11209;0, 
 	page = ParadiseZ, translation = ParadiseZ_DefaultCageReturnCoords,
 }
 

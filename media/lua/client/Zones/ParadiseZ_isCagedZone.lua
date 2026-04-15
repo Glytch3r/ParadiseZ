@@ -96,13 +96,18 @@ function ParadiseZ.getCageReturnCoord(pl)
     return x, y, z
 end
 
+
 local cageTicks = 0
 local cageTpCooldown = false
+
 function ParadiseZ.cageHandler(pl)
     cageTicks = cageTicks + 1
 
     if not pl then return end
     if not pl:isAlive() then return end
+
+    local md = pl:getModData()
+    md['CageWasInner'] = md['CageWasInner'] or false
 
     if cageTicks % 3000 == 0 then
         if not ParadiseZ.isCaged(pl) then 
@@ -110,37 +115,42 @@ function ParadiseZ.cageHandler(pl)
             return 
         end
     end
-    if cageTicks % 3 == 0 then
-        if not ParadiseZ.isCaged(pl) then 
-            return 
+
+    if cageTicks % 3 ~= 0 then return end
+    if not ParadiseZ.isCaged(pl) then return end
+    if cageTpCooldown then return end
+
+    local plX, plY = ParadiseZ.getXY(pl)
+    if not plX or not plY then return end
+
+    local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
+    if not sq then return end
+
+    local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
+    local x, y, z = ParadiseZ.getLastCageCoord(pl)
+
+    if not ParadiseZ.isCageZone(pl) then
+        if x and y and z then
+            cageTpCooldown = true
+            ParadiseZ.doTp(pl, x, y, z)
+            timer:Simple(3, function() cageTpCooldown = false end)
         end
-        if cageTpCooldown then return end
-        
-        local plX, plY = ParadiseZ.getXY(pl)
-        if not plX or not plY then return end
-        local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ())
-        if not sq then return end
-        local name = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
-        local x, y, z = ParadiseZ.getLastCageCoord(pl)
-        --clip("isCageZone="..tostring(ParadiseZ.isCageZone(pl)).." | name="..tostring(name).." | dest="..tostring(x)..","..tostring(y)..","..tostring(z).." | pos="..tostring(plX)..","..tostring(plY))
-        
-        if not ParadiseZ.isCageZone(pl) then
-            if x and y and z then
-                cageTpCooldown = true
-                ParadiseZ.doTp(pl, x, y, z)
-                timer:Simple(3, function()
-                    cageTpCooldown = false
-                end)
-            end
-            return
+        md['CageWasInner'] = false
+        return
+    end
+
+    local isInner = ParadiseZ.isXYZoneInner(plX, plY, name)
+
+    if isInner then
+        ParadiseZ.saveCageRebound(pl, name)
+        md['CageWasInner'] = true
+
+        if getCore():getDebug() then
+            if sq then ParadiseZ.addTempMarker(sq) end
         end
-        
-        if ParadiseZ.isXYZoneInner(plX, plY, name) then
-            ParadiseZ.saveCageRebound(pl, name)
-            if getCore():getDebug() then
-                if sq then ParadiseZ.addTempMarker(sq) end
-            end
-        else
+
+    else
+        if md['CageWasInner'] then
             if x and y and z then
                 cageTpCooldown = true
                 timer:Simple(1, function()
@@ -156,9 +166,9 @@ function ParadiseZ.cageHandler(pl)
                 end)
             end
         end
+        md['CageWasInner'] = false
     end
 end
-
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.cageHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.cageHandler)

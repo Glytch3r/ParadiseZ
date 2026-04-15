@@ -5,6 +5,136 @@ ParadiseZ = ParadiseZ or {}
 function ParadiseZ.coinFlip()
 	return ZombRand(2) == 0
 end
+--[[ 
+local pl = getPlayer()
+local zName = ParadiseZ.getZoneName(pl)
+local rad = 900
+local cell = pl:getCell()
+local x, y, z = pl:getX(), pl:getY(), pl:getZ()
+for xDelta = -rad, rad do
+	for yDelta = -rad, rad do
+		local sq = cell:getOrCreateGridSquare(x + xDelta, y + yDelta, z)
+		if sq then
+			local zName2 = ParadiseZ.getSqZoneName(sq)
+			if zName2 == zName then
+				local flr = sq:getFloor()
+				if flr then
+					flr:setHighlighted(true, false)
+				end
+			end
+		end
+	end
+end ]]
+
+--(2 * rad + 1) ^ 2
+
+
+--[[ 
+function ParadiseZ.dbgZoneHighlight(enable)
+    local pl = getPlayer()
+    if not pl then return end
+
+    local sq = pl:getSquare()
+    if not sq then return end
+
+    local zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
+    if not zName then return end
+
+    local data = ParadiseZ.ZoneData[zName]
+    if not data then return end
+
+    local x1 = tonumber(data.x1)
+    local y1 = tonumber(data.y1)
+    local x2 = tonumber(data.X2)
+    local y2 = tonumber(data.y2)
+    local z = pl:getZ()
+
+    if not x1 or not y1 or not x2 or not y2 then return end
+
+    x1 = math.floor(x1)
+    y1 = math.floor(y1)
+    x2 = math.floor(x2)
+    y2 = math.floor(y2)
+
+    if x1 > x2 then x1, x2 = x2, x1 end
+    if y1 > y2 then y1, y2 = y2, y1 end
+    for x = x1, x2 do
+        for y = y1, y2 do
+            local sq = getCell():getOrCreateGridSquare(x, y, z)
+            if sq then
+                local flr = sq:getFloor()
+                if flr then
+                    if enable == true then
+                        flr:setHighlighted(true, false)
+                    elseif enable == false then
+                        flr:setHighlighted(false)
+                    else
+                        flr:setHighlighted(true, false)
+                        timer:Simple(3, function()
+                            flr:setHighlighted(false)
+                        end)
+                    end
+                end
+            end
+        end
+    end
+end
+ ]]
+--[[ 
+    local pl = getPlayer()
+    if not pl then return end
+
+    local sq = pl:getSquare()
+    if not sq then return end
+
+    local zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
+    if not zName then return end
+
+    local data = ParadiseZ.ZoneData[zName]
+    if not data then return end
+
+    local x1 = tonumber(data.x1)
+    local y1 = tonumber(data.y1)
+    local x2 = tonumber(data.X2)
+    local y2 = tonumber(data.y2)
+    local z = pl:getZ()
+
+    if not x1 or not y1 or not x2 or not y2 then return end
+
+    x1 = math.floor(x1)
+    y1 = math.floor(y1)
+    x2 = math.floor(x2)
+    y2 = math.floor(y2)
+
+    if x1 > x2 then x1, x2 = x2, x1 end
+    if y1 > y2 then y1, y2 = y2, y1 end
+	
+    for x = x1, x2 do
+        for y = y1, y2 do
+			local sq = getCell():getOrCreateGridSquare(x, y, z)
+			if sq then
+				local flr = sq:getFloor()
+				if flr then
+					flr:setHighlighted(true, true)          
+				end
+			end
+        end
+    end ]]
+
+--[[ 
+				if enable == true then
+					flr:setHighlighted(true, false)
+				elseif enable == false then
+					flr:setHighlighted(false)
+				else
+					flr:setHighlighted(true, false)
+					timer:Simple(3, function()
+						flr:setHighlighted(false)
+					end)
+				end ]]
+
+
+
 
 function ParadiseZ.getRandOutfit()
 	local maleOutfits = getAllOutfits(false)
