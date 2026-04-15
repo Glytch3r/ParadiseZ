@@ -7,7 +7,7 @@ function ParadiseZ.ZoneVisuals.getData()
 end
 
 function ParadiseZ.ZoneVisuals.drawWorldMap(self)
-    if not ParadiseZ.ZoneVisuals.enabled then return end
+
 
     local data = ParadiseZ.ZoneVisuals.getData()
     if not data then return end
@@ -26,48 +26,50 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
-            local isHovered = false
+            if ParadiseZ.ZoneVisuals.enabled then  
 
-            if wx and wy then
-                if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
-                    isHovered = true
-                    zName = ParadiseZ.getZoneName(wx, wy)
+                local isHovered = false
+
+                if wx and wy then
+                    if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
+                        isHovered = true
+                        zName = ParadiseZ.getZoneName(wx, wy)
+                    end
                 end
-            end
 
-            local r,g,b,a = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
-            local fillA = 0.05
-            local borderA = isHovered and 0.8 or 0.2
-            local borderThickness = isHovered and 2 or 1
-            
-            if isometric then
-                local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
-                local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
-                local x2y1x = self.mapAPI:worldToUIX(z.x2, z.y1)
-                local x2y1y = self.mapAPI:worldToUIY(z.x2, z.y1)
-                local x1y2x = self.mapAPI:worldToUIX(z.x1, z.y2)
-                local x1y2y = self.mapAPI:worldToUIY(z.x1, z.y2)
-                local x2y2x = self.mapAPI:worldToUIX(z.x2, z.y2)
-                local x2y2y = self.mapAPI:worldToUIY(z.x2, z.y2)
+                local r,g,b,a = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
+                local fillA = 0.05
+                local borderA = isHovered and 0.8 or 0.2
+                local borderThickness = isHovered and 2 or 1
+                if isometric then
+                    local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
+                    local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
+                    local x2y1x = self.mapAPI:worldToUIX(z.x2, z.y1)
+                    local x2y1y = self.mapAPI:worldToUIY(z.x2, z.y1)
+                    local x1y2x = self.mapAPI:worldToUIX(z.x1, z.y2)
+                    local x1y2y = self.mapAPI:worldToUIY(z.x1, z.y2)
+                    local x2y2x = self.mapAPI:worldToUIX(z.x2, z.y2)
+                    local x2y2y = self.mapAPI:worldToUIY(z.x2, z.y2)
 
-                if x1y1x and x1y1y and x2y1x and x2y1y and x2y2x and x2y2y and x1y2x and x1y2y then
-                    getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, fillA)
-                    getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, borderA)
-                end
-            else
-                local x1 = self.mapAPI:worldToUIX(z.x1, z.y1)
-                local y1 = self.mapAPI:worldToUIY(z.x1, z.y1)
-                local x2 = self.mapAPI:worldToUIX(z.x2, z.y2)
-                local y2 = self.mapAPI:worldToUIY(z.x2, z.y2)
-                
-                if x1 and y1 and x2 and y2 then
-                    local w = x2 - x1
-                    local h = y2 - y1
+                    if x1y1x and x1y1y and x2y1x and x2y1y and x2y2x and x2y2y and x1y2x and x1y2y then
+                        getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, fillA)
+                        getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, borderA)
+                    end
+                else
+                    local x1 = self.mapAPI:worldToUIX(z.x1, z.y1)
+                    local y1 = self.mapAPI:worldToUIY(z.x1, z.y1)
+                    local x2 = self.mapAPI:worldToUIX(z.x2, z.y2)
+                    local y2 = self.mapAPI:worldToUIY(z.x2, z.y2)
+                    
+                    if x1 and y1 and x2 and y2 then
+                        local w = x2 - x1
+                        local h = y2 - y1
 
-                    self:drawRect(x1, y1, w, h, fillA, r, g, b)
+                        self:drawRect(x1, y1, w, h, fillA, r, g, b)
 
-                    for i=1,borderThickness do
-                        self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, r, g, b)
+                        for i=1,borderThickness do
+                            self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, r, g, b)
+                        end
                     end
                 end
             end
@@ -101,9 +103,10 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         if isInvertedY then
             drawY = my - offsetY
         end
-        
-        self:drawText(zName, drawX, drawY, colR, colG, colB, 1, font)
-        self:drawText(tostring(coordStr), drawX, drawY + 15, colR, colG, colB, 1, UIFont.Medium)
+        if ParadiseZ.ZoneVisuals.enabled2 then 
+            self:drawText(zName, drawX, drawY, colR, colG, colB, 1, font)
+            self:drawText(tostring(coordStr), drawX, drawY + 15, colR, colG, colB, 1, UIFont.Medium)
+        end
     end
 
  --[[    if zName then
@@ -126,6 +129,11 @@ function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
         ParadiseZ.ZoneVisuals.enabled = not ParadiseZ.ZoneVisuals.enabled
     end)
     context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
+    local option = context:addOption("Map Tooltip", self, function()
+        ParadiseZ.ZoneVisuals.enabled2 = not ParadiseZ.ZoneVisuals.enabled2
+    end)
+    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled2)
+
 end
 
 function ParadiseZ.ZoneVisuals.hookWorldMap()
