@@ -21,7 +21,7 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
     local zName
     local r,g,b,a = 1,1,1,1
-
+    
 
 
     for _,z in pairs(data) do

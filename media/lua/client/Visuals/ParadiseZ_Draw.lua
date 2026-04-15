@@ -212,7 +212,8 @@ function ParadiseZ.doDrawZone()
     local currentZone = ParadiseZ.getZoneName(pl)
     if ParadiseZ.lastZone ~= currentZone then  
         local isOut = currentZone == tostring(SandboxVars.ParadiseZ.OutsideStr)
-        if ParadiseZ.ZoneEditorWindow.instance and not isOut then 
+        ParadiseZ.ZoneHighlighter = ParadiseZ.ZoneHighlighter or false
+        if (ParadiseZ.ZoneEditorWindow.instance or ParadiseZ.ZoneHighlighter ) and not isOut then 
             ParadiseZ.ZoneHighlight()
         end
         ISChat.instance.servermsgTimer = 9000

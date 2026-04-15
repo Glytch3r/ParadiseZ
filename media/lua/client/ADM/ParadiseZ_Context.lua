@@ -1,4 +1,6 @@
 ParadiseZ = ParadiseZ or {}
+ParadiseZ.soundDbg = false
+ParadiseZ.ZoneHighlighter = false
 
 function ParadiseZ.isOnOrOff(bool)
     return bool and "On" or "Off"
@@ -21,7 +23,7 @@ function ParadiseZ.pause(seconds, callback)
     Events.OnTick.Add(tick)
 end
 
-ParadiseZ.soundDbg = false
+
 function ParadiseZ.dbgSoundHandler(x, y, z, radius, volume, source)
     if ParadiseZ.soundDbg then
         local pl = getPlayer()
@@ -91,7 +93,17 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
-    addSafeOption(opt, "Audio Direction"..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
+    
+    addSafeOption(opt, "Zone Highlights: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.ZoneHighlighter or false)), function() 
+        ParadiseZ.ZoneHighlighter = not ParadiseZ.ZoneHighlighter 
+        if ParadiseZ.ZoneHighlighter then
+            ParadiseZ.ZoneHighlight()
+        else
+            ParadiseZ.clearZoneHighlights()
+        end
+    end, "media/ui/Paradise/Context_HighlightZone.png")
+    
+    addSafeOption(opt, "Audio Direction: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.soundDbg or false)), function() ParadiseZ.soundDbg = not ParadiseZ.soundDbg end, "media/ui/Paradise/LightContextIcon.png")
 --[[ 
 
     if ExtendedScoreboard then
