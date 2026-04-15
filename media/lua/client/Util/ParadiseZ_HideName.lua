@@ -47,8 +47,8 @@ function ParadiseZ.setHideName(isHide)
     if not pl then return end
     local md = pl:getModData()
     if isHide then
-        if not md['HideNameCache'] then
-            md['HideNameCache'] = {
+        if not md['HiderData'] then
+            md['HiderData'] = {
                 Forename = pl:getDescriptor():getForename(),
                 Surname = pl:getDescriptor():getSurname()
             }
@@ -56,10 +56,10 @@ function ParadiseZ.setHideName(isHide)
         pl:getDescriptor():setForename('')
         pl:getDescriptor():setSurname('')
     else
-        if md['HideNameCache'] then
-            pl:getDescriptor():setForename(md['HideNameCache']['Forename'])
-            pl:getDescriptor():setSurname(md['HideNameCache']['Surname'])
-            md['HideNameCache'] = nil
+        if md['HiderData'] then
+            pl:getDescriptor():setForename(md['HiderData']['Forename'])
+            pl:getDescriptor():setSurname(md['HiderData']['Surname'])
+            md['HiderData'] = nil
         end
     end
     sendPlayerStatsChange(pl)
