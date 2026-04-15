@@ -211,6 +211,14 @@ function ParadiseZ.doDrawZone()
     ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
     local currentZone = ParadiseZ.getZoneName(pl)
     if ParadiseZ.lastZone ~= currentZone then
+        if ParadiseZ.ZoneEditorWindow.instance then 
+            ParadiseZ.ZoneHighlight()
+        end
+        if currentZone == tostring(SandboxVars.ParadiseZ.OutsideStr) then 
+            ParadiseZ.clearZoneHighlights()
+
+        end
+        
         ISChat.instance.servermsgTimer = 9000
         ISChat.instance.servermsg = tostring(currentZone)
         ParadiseZ.lastZone = currentZone

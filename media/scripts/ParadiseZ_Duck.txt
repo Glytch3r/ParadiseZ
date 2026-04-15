@@ -63,8 +63,9 @@ module ParadiseZ {
         DisplayName = Duck hunt 118,
         Icon	=  duck_glytch3r,
         WorldStaticModel = duck_glytch3r,
+        Tooltip = Like my mod work for the server? Consider sending a tip via Ko-fi,
     }
-
+    
 	model duck_glytch3r
     {
 		mesh = WorldItems/duck_glytch3r,
@@ -107,6 +108,22 @@ module ParadiseZ {
         scale = 0.8,
     }
 
+    /*  -----------------------            --------------------------- */
 
-    
+   	item Duckhunt_sierra
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 121,
+        Icon	=  duck_sierra,
+        WorldStaticModel = duck_sierra,
+    }
+
+	model duck_sierra
+    {
+		mesh = WorldItems/duck_sierra,
+        texture = duck_sierra,
+        scale = 0.8,
+    }
 }

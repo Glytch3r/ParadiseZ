@@ -1314,22 +1314,6 @@ function ParadiseZ.ZoneEditorPopupPanel:close()
     self.childEditor = nil
 end
 
-function ParadiseZ.editor(activate)
-    if ParadiseZ.ZoneEditorWindow.instance then
-        ParadiseZ.ZoneEditorWindow.instance:close()
-        ParadiseZ.ZoneEditorWindow.instance = nil
-    end
-    if activate then
-        local width = 970--1200
-        local height = 400--568
-        local x = (getCore():getScreenWidth() - width) / 2 + 150
-        local y = (getCore():getScreenHeight() - height) / 2
-        local editor = ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
-        editor:initialise()
-        editor:addToUIManager()
-    end
-end
-
 
 
 
@@ -1347,4 +1331,5 @@ function ParadiseZ.editor(activate)
         editor:initialise()
         editor:addToUIManager()
     end
+    ParadiseZ.ZoneHighlight()
 end
