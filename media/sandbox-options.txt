@@ -1,5 +1,10 @@
 VERSION = 1,
 
+option ParadiseZ.EveryoneCanWriteNotes
+{
+	type = boolean, default = false,
+	page = ParadiseZ, translation = ParadiseZ_EveryoneCanWriteNotes,
+}
 
 option ParadiseZ.ClonerDisplayName
 {

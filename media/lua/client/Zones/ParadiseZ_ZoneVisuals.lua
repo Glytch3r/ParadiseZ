@@ -26,22 +26,20 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
-            a = 0.05
+            local isHovered = false
 
             if wx and wy then
                 if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
-                    zName = ParadiseZ.getZoneName(wx, wy) 
+                    isHovered = true
+                    zName = ParadiseZ.getZoneName(wx, wy)
                 end
             end
 
-            if zName then
-                r,g,b,a = ParadiseZ.getZoneDataColor(zName)
-            end
-            
-            local borderA =  0.2
-      --[[       if zName then 
-                borderA =  0.3
-            end ]]
+            local r,g,b,a = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
+            local fillA = 0.05
+            local borderA = isHovered and 1 or 0.2
+            local borderThickness = isHovered and 2 or 1
+
             if isometric then
                 local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                 local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
@@ -51,8 +49,9 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                 local x1y2y = self.mapAPI:worldToUIY(z.x1, z.y2)
                 local x2y2x = self.mapAPI:worldToUIX(z.x2, z.y2)
                 local x2y2y = self.mapAPI:worldToUIY(z.x2, z.y2)
-             
+
                 if x1y1x and x1y1y and x2y1x and x2y1y and x2y2x and x2y2y and x1y2x and x1y2y then
+                    getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, fillA)
                     getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, borderA)
                 end
             else
@@ -63,9 +62,13 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                 
                 if x1 and y1 and x2 and y2 then
                     local w = x2 - x1
-                    local h = y2 - y1   
-                    self:drawRect(x1, y1, w, h, borderA, r, g, b)
-                    self:drawRectBorder(x1, y1, w, h, borderA, r, g, b)
+                    local h = y2 - y1
+
+                    self:drawRect(x1, y1, w, h, fillA, r, g, b)
+
+                    for i=1,borderThickness do
+                        self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, r, g, b)
+                    end
                 end
             end
         end
@@ -80,7 +83,7 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         if zName ~= SandboxVars.ParadiseZ.OutsideStr then
             font = UIFont.Large
         end
-
+        
         local offsetX = SandboxVars.ParadiseZmapVisual.offsetX
         local offsetY = SandboxVars.ParadiseZmapVisual.offsetY
         local colR = SandboxVars.ParadiseZmapVisual.colR

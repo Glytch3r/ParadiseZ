@@ -38,7 +38,7 @@ module Base {
         Prop1:Source=2,
 
         Result:TW.AirTank,
-        Extinguisher/LyingExtinguisher,
+        destroy Extinguisher/LyingExtinguisher,
         BlowTorch=2,
 
         AnimNode:Disassemble,
