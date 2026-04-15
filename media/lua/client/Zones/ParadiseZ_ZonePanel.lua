@@ -789,7 +789,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
 
             ParadiseZ.IO("ZoneDataBackup.ini", zones, false)
             pl:addLineChatElement('Backup Saved to %userprofile%/Zomboid/Lua/ZoneDataBackup.ini')
-
+    
         end
         
         if button.internal == "ADD" then
@@ -1184,6 +1184,8 @@ end
 
 
 function ParadiseZ.ZoneEditorWindow:close()
+    ParadiseZ.clearZoneHighlights()
+
     if self.childEditor then
         if self.childEditor.onCancel then
             self.childEditor:onCancel()
@@ -1367,7 +1369,6 @@ end
 
 function ParadiseZ.editor(activate)
     if ParadiseZ.ZoneEditorWindow.instance then
-        ParadiseZ.clearZoneHighlights()
         ParadiseZ.ZoneEditorWindow.instance:close()
         ParadiseZ.ZoneEditorWindow.instance = nil
     end
