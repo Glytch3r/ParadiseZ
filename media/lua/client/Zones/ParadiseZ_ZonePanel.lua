@@ -684,6 +684,7 @@ function ParadiseZ.ZoneEditorWindow:initList()
 end
 
 function ParadiseZ.ZoneEditorWindow:refreshList()
+    ParadiseZ.ZoneData = ParadiseZ.normalizeAllZones(ParadiseZ.ZoneData)
     self.ZoneData = ParadiseZ.snapshot(ParadiseZ.ZoneData) or {}
     local selectedIdx = self.datas.selected
     self.datas.fullList = nil
@@ -698,6 +699,7 @@ function ParadiseZ.ZoneEditorWindow:refreshList()
 end
 
 --
+
 function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
@@ -710,6 +712,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
 
                     ParadiseZ.doRestoreZones()
                     ParadiseZ.ZoneData = ParadiseZ.ZoneDataBackup
+                    ParadiseZ.ZoneData = ParadiseZ.normalizeAllZones(ParadiseZ.ZoneData)
                     ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
                     timer:Simple(1, function()
                         self.btnReset:setImage(reset_TEX_OFF)
@@ -764,8 +767,11 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             end)
             print("Backup Saved to %userprofile%/Zomboid/Lua/ZoneDataBackup.ini")
             ParadiseZ.ZoneDataBackup = zones
+            ParadiseZ.ZoneDataBackup = ParadiseZ.normalizeAllZones(ParadiseZ.ZoneDataBackup)
+
             ParadiseZ.IO("ZoneDataBackup.ini", zones, false)
             pl:addLineChatElement('Backup Saved to %userprofile%/Zomboid/Lua/ZoneDataBackup.ini')
+
         end
         
         if button.internal == "ADD" then
@@ -799,7 +805,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                 isTrade = false,
                 isSprint = false,
             }
-            
+            ParadiseZ.ZoneData = ParadiseZ.normalizeAllZones(ParadiseZ.ZoneData)
             ParadiseZ.saveZoneData(ParadiseZ.ZoneData)
             self.newZoneName:setText("")
             self.newZoneX1:setText("")
@@ -816,6 +822,25 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
             for i = 1, #self.datas.items do
                 local entry = self.datas.items[i]
                 local z = entry.item
+
+                local x1 = tonumber(z.x1)
+                local y1 = tonumber(z.y1)
+                local x2 = tonumber(z.x2 or z.X2)
+                local y2 = tonumber(z.y2)
+
+                if not (x1 and y1 and x2 and y2) then return end
+
+                local minX = math.min(x1, x2)
+                local maxX = math.max(x1, x2)
+                local minY = math.min(y1, y2)
+                local maxY = math.max(y1, y2)
+
+                z.x1 = minX
+                z.y1 = minY
+                z.x2 = maxX
+                z.y2 = maxY
+                
+
                 zones[entry.text] = {
                     name = entry.text,
                     x1 = z.x1,
@@ -842,6 +867,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                     isSprint = z.isSprint or false,
                 }
             end
+            zones = ParadiseZ.normalizeAllZones(zones)
             ParadiseZ.saveZoneData(zones)
             self:refreshList()
             self.shouldSync = false
@@ -941,12 +967,14 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                 end)
             end
         end
+        ParadiseZ.ZoneHighlight()
         timer:Simple(1.2, function()
             self:update()
         end)
     else
         pl:setHaloNote(tostring('The Panel Buttons are for Admins ONLY'), 150,250,150,900) 
     end
+    
 end
 
 function ParadiseZ.ZoneEditorWindow:update()
@@ -1259,13 +1287,18 @@ function ParadiseZ.ZoneEditorPopupPanel:onOK(button)
     if not name or name == "" then return end
     if not (x1 and y1 and x2 and y2) then return end
     
+    local minX = math.min(x1, x2)
+    local maxX = math.max(x1, x2)
+    local minY = math.min(y1, y2)
+    local maxY = math.max(y1, y2)
+
     local zone = self.zoneRef
     local orig = self.originalName or zone.name
     zone.name = name
-    zone.x1 = x1
-    zone.y1 = y1
-    zone.x2 = x2
-    zone.y2 = y2
+    zone.x1 = minX
+    zone.y1 = minY
+    zone.x2 = maxX
+    zone.y2 = maxY
     zone.isKos = (self.comboKos.options[self.comboKos.selected] == "true")
     zone.isPvE = (self.comboPvE.options[self.comboPvE.selected] == "true")
     zone.isSafe = (self.comboSafe.options[self.comboSafe.selected] == "true")
@@ -1319,6 +1352,7 @@ end
 
 function ParadiseZ.editor(activate)
     if ParadiseZ.ZoneEditorWindow.instance then
+        ParadiseZ.clearZoneHighlights()
         ParadiseZ.ZoneEditorWindow.instance:close()
         ParadiseZ.ZoneEditorWindow.instance = nil
     end

@@ -8,7 +8,7 @@ function ParadiseZ.isAdm()
 end
 
 function ParadiseZ.saveZoneData(data)
-    if not data then return end
+    if not data then return end    
 	if isClient() then 
 		sendClientCommand("ParadiseZ", "Sync", {  data = data })
 	end	

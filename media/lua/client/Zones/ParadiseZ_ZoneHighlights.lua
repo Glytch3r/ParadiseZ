@@ -12,20 +12,16 @@ function ParadiseZ.clearZoneHighlights()
         table.remove(ParadiseZ.ZoneHighlightedSquares, i)
     end
 end
-
 function ParadiseZ.getZoneEdgeSquares(name)
-    if not name then return {} end
+    local zone = ParadiseZ.ZoneData and ParadiseZ.ZoneData[name]
+    if not zone then return {} end
 
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return {} end
+    ParadiseZ.normalizeZone(zone)
 
-    x1 = math.floor(x1)
-    y1 = math.floor(y1)
-    x2 = math.floor(x2)
-    y2 = math.floor(y2)
-
-    if x1 > x2 then x1, x2 = x2, x1 end
-    if y1 > y2 then y1, y2 = y2, y1 end
+    local x1 = math.floor(zone.x1)
+    local y1 = math.floor(zone.y1)
+    local x2 = math.floor(zone.x2)
+    local y2 = math.floor(zone.y2)
 
     local edgeSquares = {}
 
@@ -41,7 +37,6 @@ function ParadiseZ.getZoneEdgeSquares(name)
 
     return edgeSquares
 end
-
 function ParadiseZ.ZoneHighlight()
     ParadiseZ.clearZoneHighlights()
     
@@ -62,7 +57,7 @@ function ParadiseZ.ZoneHighlight()
 
     for i = 1, #edgeSquares do
         local d = edgeSquares[i]
-        local sq = getCell():getGridSquare(d.x, d.y, z)
+        local sq = getCell():getOrCreateGridSquare(d.x, d.y, z)
         if sq then
             local flr = sq:getFloor()
             if flr then

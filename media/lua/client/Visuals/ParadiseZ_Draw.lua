@@ -210,18 +210,17 @@ function ParadiseZ.doDrawZone()
     if not pl then return end
     ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
     local currentZone = ParadiseZ.getZoneName(pl)
-    if ParadiseZ.lastZone ~= currentZone then
-        if ParadiseZ.ZoneEditorWindow.instance then 
+    if ParadiseZ.lastZone ~= currentZone then  
+        local isOut = currentZone == tostring(SandboxVars.ParadiseZ.OutsideStr)
+        if ParadiseZ.ZoneEditorWindow.instance and not isOut then 
             ParadiseZ.ZoneHighlight()
         end
-        if currentZone == tostring(SandboxVars.ParadiseZ.OutsideStr) then 
-            ParadiseZ.clearZoneHighlights()
-
-        end
-        
         ISChat.instance.servermsgTimer = 9000
         ISChat.instance.servermsg = tostring(currentZone)
         ParadiseZ.lastZone = currentZone
+        if isOut then 
+            ParadiseZ.clearZoneHighlights()
+        end
     end
     local zoneKey, reboundText = ParadiseZ.getDrawStr(pl)
     local textures = {

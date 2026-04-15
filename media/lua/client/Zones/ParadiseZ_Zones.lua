@@ -1,6 +1,38 @@
 --client\ParadiseZ_Zones.lua
 ParadiseZ = ParadiseZ or {}
 
+function ParadiseZ.normalizeZone(zone)
+    if not zone then return end
+
+    local x1 = tonumber(zone.x1)
+    local y1 = tonumber(zone.y1)
+    local x2 = tonumber(zone.x2 or zone.X2)
+    local y2 = tonumber(zone.y2)
+
+    if not (x1 and y1 and x2 and y2) then return end
+
+    local minX = math.min(x1, x2)
+    local maxX = math.max(x1, x2)
+    local minY = math.min(y1, y2)
+    local maxY = math.max(y1, y2)
+
+    zone.x1 = minX
+    zone.y1 = minY
+    zone.x2 = maxX
+    zone.y2 = maxY
+end
+
+function ParadiseZ.normalizeAllZones(data)
+    data = data or ParadiseZ.ZoneData
+    for k, z in pairs(data) do
+        ParadiseZ.normalizeZone(z)
+    end
+    return data
+end
+
+
+
+
 function ParadiseZ.getPlOrSq(char)
     if not char then return getPlayer() end
     if type(char) == "string" then

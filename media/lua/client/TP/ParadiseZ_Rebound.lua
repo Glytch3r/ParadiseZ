@@ -215,7 +215,27 @@ function ParadiseZ.getFallbackCoord()
     end
     return nil, nil, nil
 end
+function ParadiseZ.getZoneArea(name)
+    if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return nil, nil, nil, nil end
 
+    local zone = ParadiseZ.ZoneData[name]
+    if not zone then return nil, nil, nil, nil end
+
+    local x1 = tonumber(zone.x1)
+    local y1 = tonumber(zone.y1)
+    local x2 = tonumber(zone.x2 or zone.X2)
+    local y2 = tonumber(zone.y2)
+
+    if not (x1 and y1 and x2 and y2) then return nil, nil, nil, nil end
+
+    local minX = math.min(x1, x2)
+    local maxX = math.max(x1, x2)
+    local minY = math.min(y1, y2)
+    local maxY = math.max(y1, y2)
+
+    return minX, minY, maxX, maxY
+end
+--[[ 
 function ParadiseZ.getZoneArea(name)
     if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return nil, nil, nil, nil end
 
@@ -224,36 +244,43 @@ function ParadiseZ.getZoneArea(name)
     if not zone then return  nil, nil, nil, nil end
     return zone.x1, zone.y1, zone.x2, zone.y2
 end
-
-
+ ]]
 
 function ParadiseZ.isXYInsideZone(x, y, name)
     if not name or name == tostring(SandboxVars.ParadiseZ.OutsideStr) then return false end
     if not x or not y then return false end
 
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return false end
+    local zone = ParadiseZ.ZoneData and ParadiseZ.ZoneData[name]
+    if not zone then return false end
 
-    return x >= x1 and x <= x2 and y >= y1 and y <= y2
+    ParadiseZ.normalizeZone(zone)
+
+    return x >= zone.x1 and x <= zone.x2 and y >= zone.y1 and y <= zone.y2
 end
+
 function ParadiseZ.isXYZoneOuter(x, y, name, margin)
     margin = margin or 3
+
+    local zone = ParadiseZ.ZoneData and ParadiseZ.ZoneData[name]
+    if not zone then return false end
+
+    ParadiseZ.normalizeZone(zone)
+
     if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
 
-    local x1, y1, x2, y2 = ParadiseZ.getZoneArea(name)
-    if not (x1 and y1 and x2 and y2) then return false end
-
-    return x <= x1 + (margin - 1)
-        or x >= x2 - (margin - 1)
-        or y <= y1 + (margin - 1)
-        or y >= y2 - (margin - 1)
+    return x <= zone.x1 + (margin - 1)
+        or x >= zone.x2 - (margin - 1)
+        or y <= zone.y1 + (margin - 1)
+        or y >= zone.y2 - (margin - 1)
 end
+
 function ParadiseZ.isXYZoneInner(x, y, name, margin)
     margin = margin or 3
+
     if not ParadiseZ.isXYInsideZone(x, y, name) then return false end
+
     return not ParadiseZ.isXYZoneOuter(x, y, name, margin)
 end
-
 
 -----------------------            ---------------------------
 

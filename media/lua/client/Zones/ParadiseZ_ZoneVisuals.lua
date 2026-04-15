@@ -37,9 +37,9 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
             local r,g,b,a = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
             local fillA = 0.05
-            local borderA = isHovered and 1 or 0.2
+            local borderA = isHovered and 0.8 or 0.2
             local borderThickness = isHovered and 2 or 1
-
+            
             if isometric then
                 local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                 local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)

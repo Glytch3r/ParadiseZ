@@ -134,8 +134,10 @@ function ParadiseZ.getZoneDataColor(zName)
         colorIndex = SandboxVars.ParadiseZcolor.Trade or 9
     elseif zData.isSprint then
         colorIndex = SandboxVars.ParadiseZcolor.Sprint or 9
+    else
+        colorIndex = 8
     end
-
+    
     if colorIndex == 11 then
         return 0,0,0,0
     end
