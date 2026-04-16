@@ -3,7 +3,7 @@ TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 -----------------------            ---------------------------
-function ParadiseZ.restrictReason(pl)
+function ParadiseZ.checkRestrictions(pl)
     pl = pl or getPlayer()
     if not pl then return false end
     if (ParadiseZ.isKosZone(pl) and ParadiseZ.isPvE(pl)) or ParadiseZ.isBlockedZone(pl)  or (ParadiseZ.isHuntZone(pl) and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl))) then
