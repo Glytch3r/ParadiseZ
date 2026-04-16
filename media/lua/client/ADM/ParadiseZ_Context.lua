@@ -204,6 +204,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
             addSafeOption(sbopt, label, function()
                 ParadiseZ.popup("Paradise Clear Functions", label, fn, "Clear")
+   
                 getSoundManager():playUISound("UIActivateMainMenuItem")
             end, icon)
         end

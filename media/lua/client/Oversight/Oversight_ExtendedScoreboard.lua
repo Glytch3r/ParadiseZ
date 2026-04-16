@@ -148,7 +148,7 @@
 --        Movement = {
 --            Coordinates = tostring(x) ..', '.. tostring(y) ..', '.. tostring(obj:getZ()),
 --            Zone = ParadiseZ.getZoneName(x, y),    
---            Caged = ParadiseZ.isCaged(obj),
+--            Caged = ParadiseZ.isCagedPl(obj),
 --            isInSafehouse = ExtendedScoreboard.isInSafehouse(sh, x, y),
 --            IsSneaking = obj:isSneaking() == true,
 --            m_isPlayerMoving = ExtendedScoreboard.getFieldValue(obj, "m_isPlayerMoving") == true,

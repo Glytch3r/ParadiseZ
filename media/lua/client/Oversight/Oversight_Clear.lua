@@ -22,6 +22,58 @@
 
 ParadiseZ = ParadiseZ or {}
 
+function ParadiseZ.promptSlider(text, min, max, current, callback, target, player, param1, param2)
+    local slider = nil
+    local valueLabel = nil
+    local lastValue = current
+
+    local function onClick(self, button, p1, p2)
+        if button.internal == "OK" and slider then
+            local val = slider:getCurrentValue()
+            if callback then
+                callback(target, val, p1, p2)
+            end
+        end
+    end
+
+    local modal = ISModalDialog:new(0, 0, 320, 190, "", false, target, onClick, player, param1, param2)
+    modal:initialise()
+    modal:addToUIManager()
+
+    function modal:prerender()
+        ISModalDialog.prerender(self)
+
+        if slider then
+            local v = slider:getCurrentValue()
+            if v ~= lastValue then
+                lastValue = v
+                if valueLabel then
+                    valueLabel:setName(text .. ": " .. tostring(v))
+                end
+            end
+        end
+    end
+
+    valueLabel = ISLabel:new(20, 40, 20, text .. ": " .. tostring(current), 1, 1, 1, 1, UIFont.Small, true)
+    valueLabel:initialise()
+    modal:addChild(valueLabel)
+
+    slider = ISSliderPanel:new(20, 80, modal.width - 40, 20, target,
+        function() end,
+        min, max, current
+    )
+    
+    slider:initialise()
+    slider:instantiate()
+    modal:addChild(slider)
+
+    return modal
+end
+--[[ 
+ParadiseZ.promptSlider("Enter value:", function(target, value)
+    print(value)
+end) ]]
+
 
 function ParadiseZ.highlightSqHandler()
     local function highlightSq(sq)
@@ -139,12 +191,13 @@ function ParadiseZ.ClearFloorItems(pl)
     getPlayerLoot(plNum):refreshBackpacks()
 end
 
-function ParadiseZ.ClearFloorItems2(pl)
+function ParadiseZ.ClearFloorItems2(pl, rad)
     pl = pl or getPlayer() 
     if not pl then return end
 
     local itemBuffer = {}
-    local rad = SandboxVars.ParadiseZ.ClearRadius or 15
+    rad = rad or SandboxVars.ParadiseZ.ClearRadius or 15       
+
     local cell = pl:getCell()
     local sq = pl:getCurrentSquare()
     if not cell or not sq then return end
@@ -209,11 +262,11 @@ function ParadiseZ.StopFire(pl, checkZone)
     --pl:addLineChatElement("Stopped Fire")
 end
 
-function ParadiseZ.DespawnCars(pl)
+function ParadiseZ.DespawnCars(pl, rad)
     pl = pl or getPlayer() 
     if not pl then return end
+    rad = rad or SandboxVars.ParadiseZ.ClearRadius or 15       
 
-    local rad = SandboxVars.ParadiseZ.ClearRadius or 15
     local cell = pl:getCell()
     local sq = pl:getCurrentSquare()
     if not cell or not sq then return end
@@ -237,11 +290,11 @@ function ParadiseZ.DespawnCars(pl)
     local s = count ~= 1 and 's' or ''
     pl:addLineChatElement("Removed "..tostring(count)..' Vehicle'..s)
 end
-function ParadiseZ.DespawnPlants(pl)
+function ParadiseZ.DespawnPlants(pl, rad)
     pl = pl or getPlayer() 
     if not pl then return end
+    rad = rad or SandboxVars.ParadiseZ.ClearRadius or 15       
 
-    local rad = SandboxVars.ParadiseZ.ClearRadius or 15
     local cell = pl:getCell()
     local sq = pl:getCurrentSquare()
     if not cell or not sq then return end
@@ -285,11 +338,11 @@ function ParadiseZ.DespawnPlants(pl)
     pl:addLineChatElement("Removed "..tostring(count)..' grass, bushes, and vines')
 end
 
-function ParadiseZ.ClearTrees(pl)
+function ParadiseZ.ClearTrees(pl, rad)
     pl = pl or getPlayer() 
     if not pl then return end
 
-    local rad = SandboxVars.ParadiseZ.ClearRadius or 15       
+    rad = rad or SandboxVars.ParadiseZ.ClearRadius or 15       
     local count = 0
     local cell = pl:getCell()
     if not cell then return end
@@ -320,7 +373,7 @@ function ParadiseZ.ClearTrees(pl)
     pl:addLineChatElement("Removed "..tostring(count)..' Tree'..s)
 end
 -----------------------            ---------------------------
-
+-----------------------            ---------------------------
 function ParadiseZ.cleanChar()
     local pl = getPlayer()
     if not pl then return end
@@ -500,3 +553,72 @@ function ParadiseZ.lvlUp()
     getSoundManager():playUISound("GainExperienceLevel")
 end
 -----------------------            ---------------------------
+--[[ 
+function ParadiseZ.clearPrompt(title, text, yesFn, yesTitle, min, max, current)
+    if ParadiseZ.ClearModalInstance then ParadiseZ.closeModal() end
+
+    local pl = getPlayer()
+    if not pl then return end
+    local plNum = pl:getPlayerNum()
+
+    local slider = nil
+    local valueLabel = nil
+    local value = current or min or 0
+
+    local function updateLabel(v)
+        value = v
+        if valueLabel then
+            valueLabel:setName(text .. ": " .. tostring(v))
+        end
+    end
+
+    local function onApply()
+        if yesFn then
+            local p = getSpecificPlayer(plNum)
+            if p then
+                yesFn(p, value)
+            end
+        end
+    end
+
+    local modal = ISPanelJoypad:new(0, 0, 340, 160)
+    modal:initialise()
+    modal:addToUIManager()
+
+    function modal:prerender()
+        self:drawRect(0, 0, self.width, self.height, 0.85, 0, 0, 0)
+        self:drawRectBorder(0, 0, self.width, self.height, 1, 0.4, 0.4, 0.4)
+        self:drawText(title or "", 10, 10, 1, 1, 1, 1, UIFont.Small)
+    end
+
+    valueLabel = ISLabel:new(10, 40, 20, text .. ": " .. tostring(value), 1, 1, 1, 1, UIFont.Small, true)
+    valueLabel:initialise()
+    modal:addChild(valueLabel)
+
+    slider = ISSliderPanel:new(10, 70, 320, 20, nil,
+        function(_, v)
+            updateLabel(v)
+        end,
+        min or 0,
+        max or 100,
+        current or 0
+    )
+
+    slider:initialise()
+    slider:instantiate()
+    slider.changeOnDrag = true
+    modal:addChild(slider)
+
+    local okBtn = ISButton:new(120, 110, 100, 25, yesTitle or "OK", modal, function()
+        onApply()
+        ParadiseZ.closeModal()
+        modal:removeFromUIManager()
+    end)
+
+    okBtn:initialise()
+    okBtn:instantiate()
+    modal:addChild(okBtn)
+
+    ParadiseZ.ClearModalInstance = modal
+    return modal
+end ]]

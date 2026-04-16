@@ -73,11 +73,6 @@ option ParadiseZ.ReboundSystem
 	type = boolean, default = true,
 	page = ParadiseZ, translation = ParadiseZ_ReboundSystem,
 }
-option ParadiseZ.ReboundExitsCar
-{
-	type = boolean, default = true,
-	page = ParadiseZ, translation = ParadiseZ_ReboundExitsCar,
-}
 
 option ParadiseZ.showTrailingMarkers
 {

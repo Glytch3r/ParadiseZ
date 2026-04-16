@@ -58,7 +58,7 @@ function ParadiseZ.chatCmd(cmd)
       --[[   --ISWorldObjectContextMenu.onTeleport()    
         local x, y, z =  ParadiseZ.parseCoords()
         if not (x and y and z) then return end
-        ParadiseZ.tp(pl, x, y, z)
+        ParadiseZ.doTp(pl, x, y, z)
 
         timer:Simple(1.5, function() 
             pl:setBumpType("stagger")

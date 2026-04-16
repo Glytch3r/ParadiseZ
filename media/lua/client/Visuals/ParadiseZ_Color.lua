@@ -36,6 +36,16 @@ ParadiseZ.colorValues = {
     { r = 1, g = 0.75, b = 0.8 },  --10 Pink
 }
 
+function ParadiseZ.getFloatColor(col)
+    if not col then return end
+    return col / 255
+end
+
+function ParadiseZ.getIntColor(col)
+    if not col then return end
+    return math.floor(col * 255)
+end
+
 function ParadiseZ.getZoneSandboxColor(zoneType)
     local colorIndex = 9
     if zoneType == "HQ" then

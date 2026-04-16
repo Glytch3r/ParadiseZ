@@ -5,52 +5,38 @@ LifeBarUI.panel = nil
 LifeBarUI.visible = true
 LifeBarUI.maxValue = 100
 
-
-
 LifeBarUI.UI = ISPanel:derive("LifeBarUI_UI")
 
 function LifeBarUI.UI:initialise()
     ISPanel.initialise(self)
 end
 
-
 function LifeBarUI.UI:render()
-  
     local pl = getPlayer()
     if not pl then return end
 
     if ParadiseZ.isPvE(pl) then 
         if pl:HasTrait("InjuredPvP") then 
-            pl:getTraits():remove('InjuredPvP')
+            pl:getTraits():remove("InjuredPvP")
         end
         return 
     end
-    
+
     local md = pl:getModData()
-    md.LifePoints = md.LifePoints or 100
-    md.LifeBarFlash = md.LifeBarFlash or 0
-    
-    local life = md.LifePoints
-    local w = self.width - 4
-    local h = self.height - 4
+    if not md or not md.LifePoints then return end
+
+    local life = math.max(0, math.min(LifeBarUI.maxValue, md.LifePoints))
+
+    local w = self.width
+    local h = self.height
+
     local barW = (life / LifeBarUI.maxValue) * w
 
     local col = ParadiseZ.getConditionRGB(life)
+
     self:drawRect(0, 0, w, h, 1, 0, 0, 0)
     self:drawRect(0, 0, barW, h, 1, col.r, col.g, col.b)
     self:drawRectBorder(0, 0, w, h, 1, 1, 1, 1)
-    local rec = md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery)
-    if pl:HasTrait("InjuredPvP") then 
-        if ParadiseZ.doRoll(1) then
-            local sq = pl:getSquare() 
-            if sq then
-                addBloodSplat(sq, 15)
-            end
-        end
-        rec = md.LifePoints - tonumber(SandboxVars.ParadiseZpvp.InjuryDrain)
-    end
-    md.LifePoints = math.max(0, math.min(100, rec))
-    
 end
 
 function LifeBarUI.UI:new(x, y, width, height)
@@ -82,9 +68,8 @@ end
 
 function ParadiseZ.getConditionRGB(condition)
     local t = condition / 100
-    return {r = 1 - t, g = 0, b = t}
+    return { r = 1 - t, g = 0, b = t }
 end
-
 
 function ParadiseZ.LifeBarVisibility(pl)
     if not isIngameState() then return end
@@ -95,15 +80,49 @@ function ParadiseZ.LifeBarVisibility(pl)
     local isPveZone = ParadiseZ.isPveZone(pl)
     local isPvePlayer = ParadiseZ.isPvE(pl)
 
-
-
-    if isPveZone or isPvePlayer or pl:isDead()  then
+    if isPveZone or isPvePlayer or pl:isDead() then
         LifeBarUI.hide()
     else
         LifeBarUI.show()
     end
-
 end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.LifeBarVisibility)
 Events.OnPlayerUpdate.Add(ParadiseZ.LifeBarVisibility)
+
+function ParadiseZ.LifeDataInit()
+    local pl = getPlayer()
+    if not pl then return end
+
+    local md = pl:getModData()
+    md.LifePoints = md.LifePoints or 100
+    md.LifeBarFlash = md.LifeBarFlash or 0
+end
+
+Events.OnCreatePlayer.Add(ParadiseZ.LifeDataInit)
+
+function ParadiseZ.LifeTick(pl)
+    if not pl then return end
+    if ParadiseZ.isPvE(pl) then return end
+
+    local md = pl:getModData()
+    if not md or not md.LifePoints then return end
+
+    local rec = md.LifePoints + tonumber(SandboxVars.ParadiseZpvp.LifeBarRecovery)
+
+    if pl:HasTrait("InjuredPvP") then 
+        if ParadiseZ.doRoll(1) then
+            local sq = pl:getSquare()
+            if sq then
+                addBloodSplat(sq, 15)
+            end
+        end
+        rec = md.LifePoints - tonumber(SandboxVars.ParadiseZpvp.InjuryDrain)
+    end
+
+    md.LifePoints = math.max(0, math.min(100, rec))
+end
+
+Events.EveryOneMinute.Add(function()
+    ParadiseZ.LifeTick(getPlayer())
+end)
