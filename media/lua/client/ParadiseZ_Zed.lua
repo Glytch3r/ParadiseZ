@@ -80,7 +80,13 @@ function ParadiseZ.getTypeFromOutfit(zed)
 end
 
 function ParadiseZ.setSprinter(zed)
-    zed:setWalkType("sprint"..tostring(ParadiseZ.getTypeFromOutfit(zed)))
+    local sprintStr = "sprint"..tostring(ParadiseZ.getTypeFromOutfit(zed))
+    if zed:getWalkType() ~= sprintStr then
+        zed:setWalkType(sprintStr)
+    end
+    if not zed:getVariableBoolean("isSprintZone") then
+        zed:setVariable("isSprintZone", true);
+    end
 --[[     zed:makeInactive(true)
     zed:makeInactive(false)      ]]   
 end

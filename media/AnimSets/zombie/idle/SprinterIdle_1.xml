@@ -9,6 +9,12 @@
 		<m_StringValue>sprint1</m_StringValue>
 	</m_Conditions>
 
+	<m_Conditions>
+		<m_Name>isSprintZone</m_Name>
+		<m_Type>BOOL</m_Type>
+		<m_BoolValue>true</m_BoolValue>
+	</m_Conditions>
+
 	<m_deferredBoneAxis>Y</m_deferredBoneAxis>
 	<m_SpeedScale>0.23</m_SpeedScale>
 	<m_SpeedScaleRandomMultiplierMin>0.2</m_SpeedScaleRandomMultiplierMin>
