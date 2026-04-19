@@ -1,6 +1,9 @@
 ParadiseZ = ParadiseZ or {}
 ParadiseZ.showZoneInfo = true
 ParadiseZ.lastZone = nil
+LuaEventManager.AddEvent("OnZoneCrossed")
+
+
 
 function ParadiseZ.getZoneHeader(pl)
     pl = pl or getPlayer()
@@ -204,21 +207,37 @@ function ParadiseZ.getStatusIcons(pl)
     return icons
 end
 
+function ParadiseZ.OnZoneCrossed(lastZoneName, curZoneName)
+    if not getCore():getDebug() then return end
+    print("Previous Zone: "..tostring(lastZoneName))
+    print("Current Zone: "..tostring(curZoneName))
+end
+Events.OnZoneCrossed.Add(ParadiseZ.OnZoneCrossed)
+
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
-    ParadiseZ.lastZone = ParadiseZ.lastZone or ParadiseZ.getZoneName(pl)
-    local currentZone = ParadiseZ.getZoneName(pl)
-    if ParadiseZ.lastZone ~= currentZone then  
-        local isOut = currentZone == tostring(SandboxVars.ParadiseZ.OutsideStr)
+    local md = pl:getModData()
+    local curZoneName = ParadiseZ.getZoneName(pl)
+    if not curZoneName then return end
+    
+    if md['lastZone'] == nil then
+        md['lastZone'] = curZoneName
+    end
+    if md['lastZone'] ~= curZoneName then
+        triggerEvent("OnZoneCrossed", md['lastZone'], curZoneName)
         ParadiseZ.ZoneHighlighter = ParadiseZ.ZoneHighlighter or false
+        local isOut = curZoneName == tostring(SandboxVars.ParadiseZ.OutsideStr)
+
         if (ParadiseZ.ZoneEditorWindow.instance or ParadiseZ.ZoneHighlighter ) and not isOut then 
             ParadiseZ.ZoneHighlight()
         end
+
         ISChat.instance.servermsgTimer = 9000
-        ISChat.instance.servermsg = tostring(currentZone)
-        ParadiseZ.lastZone = currentZone
+        ISChat.instance.servermsg = tostring(curZoneName)
+        md['lastZone'] = curZoneName
+        
         if isOut then 
             ParadiseZ.clearZoneHighlights()
         end

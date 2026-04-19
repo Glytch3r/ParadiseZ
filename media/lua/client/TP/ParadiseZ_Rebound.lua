@@ -3,6 +3,36 @@ TheRange = TheRange or {}
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 -----------------------            ---------------------------
+
+
+
+function ParadiseZ.doRegularTp(pl, x, y, z)
+    if not pl then return end
+    if pl:getVehicle() then
+        ParadiseZ.forceExitCar()
+    end
+    if not x or not y or not z then return end
+    ParadiseZ.doTp(pl, x, y, z)
+end
+
+
+function ParadiseZ.spawnRebound()
+    if not SandboxVars.ParadiseZ.ReboundSystem then return end
+    local pl = getPlayer() 
+    if not pl then return false end
+    if ParadiseZ.checkRestrictions(pl) then
+        local x, y, z = ParadiseZ.getLastCoord(pl, false)
+        if not x or not y or not z then return false end        
+        ParadiseZ.doRegularTp(pl, x, y, z)
+        timer:Simple(3, function() 
+            pl:Say(tostring('Not Allowed From Spawned Location')) 
+        end)
+    end
+end
+Events.OnCreatePlayer.Remove(ParadiseZ.spawnRebound)
+Events.OnCreatePlayer.Add(ParadiseZ.spawnRebound)
+
+
 function ParadiseZ.checkRestrictions(pl)
     pl = pl or getPlayer()
     if not pl then return false end
@@ -11,6 +41,28 @@ function ParadiseZ.checkRestrictions(pl)
     end
     return false
 end
+
+
+function ParadiseZ.isRestrictedCoord(pl, x, y)
+    pl = pl or getPlayer()
+    if not pl then return false end
+    if not (x and y) then return false end
+    local zName = ParadiseZ.getZoneName(x, y)
+    local data
+    if zName then
+        data = ParadiseZ.ZoneData[zName]
+    end
+    if data then 
+        if (data.isKos and ParadiseZ.isPvE(pl)) or data.isBlocked or (data.isHunt and (not TheRange.isStaff(pl) and not TheRange.canHunt(pl))) then
+            return true    
+        end
+    end
+    return false
+end
+
+
+
+
 
 function ParadiseZ.isRestricted(pl)
     pl = pl or getPlayer()
@@ -43,7 +95,9 @@ function ParadiseZ.doRebound(pl, isChat)
             if isDriving then 
                 if ParadiseZ.carTp(pl, car, x, y, z) then return end
             else 
-                ParadiseZ.forceExitCar()
+                if not ParadiseZ.isBlockedZone(pl) then
+                    ParadiseZ.forceExitCar()
+                end
             end
         end
     end
@@ -84,7 +138,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
         ParadiseZ.forceExitCar()
         return false
     end
-
+    
     local sq = getCell():getOrCreateGridSquare(math.floor(lx), math.floor(ly), lz)
     if sq and ParadiseZ.checkDist(pl, sq) >= 200 then
         ParadiseZ.forceExitCar()
@@ -126,7 +180,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
     local origin = getClassFieldVal(w_transform, origin_field)
     origin:set(origin:x() - px, origin:y(), origin:z() - py)
     vehicle:setWorldTransform(w_transform)
-
+    
     if isClient() then
         pcall(vehicle.update, vehicle)
         pcall(vehicle.updateControls, vehicle)
@@ -218,13 +272,17 @@ function ParadiseZ.getLastCoord(pl, isChat)
     local md = pl:getModData()
     local rebound = md['Rebound']
     
-    if rebound and rebound.x and rebound.y and rebound.z then     
-        return rebound.x, rebound.y, rebound.z        
-    end
-    if not isChat then
-        local sh = SafeHouse.hasSafehouse(pl)
-        if sh then
-            return sh:getX(), sh:getY(), 0
+    if rebound  then 
+        if rebound.x and rebound.y and rebound.z then     
+            if not ParadiseZ.isRestrictedCoord(pl, rebound.x, rebound.y) then
+                return rebound.x, rebound.y, rebound.z      
+            end  
+        end
+        if not isChat then
+            local sh = SafeHouse.hasSafehouse(pl)
+            if sh then
+                return sh:getX(), sh:getY(), 0
+            end
         end
     end
     return ParadiseZ.getFallbackCoord()

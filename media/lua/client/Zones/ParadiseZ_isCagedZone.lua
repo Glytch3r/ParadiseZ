@@ -1,16 +1,5 @@
 ParadiseZ = ParadiseZ or {}
 
-ParadiseZ = ParadiseZ or {}
-
-function ParadiseZ.doCageTp(pl, x, y, z)
-    if not pl then return end
-    if pl:getVehicle() then
-        ParadiseZ.forceExitCar()
-    end
-    if not x or not y or not z then return end
-    ParadiseZ.doTp(pl, x, y, z)
-end
-
 local ticks = 0
 
 function ParadiseZ.cageHandler(pl)
@@ -33,7 +22,7 @@ function ParadiseZ.cageHandler(pl)
             ParadiseZ.saveCageRebound(pl, zName)
         else
             local x, y, z = ParadiseZ.getCageRebound(pl)
-            ParadiseZ.doCageTp(pl, x, y, z)
+            ParadiseZ.doRegularTp(pl, x, y, z)
         end
         return
     end
@@ -45,7 +34,7 @@ function ParadiseZ.cageHandler(pl)
         if name then
             local cx, cy = ParadiseZ.getZoneCenter(name)
             if cx and cy then
-                ParadiseZ.doCageTp(pl, cx, cy, plz)
+                ParadiseZ.doRegularTp(pl, cx, cy, plz)
                 return
             end
         end
@@ -53,7 +42,7 @@ function ParadiseZ.cageHandler(pl)
         x, y, z = ParadiseZ.parseCageCoords(false)
     end
 
-    ParadiseZ.doCageTp(pl, x, y, z)
+    ParadiseZ.doRegularTp(pl, x, y, z)
 end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.cageHandler)

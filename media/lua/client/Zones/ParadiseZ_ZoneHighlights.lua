@@ -1,3 +1,4 @@
+ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneHighlightedSquares = ParadiseZ.ZoneHighlightedSquares or {}
 
 function ParadiseZ.clearZoneHighlights()
@@ -12,19 +13,17 @@ function ParadiseZ.clearZoneHighlights()
         table.remove(ParadiseZ.ZoneHighlightedSquares, i)
     end
 end
-function ParadiseZ.getZoneEdgeSquares(name)
-    local zone = ParadiseZ.ZoneData and ParadiseZ.ZoneData[name]
+function ParadiseZ.getZoneEdgeSquares(zName)
+    if not zName then return end
+
+    local zone = ParadiseZ.ZoneData and ParadiseZ.ZoneData[zName]
     if not zone then return {} end
 
     ParadiseZ.normalizeZone(zone)
-
-    local x1 = math.floor(zone.x1)
-    local y1 = math.floor(zone.y1)
-    local x2 = math.floor(zone.x2)
-    local y2 = math.floor(zone.y2)
+    local x1, y1, x2, y2 = ParadiseZ.normalizeArea(math.floor(zone.x1), math.floor(zone.y1), math.floor(zone.x2), math.floor(zone.y2))
 
     local edgeSquares = {}
-
+    
     for x = x1, x2 do
         edgeSquares[#edgeSquares+1] = {x = x, y = y1}
         edgeSquares[#edgeSquares+1] = {x = x, y = y2}

@@ -27,26 +27,6 @@ function ParadiseZ.isOutside(pl)
     if not targ then return false end
     return ParadiseZ.getZoneName(targ) == tostring(SandboxVars.ParadiseZ.OutsideStr)
 end
---[[ 
-function ParadiseZ.isRegularZone(pl)
-    local targ = ParadiseZ.getPlOrSq(pl)
-    if not targ then return false end
-
-    local isKosZone = ParadiseZ.isKosZone(targ)
-    local isPveZone = ParadiseZ.isPveZone(targ)
-    local isOutsideZone = ParadiseZ.isOutside(targ)
-
-    if isOutsideZone then
-        return false
-    end
-
-    if (isKosZone and isPveZone) or (not isKosZone and not isPveZone) then
-        return true
-    end
-
-    return false
-end
- ]]
 -----------------------            ---------------------------
 function ParadiseZ.isHuntZone(pl)
     local targ = ParadiseZ.getPlOrSq(pl)

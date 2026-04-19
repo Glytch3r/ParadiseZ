@@ -96,9 +96,7 @@ function ParadiseZ.context(plNum, context, worldobjects)
     
     addSafeOption(opt, "Zone Highlights: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.ZoneHighlighter or false)), function() 
         ParadiseZ.ZoneHighlighter = not ParadiseZ.ZoneHighlighter 
-        if ParadiseZ.ZoneHighlighter then
-            ParadiseZ.ZoneHighlight()
-        else
+        if not ParadiseZ.ZoneHighlighter then
             ParadiseZ.clearZoneHighlights()
         end
     end, "media/ui/Paradise/Context_HighlightZone.png")
