@@ -260,8 +260,8 @@ function ParadiseZ.ZoneEditorWindow:createChildren()
     btnX = btnX + btnSWid + btnSpacing
     
     self.btnPvP = ISButton:new(btnX, btnY, btnSWid, btnSHgt, "", self, ParadiseZ.ZoneEditorWindow.onOptionMouseDown)
-    self.btnPvP.internal = "PVP"
-    self.btnPvP.tooltip = "PVP"
+    self.btnPvP.internal = "KoS"
+    self.btnPvP.tooltip = "KoS"
     self.btnPvP:initialise()
     self.btnPvP:instantiate()
     self.btnPvP:setImage(ParadiseZ.flagTextures.PvP)
@@ -901,7 +901,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
                 zone.x2 = round(pl:getX())
                 zone.y2 = round(pl:getY())
                 self.shouldSync = true
-            elseif button.internal == "PVP" then
+            elseif button.internal == "KoS" then
                 zone.isKos = not zone.isKos
                 self.shouldSync = true
             elseif button.internal == "NONPVP" then

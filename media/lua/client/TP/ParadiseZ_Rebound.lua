@@ -111,6 +111,9 @@ function ParadiseZ.doRebound(pl, isChat)
         end
     end
     pl:setHaloNote(tostring(reboundStr),150,250,150,900) 
+    if ParadiseZ.isRestrictedCoord(pl, x, y) then
+        x, y, z = ParadiseZ.getFallbackCoord()     
+    end
     ParadiseZ.doTp(pl, x, y, z)
 end
 
@@ -127,13 +130,14 @@ function ParadiseZ.reboundHandler(pl)
         if not sq then return end 
         local zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
         if not zName or zName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
+        local isRestricted = ParadiseZ.isRestricted(pl)
+        if not isRestricted then
+            ParadiseZ.saveRebound(pl, zName)
+        end
+        --if ParadiseZ.isXYZoneOuter(plX, plY, zName) then end
         
-        if ParadiseZ.isXYZoneOuter(plX, plY, zName) then
-            if not ParadiseZ.isRestricted(pl) then
-                ParadiseZ.saveRebound(pl, zName)
-            end
-        elseif ParadiseZ.isXYZoneInner(plX, plY, zName) then                        
-            if ParadiseZ.isRestricted(pl) then
+        if ParadiseZ.isXYZoneInner(plX, plY, zName) then                        
+            if isRestricted then
                 ParadiseZ.doRebound(pl, false)
             end
         end
@@ -287,7 +291,7 @@ function ParadiseZ.getLastCoord(pl, isChat)
     if rebound  then 
         if rebound.x and rebound.y and rebound.z then     
             if not ParadiseZ.isRestrictedCoord(pl, rebound.x, rebound.y) then
-                return rebound.x, rebound.y, rebound.z      
+                return rebound.x, rebound.y, rebound.z     
             end  
         end
         if not isChat then
