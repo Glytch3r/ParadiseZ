@@ -1,6 +1,5 @@
 ParadiseZ = ParadiseZ or {}
 
-local ticks = 0
 
 function ParadiseZ.doCageTp(pl, x, y, z)
     local car = pl:getVehicle()
@@ -10,45 +9,39 @@ function ParadiseZ.doCageTp(pl, x, y, z)
     ParadiseZ.doTp(pl, x, y, z) 
 end
 
+
+local ticks = 0
 function ParadiseZ.cageHandler(pl)
     if not pl then return end
     if not pl:isAlive() then return end
+
     ticks = ticks + 1
-    if ticks % 3 == 0 then
-        local isCageZone = ParadiseZ.isCageZone(pl) 
-        local isCagedPl = ParadiseZ.isCagedPl(pl)
-        if not isCagedPl then 
-            if not isCageZone then
-                ParadiseZ.saveCageReturn(pl)
+    if ticks % 3 ~= 0 then return end
+
+    local isCagedPl = ParadiseZ.isCagedPl(pl)
+    if not isCagedPl then return end
+
+    local isCageZone = ParadiseZ.isCageZone(pl)
+    local plx, ply, plz = round(pl:getX()), round(pl:getY()), pl:getZ()
+
+    if isCageZone then
+        local zName = ParadiseZ.getZoneName(plx, ply)
+        if zName then
+            if ParadiseZ.isXYInsideZone(plx, ply, zName) then
+                ParadiseZ.saveCageRebound(pl, zName)
             else
-                local x, y, z = ParadiseZ.getCageReturn(pl)
-                ParadiseZ.doCageTp(pl, x, y, z)
-            end
-        elseif isCagedPl then
-            local plx, ply, plz = round(pl:getX()),  round(pl:getY()),  pl:getZ()
-            local zName = ParadiseZ.getZoneName(plx, ply) 
-            if isCageZone then
-                if zName then
-                    if ParadiseZ.isXYInsideZone(plx, ply, zName) then
-                        ParadiseZ.saveCageRebound(pl, zName)
-                    elseif ParadiseZ.isXYZoneOuter(plx, ply, zName, 3) then
-                        local x, y, z = ParadiseZ.getCageRebound(pl)
-                        ParadiseZ.doCageTp(pl, x, y, z)
-                    end
-                end
-            else
-                local x, y, z = ParadiseZ.parseCageCoords(false)
+                local x, y, z = ParadiseZ.getCageRebound(pl)
                 ParadiseZ.doCageTp(pl, x, y, z)
             end
         end
+    else
+        local x, y, z = ParadiseZ.parseCageCoords(false)
+        ParadiseZ.doCageTp(pl, x, y, z)
     end
 end
+
 Events.OnPlayerUpdate.Remove(ParadiseZ.cageHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.cageHandler)
-
-
-
-
 
 function ParadiseZ.isCagedPl(pl)
     pl = pl or getPlayer()
@@ -96,9 +89,7 @@ function ParadiseZ.saveCageReturn(pl, name)
     }
     md['CageReturn'] = tab
     return tab
-
 end
-
 
 function ParadiseZ.saveCageRebound(pl, name)
     pl = pl or getPlayer()
@@ -121,12 +112,6 @@ function ParadiseZ.saveCageRebound(pl, name)
         return tab
     end
     return nil
-end
-
-
-function ParadiseZ.isHasCageCoords(pl)
-    local md = pl:getModData()
-    return md['CageRebound'] ~= nil
 end
 
 function ParadiseZ.getCageRebound(pl)
@@ -152,4 +137,3 @@ function ParadiseZ.getCageReturn(pl)
     local x, y, z = ParadiseZ.parseCageCoords(true)
     return x, y, z
 end
-
