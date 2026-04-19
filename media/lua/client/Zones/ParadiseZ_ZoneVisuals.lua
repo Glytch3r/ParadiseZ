@@ -2,12 +2,14 @@ ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneVisuals = ParadiseZ.ZoneVisuals or {}
 
 ParadiseZ.ZoneVisuals.enabled = true
+ParadiseZ.ZoneVisuals.highlight = true
 
 function ParadiseZ.ZoneVisuals.getData()
     return ModData.get("ParadiseZ_ZoneData") or {}
 end
 
 function ParadiseZ.ZoneVisuals.drawWorldMap(self)
+
     local data = ParadiseZ.ZoneVisuals.getData()
     if not data then return end
 
@@ -19,6 +21,7 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
     local wy = self.mapAPI:uiToWorldY(mx, my)
 
     local zName
+    local r,g,b,a = 1,1,1,1
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
@@ -33,13 +36,15 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                     end
                 end
 
-                local cr,cg,cb,ca = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
-                if not cr then cr,cg,cb,ca = 1,1,1,1 end
+                local r,g,b,a = ParadiseZ.getZoneDataColor(z.zoneName or z.name)
+                if not r or not g or not b then
+                    r,g,b,a = 1,1,1,1
+                end
 
+                local fillA = 0.05
                 local borderA = isHovered and 0.8 or 0.2
-                local borderThickness = isHovered and 1.5 or 1
-                local fillA = isHovered and 0.05 or 0.01
-                
+                local borderThickness = isHovered and 2 or 1
+
                 if isometric then
                     local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                     local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
@@ -51,12 +56,11 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                     local x2y2y = self.mapAPI:worldToUIY(z.x2, z.y2)
 
                     if x1y1x and x1y1y and x2y1x and x2y1y and x2y2x and x2y2y and x1y2x and x1y2y then
-                        getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, cr, cg, cb, fillA)
+                        getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, fillA)
 
-                        getRenderer():renderLine(x1y1x, x1y1y, x2y1x, x2y1y, cr, cg, cb, borderA)
-                        getRenderer():renderLine(x2y1x, x2y1y, x2y2x, x2y2y, cr, cg, cb, borderA)
-                        getRenderer():renderLine(x2y2x, x2y2y, x1y2x, x1y2y, cr, cg, cb, borderA)
-                        getRenderer():renderLine(x1y2x, x1y2y, x1y1x, x1y1y, cr, cg, cb, borderA)
+                        if ParadiseZ.ZoneVisuals.highlight then
+                            getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, borderA)
+                        end
                     end
                 else
                     local x1 = self.mapAPI:worldToUIX(z.x1, z.y1)
@@ -68,10 +72,12 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                         local w = x2 - x1
                         local h = y2 - y1
 
-                        self:drawRect(x1, y1, w, h, fillA, cr, cg, cb)
+                        self:drawRect(x1, y1, w, h, fillA, r, g, b)
 
-                        for i=1,borderThickness do
-                            self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, cr, cg, cb)
+                        if ParadiseZ.ZoneVisuals.highlight then
+                            for i=1,borderThickness do
+                                self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, r, g, b)
+                            end
                         end
                     end
                 end
@@ -89,7 +95,7 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         if zName ~= SandboxVars.ParadiseZ.OutsideStr then
             font = UIFont.Large
         end
-        
+
         local offsetX = SandboxVars.ParadiseZmapVisual.offsetX
         local offsetY = SandboxVars.ParadiseZmapVisual.offsetY
         local colR = SandboxVars.ParadiseZmapVisual.colR
@@ -101,12 +107,8 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         local drawX = mx + offsetX
         local drawY = my + offsetY
 
-        if isInvertedX then
-            drawX = mx - offsetX
-        end
-        if isInvertedY then
-            drawY = my - offsetY
-        end
+        if isInvertedX then drawX = mx - offsetX end
+        if isInvertedY then drawY = my - offsetY end
 
         if ParadiseZ.ZoneVisuals.enabled2 then
             self:drawText(zName, drawX, drawY, colR, colG, colB, 1, font)
@@ -129,6 +131,11 @@ function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
         ParadiseZ.ZoneVisuals.enabled2 = not ParadiseZ.ZoneVisuals.enabled2
     end)
     context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled2)
+
+    local option = context:addOption("Zone Highlight", self, function()
+        ParadiseZ.ZoneVisuals.highlight = not ParadiseZ.ZoneVisuals.highlight
+    end)
+    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.highlight)
 end
 
 function ParadiseZ.ZoneVisuals.hookWorldMap()

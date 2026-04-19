@@ -1,16 +1,18 @@
 ParadiseZ = ParadiseZ or {}
 
+ParadiseZ = ParadiseZ or {}
 
 function ParadiseZ.doCageTp(pl, x, y, z)
-    local car = pl:getVehicle()
-    if car then
+    if not pl then return end
+    if pl:getVehicle() then
         ParadiseZ.forceExitCar()
     end
-    ParadiseZ.doTp(pl, x, y, z) 
+    if not x or not y or not z then return end
+    ParadiseZ.doTp(pl, x, y, z)
 end
 
-
 local ticks = 0
+
 function ParadiseZ.cageHandler(pl)
     if not pl then return end
     if not pl:isAlive() then return end
@@ -18,30 +20,57 @@ function ParadiseZ.cageHandler(pl)
     ticks = ticks + 1
     if ticks % 3 ~= 0 then return end
 
-    local isCagedPl = ParadiseZ.isCagedPl(pl)
-    if not isCagedPl then return end
+    if not ParadiseZ.isCagedPl(pl) then return end
 
-    local isCageZone = ParadiseZ.isCageZone(pl)
     local plx, ply, plz = round(pl:getX()), round(pl:getY()), pl:getZ()
+    local isCageZone = ParadiseZ.isCageZone(pl)
 
     if isCageZone then
         local zName = ParadiseZ.getZoneName(plx, ply)
-        if zName then
-            if ParadiseZ.isXYInsideZone(plx, ply, zName) then
-                ParadiseZ.saveCageRebound(pl, zName)
-            else
-                local x, y, z = ParadiseZ.getCageRebound(pl)
-                ParadiseZ.doCageTp(pl, x, y, z)
+        if not zName then return end
+
+        if ParadiseZ.isXYInsideZone(plx, ply, zName) then
+            ParadiseZ.saveCageRebound(pl, zName)
+        else
+            local x, y, z = ParadiseZ.getCageRebound(pl)
+            ParadiseZ.doCageTp(pl, x, y, z)
+        end
+        return
+    end
+
+    local x, y, z = ParadiseZ.getCageRebound(pl)
+
+    if not x or not y or not z then
+        local name = ParadiseZ.getZoneName(pl)
+        if name then
+            local cx, cy = ParadiseZ.getZoneCenter(name)
+            if cx and cy then
+                ParadiseZ.doCageTp(pl, cx, cy, plz)
+                return
             end
         end
-    else
-        local x, y, z = ParadiseZ.parseCageCoords(false)
-        ParadiseZ.doCageTp(pl, x, y, z)
+
+        x, y, z = ParadiseZ.parseCageCoords(false)
     end
+
+    ParadiseZ.doCageTp(pl, x, y, z)
 end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.cageHandler)
 Events.OnPlayerUpdate.Add(ParadiseZ.cageHandler)
+
+function ParadiseZ.getZoneCenter(name)
+    local data = ParadiseZ.ZoneData and ParadiseZ.ZoneData[name]
+    if not data then return nil, nil end
+
+    local minX = math.min(data.x1, data.x2)
+    local maxX = math.max(data.x1, data.x2)
+    local minY = math.min(data.y1, data.y2)
+    local maxY = math.max(data.y1, data.y2)
+
+    return (minX + maxX) / 2, (minY + maxY) / 2
+end
+
 
 function ParadiseZ.isCagedPl(pl)
     pl = pl or getPlayer()

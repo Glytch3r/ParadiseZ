@@ -149,7 +149,7 @@ function ParadiseZ.getZoneDataColor(zName)
     end
     
     if colorIndex == 11 then
-        return 0,0,0,0
+        return 1,1,1,1
     end
 
     local color = ParadiseZ.colorValues[colorIndex] or ParadiseZ.colorValues[9]
