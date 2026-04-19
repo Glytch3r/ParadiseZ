@@ -268,4 +268,16 @@ Sandbox_EN = {
     Sandbox_ParadiseZcolor_Sprint_option10 = "Pink",
     Sandbox_ParadiseZcolor_Sprint_option11 = "Disabled",
 
+    Sandbox_ParadiseZcolor_Typeless = "Typeless Zone Color",
+    Sandbox_ParadiseZcolor_Typeless_option1 = "Gray",
+    Sandbox_ParadiseZcolor_Typeless_option2 = "Red",
+    Sandbox_ParadiseZcolor_Typeless_option3 = "Orange",
+    Sandbox_ParadiseZcolor_Typeless_option4 = "Yellow",
+    Sandbox_ParadiseZcolor_Typeless_option5 = "Green",
+    Sandbox_ParadiseZcolor_Typeless_option6 = "Blue",
+    Sandbox_ParadiseZcolor_Typeless_option7 = "Purple",
+    Sandbox_ParadiseZcolor_Typeless_option8 = "Black",
+    Sandbox_ParadiseZcolor_Typeless_option9 = "White",
+    Sandbox_ParadiseZcolor_Typeless_option10 = "Pink",
+    Sandbox_ParadiseZcolor_Typeless_option11 = "Disabled",
 }

@@ -25,7 +25,7 @@ function ParadiseZ.textModal(text, callback, target, player, param1, param2)
 end
 
 
-
+ParadiseZ.contextOpen = false
 function ParadiseZ.noteContext(plNum, context, worldobjects, test)
 	local pl = getSpecificPlayer(plNum)
 	--local targ = clickedPlayer
@@ -34,24 +34,55 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
     local sq = luautils.stringStarts(getCore():getVersion(), "42") and ISWorldObjectContextMenu.fetchVars.clickedSquare or clickedSquare
     if not sq then return end
     local flr = sq:getFloor()
+    if not flr then return end
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
-
     local note = flr:getModData()['FloorNote']
+
     if note ~= nil then
         local ReadOpt = context:addOptionOnTop("Read Note", worldobjects, function()
             if luautils.walkAdj(pl, sq) then
                 pl:Say(tostring(note)) 
+                pl:playSoundLocal("MapOpen")
             end
             getSoundManager():playUISound("UIActivateMainMenuItem")
             context:hideAndChildren()
         end)
         ReadOpt.iconTexture = getTexture("media/ui/Paradise/context_noteRead.png")
+
+        flr:setHighlighted(true, false)
+        local function noteHighlightRemove()
+            flr:setHighlighted(false)
+            Events.OnKeyPressed.Remove(noteHighlightRemovePress)
+            Events.OnMouseDown.Remove(noteHighlightRemove)
+        end
+        local function noteHighlightRemovePress(key)         
+            if key == getCore():getKey("CancelAction") or key == Keyboard.KEY_ESCAPE then
+                noteHighlightRemove()
+            end
+        end
+        Events.OnKeyPressed.Add(noteHighlightRemovePress)
+        Events.OnMouseDown.Add(noteHighlightRemove)
+
+
     end
-    
-    if isAdm or SandboxVars.ParadiseZ.EveryoneCanWriteNotes then
+    local canWrite = isAdm or SandboxVars.ParadiseZ.EveryoneCanWriteNotes
+    if canWrite then
         local WriteCaption = "Write Note"
+        
+        
         if note ~= nil then
             WriteCaption = "Edit Note"
+            local DelOpt = context:addOptionOnTop("Delete Note", worldobjects, function()
+                if luautils.walkAdj(pl, sq) then
+                    flr:getModData()['FloorNote'] = nil
+                    flr:transmitModData()
+                    pl:playSoundLocal("MapRemoveMarking")
+                end
+                getSoundManager():playUISound("UIActivateMainMenuItem")
+                context:hideAndChildren()
+            end)
+            DelOpt.iconTexture = getTexture("media/ui/Paradise/context_noteDel.png")    
+
         end
         
         local WriteOpt = context:addOptionOnTop(WriteCaption, worldobjects, function()
@@ -60,6 +91,7 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
                     if value ~= nil and value ~= "" and value ~= " " then
                         flr:getModData()['FloorNote'] = tostring(value)
                         flr:transmitModData()
+                        pl:playSoundLocal("MapAddNote")
                     end
                 end)
             end
@@ -67,6 +99,7 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
             context:hideAndChildren()
         end)
         WriteOpt.iconTexture = getTexture("media/ui/Paradise/context_noteWrite.png")    
+
         if note ~= nil and note ~= "" and note ~= " " then
             local tooltip = ISToolTip:new();
             tooltip:initialise();
@@ -77,5 +110,6 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
 end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.noteContext)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.noteContext)
+
 
 

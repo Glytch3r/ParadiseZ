@@ -54,7 +54,7 @@ function ParadiseZ.getZoneSandboxColor(zoneType)
         colorIndex = SandboxVars.ParadiseZcolor.Outside or 9
     elseif zoneType == "NonPvp" then
         colorIndex = SandboxVars.ParadiseZcolor.NonPvp or 9
-    elseif zoneType == "PvP" then
+    elseif zoneType == "KoS" then
         colorIndex = SandboxVars.ParadiseZcolor.PvP or 9
     elseif zoneType == "Blocked" then
         colorIndex = SandboxVars.ParadiseZcolor.Blocked or 9
@@ -88,6 +88,8 @@ function ParadiseZ.getZoneSandboxColor(zoneType)
         colorIndex = SandboxVars.ParadiseZcolor.Trade or 9
     elseif zoneType == "Sprint" then
         colorIndex = SandboxVars.ParadiseZcolor.Sprint or 9
+    else
+        colorIndex = SandboxVars.ParadiseZcolor.Typeless or 6        
     end
     
     if colorIndex == 11 then
@@ -145,7 +147,7 @@ function ParadiseZ.getZoneDataColor(zName)
     elseif zData.isSprint then
         colorIndex = SandboxVars.ParadiseZcolor.Sprint or 9
     else
-        colorIndex = 8
+        colorIndex = SandboxVars.ParadiseZcolor.Typeless or 6
     end
     
     if colorIndex == 11 then

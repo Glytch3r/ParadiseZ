@@ -21,7 +21,6 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
     local wy = self.mapAPI:uiToWorldY(mx, my)
 
     local zName
-    local r,g,b,a = 1,1,1,1
 
     for _,z in pairs(data) do
         if z.x1 and z.y1 and z.x2 and z.y2 then
@@ -42,9 +41,15 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                 end
 
                 local fillA = 0.05
-                local borderA = isHovered and 0.8 or 0.2
-                local borderThickness = isHovered and 2 or 1
+                local borderA = 0.2
+                local borderThickness = 1
 
+                if isHovered then
+                    fillA = 0.05
+                    borderA = 0.8
+                    borderThickness = 2
+                end
+                
                 if isometric then
                     local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                     local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
@@ -56,10 +61,25 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                     local x2y2y = self.mapAPI:worldToUIY(z.x2, z.y2)
 
                     if x1y1x and x1y1y and x2y1x and x2y1y and x2y2x and x2y2y and x1y2x and x1y2y then
-                        getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, fillA)
+                        getRenderer():renderPoly(
+                            x1y1x, x1y1y,
+                            x2y1x, x2y1y,
+                            x2y2x, x2y2y,
+                            x1y2x, x1y2y,
+                            r, g, b, fillA
+                        )
 
                         if ParadiseZ.ZoneVisuals.highlight then
-                            getRenderer():renderPoly(x1y1x, x1y1y, x2y1x, x2y1y, x2y2x, x2y2y, x1y2x, x1y2y, r, g, b, borderA)
+                            for i=1,borderThickness do
+                                local off = i * 0.5
+                                getRenderer():renderPoly(
+                                    x1y1x-off, x1y1y-off,
+                                    x2y1x+off, x2y1y-off,
+                                    x2y2x+off, x2y2y+off,
+                                    x1y2x-off, x1y2y+off,
+                                    r, g, b, borderA
+                                )
+                            end
                         end
                     end
                 else
@@ -76,7 +96,11 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
                         if ParadiseZ.ZoneVisuals.highlight then
                             for i=1,borderThickness do
-                                self:drawRectBorder(x1-i, y1-i, w+(i*2), h+(i*2), borderA, r, g, b)
+                                self:drawRectBorder(
+                                    x1-i, y1-i,
+                                    w+(i*2), h+(i*2),
+                                    borderA, r, g, b
+                                )
                             end
                         end
                     end
@@ -119,23 +143,10 @@ end
 
 function ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
     local playerNum = 0
-    local context = getPlayerContextMenu(playerNum)
+    local context = ISContextMenu.get(playerNum, x + self:getAbsoluteX(), y + self:getAbsoluteY())
     if not context then return end
 
-    local option = context:addOption("Zone Visuals", self, function()
-        ParadiseZ.ZoneVisuals.enabled = not ParadiseZ.ZoneVisuals.enabled
-    end)
-    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
 
-    local option = context:addOption("Map Tooltip", self, function()
-        ParadiseZ.ZoneVisuals.enabled2 = not ParadiseZ.ZoneVisuals.enabled2
-    end)
-    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled2)
-
-    local option = context:addOption("Zone Highlight", self, function()
-        ParadiseZ.ZoneVisuals.highlight = not ParadiseZ.ZoneVisuals.highlight
-    end)
-    context:setOptionChecked(option, ParadiseZ.ZoneVisuals.highlight)
 end
 
 function ParadiseZ.ZoneVisuals.hookWorldMap()
@@ -145,14 +156,65 @@ function ParadiseZ.ZoneVisuals.hookWorldMap()
         ParadiseZ.ZoneVisuals.drawWorldMap(self)
     end
 
-    local hookcontext = ISWorldMap.onRightMouseUp
-    ISWorldMap.onRightMouseUp = function(self, x, y, ...)
-        local result = hookcontext(self, x, y, ...)
-        ParadiseZ.ZoneVisuals.onRightMouseUp(self, x, y)
-        return result
-    end
-end
+    function ISWorldMap:onRightMouseUp(x, y)
+        if self.symbolsUI:onRightMouseUpMap(x, y) then
+            return true
+        end
+        
+        local isNotAllowed = not (isClient() and (getAccessLevel() == "admin"))
+        
+        local playerNum = 0
+        local playerObj = getSpecificPlayer(0)
+        if not playerObj then return end 
+        local context = ISContextMenu.get(playerNum, x + self:getAbsoluteX(), y + self:getAbsoluteY())
 
+        if not isNotAllowed then
+            local option = context:addOption("Show Cell Grid", self, function(self) self:setShowCellGrid(not self.showCellGrid) end)
+            context:setOptionChecked(option, self.showCellGrid)
+
+            option = context:addOption("Show Tile Grid", self, function(self) self:setShowTileGrid(not self.showTileGrid) end)
+            context:setOptionChecked(option, self.showTileGrid)
+
+            self.hideUnvisitedAreas = self.mapAPI:getBoolean("HideUnvisited")
+            option = context:addOption("Hide Unvisited Areas", self, function(self) self:setHideUnvisitedAreas(not self.hideUnvisitedAreas) end)
+            context:setOptionChecked(option, self.hideUnvisitedAreas)
+
+            option = context:addOption("Isometric", self, function(self) self:setIsometric(not self.isometric) end)
+            context:setOptionChecked(option, self.isometric)
+
+            option = context:addOption("Reapply Style", self, function(self)
+                MapUtils.initDefaultStyleV1(self)
+                MapUtils.overlayPaper(self)
+            end)
+        end
+
+        local option = context:addOption("Zone Visuals", self, function()
+            ParadiseZ.ZoneVisuals.enabled = not ParadiseZ.ZoneVisuals.enabled
+        end)
+        context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled)
+
+        option = context:addOption("Map Tooltip", self, function()
+            ParadiseZ.ZoneVisuals.enabled2 = not ParadiseZ.ZoneVisuals.enabled2
+        end)
+        context:setOptionChecked(option, ParadiseZ.ZoneVisuals.enabled2)
+
+        option = context:addOption("Zone Highlight", self, function()
+            ParadiseZ.ZoneVisuals.highlight = not ParadiseZ.ZoneVisuals.highlight
+        end)
+        context:setOptionChecked(option, ParadiseZ.ZoneVisuals.highlight)
+        
+        if not isNotAllowed then
+            local worldX = self.mapAPI:uiToWorldX(x, y)
+            local worldY = self.mapAPI:uiToWorldY(x, y)
+            if getWorld():getMetaGrid():isValidChunk(worldX / 10, worldY / 10) then
+                option = context:addOption("Teleport Here", self, self.onTeleport, worldX, worldY)
+            end
+        end
+
+        return true
+    end
+
+end
 Events.OnCreatePlayer.Add(function()
     ParadiseZ.ZoneVisuals.hookWorldMap()
 end)

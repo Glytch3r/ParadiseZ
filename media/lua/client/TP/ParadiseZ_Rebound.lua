@@ -20,6 +20,12 @@ function ParadiseZ.spawnRebound()
     if not SandboxVars.ParadiseZ.ReboundSystem then return end
     local pl = getPlayer() 
     if not pl then return false end
+    local md = pl:getModData()
+    if md['Rebound'] == nil then
+        if not ParadiseZ.checkRestrictions(pl) then
+            ParadiseZ.saveRebound(pl)
+        end
+    end
     if ParadiseZ.checkRestrictions(pl) then
         local x, y, z = ParadiseZ.getLastCoord(pl, false)
         if not x or not y or not z then return false end        
@@ -87,13 +93,16 @@ function ParadiseZ.doRebound(pl, isChat)
     
     local x, y, z = ParadiseZ.getLastCoord(pl, isChat)
     if not x or not y or not z then return end
-    
+    local reboundStr = SandboxVars.ParadiseZ.reboundMsg or 'NOT ALLOWED IN THIS ZONE'
     local car = pl:getVehicle()
     if car then
         local isDriving = pl:isDriving()
         if ParadiseZ.isRestricted(pl) then
             if isDriving then 
-                if ParadiseZ.carTp(pl, car, x, y, z) then return end
+                if ParadiseZ.carTp(pl, car, x, y, z) then 
+                    pl:setHaloNote(tostring(reboundStr),150,250,150,900) 
+                    return 
+                end
             else 
                 if not ParadiseZ.isBlockedZone(pl) then
                     ParadiseZ.forceExitCar()
@@ -101,6 +110,7 @@ function ParadiseZ.doRebound(pl, isChat)
             end
         end
     end
+    pl:setHaloNote(tostring(reboundStr),150,250,150,900) 
     ParadiseZ.doTp(pl, x, y, z)
 end
 
@@ -119,7 +129,9 @@ function ParadiseZ.reboundHandler(pl)
         if not zName or zName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
         
         if ParadiseZ.isXYZoneOuter(plX, plY, zName) then
-            ParadiseZ.saveRebound(pl, zName)
+            if not ParadiseZ.isRestricted(pl) then
+                ParadiseZ.saveRebound(pl, zName)
+            end
         elseif ParadiseZ.isXYZoneInner(plX, plY, zName) then                        
             if ParadiseZ.isRestricted(pl) then
                 ParadiseZ.doRebound(pl, false)
@@ -144,7 +156,7 @@ function ParadiseZ.carTp(pl, vehicle, x, y, z)
         ParadiseZ.forceExitCar()
         return false
     end
-
+    
     local curX, curY = pl:getX(), pl:getY()
     local md = pl:getModData()
     local rebound = md and md['Rebound'] or nil
@@ -244,20 +256,20 @@ function ParadiseZ.saveRebound(pl, zName)
     zName = zName or ParadiseZ.getZoneName(pl)
     local md = pl:getModData()
 
-    if ParadiseZ.isXYZoneOuter(sx, sy, zName) then
-        local tab = {
-            name = zName,
-            x = sx + 0.5,
-            y = sy + 0.5,
-            z = pl:getZ(),
-            ax = ParadiseZ.roundN(pl:getX(), 3),
-            ay = ParadiseZ.roundN(pl:getY(), 3)
-        }
-        md['Rebound'] = tab
-        --pl:setHaloNote("rebound updated\n:"..tostring(sx)..',    '..tostring(sy), 150, 250, 150, 180)
-        return tab
-    end
-    return nil
+    --if ParadiseZ.isXYZoneOuter(sx, sy, zName) then
+    local tab = {
+        name = zName,
+        x = sx + 0.5,
+        y = sy + 0.5,
+        z = pl:getZ(),
+        ax = ParadiseZ.roundN(pl:getX(), 3),
+        ay = ParadiseZ.roundN(pl:getY(), 3)
+    }
+    md['Rebound'] = tab
+    --pl:setHaloNote("rebound updated\n:"..tostring(sx)..',    '..tostring(sy), 150, 250, 150, 180)
+    return tab
+    --end
+    --return nil
 end
 
 function ParadiseZ.getReboundXYZ(pl)

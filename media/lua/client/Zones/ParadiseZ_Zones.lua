@@ -88,7 +88,7 @@ end
 
 -----------------------            ---------------------------
 
-function ParadiseZ.isRegularZone(pl)
+function ParadiseZ.isTypelessZone(pl)
     local targ = ParadiseZ.getPlOrSq(pl)
     if not targ then return false end
     local zoneName = ParadiseZ.getZoneName(targ)
@@ -96,14 +96,9 @@ function ParadiseZ.isRegularZone(pl)
     local zone = ParadiseZ.ZoneData[zoneName]
     if not zone then return false end
     
-    if zone.isKos or zone.isPvE or zone.isSafe or zone.isBlocked or
-       zone.isRad or zone.isHunt or zone.isBlaze or zone.isFrost or
-       zone.isBomb or zone.isMine or zone.isNoCamp or zone.isNoFire or
-       zone.isCage or zone.isParty or zone.isRally or zone.isSpecial or
-       zone.isTrade or zone.isSprint then
+    if zone.isKos or zone.isPvE or zone.isSafe or zone.isBlocked or zone.isRad or zone.isHunt or zone.isBlaze or zone.isFrost or zone.isBomb or zone.isMine or zone.isNoCamp or zone.isNoFire or zone.isCage or zone.isParty or zone.isRally or zone.isSpecial or zone.isTrade or zone.isSprint then
         return false
     end
-    
     return true
 end
 

@@ -9,10 +9,17 @@ function ParadiseZ.cageHandler(pl)
     ticks = ticks + 1
     if ticks % 3 ~= 0 then return end
 
-    if not ParadiseZ.isCagedPl(pl) then return end
-
+    local isCagedPl = ParadiseZ.isCagedPl(pl)
     local plx, ply, plz = round(pl:getX()), round(pl:getY()), pl:getZ()
     local isCageZone = ParadiseZ.isCageZone(pl)
+
+    if not isCagedPl then
+        if isCageZone then
+            local x, y, z = ParadiseZ.getCageReturn(pl)
+            ParadiseZ.doRegularTp(pl, x, y, z)
+        end
+        return
+    end
 
     if isCageZone then
         local zName = ParadiseZ.getZoneName(plx, ply)
@@ -59,7 +66,6 @@ function ParadiseZ.getZoneCenter(name)
 
     return (minX + maxX) / 2, (minY + maxY) / 2
 end
-
 
 function ParadiseZ.isCagedPl(pl)
     pl = pl or getPlayer()

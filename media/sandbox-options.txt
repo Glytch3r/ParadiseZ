@@ -52,7 +52,6 @@ option ParadiseZ.isSafeAllowActions
 
 option ParadiseZ.Glytch3rGift  
 {
-	type = string, default =  Base.Bleach,
 	page = ParadiseZ, translation = ParadiseZ_Glytch3rGift,
 }
 
@@ -74,6 +73,12 @@ option ParadiseZ.ReboundSystem
 	page = ParadiseZ, translation = ParadiseZ_ReboundSystem,
 }
 
+
+option ParadiseZ.reboundMsg  
+{
+	type = string, default =  NOT ALLOWED IN THIS ZONE,
+	page = ParadiseZ, translation = ParadiseZ_reboundMsg,
+}
 option ParadiseZ.showTrailingMarkers
 {
 	type = boolean, default = false,
@@ -580,6 +585,16 @@ option ParadiseZcolor.Sprint
     translation = ParadiseZcolor_Sprint,
     valueTranslation = ParadiseZcolor_Sprint,
 }
+
+option ParadiseZcolor.Typeless
+{
+    type = enum, numValues = 11, default = 6,
+    page = ParadiseZcolor,
+    translation = ParadiseZcolor_Typeless,
+    valueTranslation = ParadiseZcolor_Typeless,
+}
+
+
 option ParadiseZmapVisual.offsetX
 {
 	type = double,	 min = 0,  max = 999999,  default = 32,

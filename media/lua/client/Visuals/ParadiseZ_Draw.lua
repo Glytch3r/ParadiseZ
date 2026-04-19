@@ -33,7 +33,7 @@ function ParadiseZ.getZoneInfo(pl)
         zoneName = zoneName .. " (Border)"
     end
     local info = { }
-    if ParadiseZ.isKosZone(pl) then table.insert(info, "KosZone") end
+    if ParadiseZ.isKosZone(pl) then table.insert(info, "KoS") end
     if ParadiseZ.isPveZone(pl) then table.insert(info, "PvE") end
     if ParadiseZ.isBlockedZone(pl) then table.insert(info, "Blocked") end
     if ParadiseZ.isSafeZone(pl) then table.insert(info, "Protected") end
@@ -139,8 +139,9 @@ end
 
 function ParadiseZ.getZoneIcons(pl)
     local icons = {}
+    
     if ParadiseZ.isKosZone(pl) then
-        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), label = "PvP", color = { r = 0.9, g = 0.2, b = 0.2 } })
+        table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_PvP.png"), label = "KoS", color = { r = 0.9, g = 0.2, b = 0.2 } })
     end
     if ParadiseZ.isPveZone(pl) then
         table.insert(icons, { texture = getTexture("media/textures/zone/ParadiseZ_Zone_NonPvP.png"), label = "NonPvp", color = { r = 0, g = 1, b = 0 } })
