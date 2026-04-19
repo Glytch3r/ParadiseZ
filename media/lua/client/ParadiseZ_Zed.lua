@@ -80,13 +80,10 @@ function ParadiseZ.getTypeFromOutfit(zed)
 end
 
 function ParadiseZ.setSprinter(zed)
+    if not zed then return end
     local sprintStr = "sprint"..tostring(ParadiseZ.getTypeFromOutfit(zed))
-    if zed:getWalkType() ~= sprintStr then
-        zed:setWalkType(sprintStr)
-    end
-    if not zed:getVariableBoolean("isSprintZone") then
-        zed:setVariable("isSprintZone", true);
-    end
+    zed:setWalkType(tostring(sprintStr))
+    zed:setVariable("isSprintZone", true);
 --[[     zed:makeInactive(true)
     zed:makeInactive(false)      ]]   
 end
@@ -137,5 +134,6 @@ function ParadiseZ.sprinterHandler(zed)
         end        
     end
 end
+Events.OnZombieUpdate.Remove(ParadiseZ.sprinterHandler)
 Events.OnZombieUpdate.Add(ParadiseZ.sprinterHandler)
 
