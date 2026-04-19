@@ -1,5 +1,16 @@
 ParadiseZ = ParadiseZ or {}
 
+
+function ParadiseZ.isPlayerInArea(x1, y1, x2, y2, pl)
+    local targ = ParadiseZ.getPlOrSq(pl)
+    if not targ then return false end
+    local px, py = ParadiseZ.getXY(targ)
+    if not px or not py then return false end
+    local minX, maxX = math.min(x1, x2), math.max(x1, x2)
+    local minY, maxY = math.min(y1, y2), math.max(y1, y2)
+    return px >= minX and px <= maxX and py >= minY and py <= maxY
+end
+
 function ParadiseZ.normalizeZone(zone)
     if not zone then return end
 
@@ -62,7 +73,8 @@ end
 
 function ParadiseZ.isXYZoneOuter(x, y, zName, margin)
     margin = margin or 3
-
+    if not x or not y then return false end
+    zName = zName or ParadiseZ.getZoneName(x, y)  
     local nX1, nY1, nX2, nY2 = ParadiseZ.getZoneArea(zName)
     if not nX1 then return false end
 
@@ -77,6 +89,8 @@ function ParadiseZ.isXYZoneOuter(x, y, zName, margin)
 end
 
 function ParadiseZ.isXYZoneInner(x, y, zName, margin)
+    if not x or not y then return false end
+    zName = zName or ParadiseZ.getZoneName(x, y)  
     if not ParadiseZ.isXYInsideZone(x, y, zName) then return false end
     return not ParadiseZ.isXYZoneOuter(x, y, zName, margin)
 end

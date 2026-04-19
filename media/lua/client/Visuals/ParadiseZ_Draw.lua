@@ -4,6 +4,12 @@ ParadiseZ.lastZone = nil
 LuaEventManager.AddEvent("OnZoneCrossed")
 
 
+function ParadiseZ.OnZoneCrossed(lastZoneName, curZoneName)
+    if not getCore():getDebug() then return end
+    print("Previous Zone: "..tostring(lastZoneName))
+    print("Current Zone: "..tostring(curZoneName))    
+end
+Events.OnZoneCrossed.Add(ParadiseZ.OnZoneCrossed)
 
 function ParadiseZ.getZoneHeader(pl)
     pl = pl or getPlayer()
@@ -208,12 +214,6 @@ function ParadiseZ.getStatusIcons(pl)
     return icons
 end
 
-function ParadiseZ.OnZoneCrossed(lastZoneName, curZoneName)
-    if not getCore():getDebug() then return end
-    print("Previous Zone: "..tostring(lastZoneName))
-    print("Current Zone: "..tostring(curZoneName))
-end
-Events.OnZoneCrossed.Add(ParadiseZ.OnZoneCrossed)
 
 -----------------------            ---------------------------
 
