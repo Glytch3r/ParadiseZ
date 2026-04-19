@@ -215,26 +215,29 @@ function ParadiseZ.OnZoneCrossed(lastZoneName, curZoneName)
 end
 Events.OnZoneCrossed.Add(ParadiseZ.OnZoneCrossed)
 
+-----------------------            ---------------------------
+
+
 function ParadiseZ.doDrawZone()
     if not isIngameState() then return end
     local pl = getPlayer()
     if not pl then return end
     local md = pl:getModData()
+
     local curZoneName = ParadiseZ.getZoneName(pl)
     if not curZoneName then return end
     
     if md['lastZone'] == nil then
         md['lastZone'] = curZoneName
     end
+
     if md['lastZone'] ~= curZoneName then
         triggerEvent("OnZoneCrossed", md['lastZone'], curZoneName)
         ParadiseZ.ZoneHighlighter = ParadiseZ.ZoneHighlighter or false
         local isOut = curZoneName == tostring(SandboxVars.ParadiseZ.OutsideStr)
-
         if (ParadiseZ.ZoneEditorWindow.instance or ParadiseZ.ZoneHighlighter ) and not isOut then 
             ParadiseZ.ZoneHighlight()
         end
-
         ISChat.instance.servermsgTimer = 9000
         ISChat.instance.servermsg = tostring(curZoneName)
         md['lastZone'] = curZoneName
@@ -243,6 +246,7 @@ function ParadiseZ.doDrawZone()
             ParadiseZ.clearZoneHighlights()
         end
     end
+
     local zoneKey, reboundText = ParadiseZ.getDrawStr(pl)
     local textures = {
         HQ = getTexture("media/textures/zone/ParadiseZ_Zone_HQ.png"),
@@ -267,6 +271,7 @@ function ParadiseZ.doDrawZone()
         Trade = getTexture("media/textures/zone/ParadiseZ_Zone_Trade.png"),
         Sprint = getTexture("media/textures/zone/ParadiseZ_Zone_Sprint.png"),
     }
+
     local texture = textures[zoneKey]
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
     local zoneHeader = ParadiseZ.getZoneHeader(pl) or ""
@@ -282,18 +287,18 @@ function ParadiseZ.doDrawZone()
     end
     
     local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
-
-    local headerY = 73
-    getTextManager():DrawString(UIFont.Large, 68, headerY, zoneHeader, 1, 1, 1, alpha)
-
-    local iconX = 68
+    local baseX = md['HUDSettings'].x
+    local baseY = md['HUDSettings'].y
+    local headerY = baseY
+    getTextManager():DrawString(UIFont.Large, baseX, headerY, zoneHeader, 1, 1, 1, alpha)
+    
+    local iconX = baseX
     local iconY = headerY + 50
     local spacer = 24
     local strX = iconX + spacer
     local strY = iconY + spacer
-
     local currentY = iconY
-    local traitsX = 230
+    local traitsX = baseX + 162
 
     local zoneIcons = ParadiseZ.getZoneIcons(pl)
     for i = 1, #zoneIcons do
@@ -305,7 +310,6 @@ function ParadiseZ.doDrawZone()
             currentY = currentY + 26
         end
     end
-
     local statusIcons = ParadiseZ.getStatusIcons(pl)
     for i = 1, #statusIcons do
         if statusIcons[i].texture then
@@ -314,11 +318,21 @@ function ParadiseZ.doDrawZone()
         end
     end
     
-    local reboundY = 100 + (currentY - iconY)
+    local reboundY = baseY + 100 + (currentY - iconY)
     if reboundText and reboundText ~= "" then
-        getTextManager():DrawString(UIFont.Small, 68, reboundY, reboundText, 1, 1, 1, alpha)
+        getTextManager():DrawString(UIFont.Small, baseX, reboundY, reboundText, 1, 1, 1, alpha)
     end
 end
-
 Events.OnPostUIDraw.Remove(ParadiseZ.doDrawZone)
 Events.OnPostUIDraw.Add(ParadiseZ.doDrawZone)
+-----------------------            ---------------------------
+function ParadiseZ.initHUD()
+    local pl = getPlayer() 
+    if not pl then return end
+    local md = pl:getModData()
+    md['HUDSettings'] = md['HUDSettings'] or {
+        x = 68,
+        y = 73,
+    }
+end
+Events.OnCreatePlayer.Add(ParadiseZ.initHUD)

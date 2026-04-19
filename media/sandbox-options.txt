@@ -52,6 +52,7 @@ option ParadiseZ.isSafeAllowActions
 
 option ParadiseZ.Glytch3rGift  
 {
+	type = string, default =  	Base.Lighter;Base.Bleach;Base.BeerBottle;Base.Worm;Base.ChessWhite,
 	page = ParadiseZ, translation = ParadiseZ_Glytch3rGift,
 }
 
