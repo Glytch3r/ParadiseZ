@@ -60,6 +60,7 @@ function ParadiseZ.saveRebound(pl, zName, isInit)
 
     if isInit then
         local x, y, z = ParadiseZ.parseCoords()
+        zName = ParadiseZ.getZoneName(x, y)
         tab = {
             name = zName,
             x = round(x),
@@ -144,7 +145,7 @@ function ParadiseZ.doRebound(pl, isChat)
             end
         end
     end
-    pl:setHaloNote(tostring(reboundStr),150,250,150,900) 
+    pl:setHaloNote(tostring(reboundStr),250,0,0,100) 
     if ParadiseZ.isRestrictedCoord(pl, x, y) and not ParadiseZ.isXYZoneOuter(x, y, zName, 2) then
         x, y, z = ParadiseZ.getFallbackCoord()     
     end
