@@ -126,4 +126,106 @@ module ParadiseZ {
         texture = duck_sierra,
         scale = 0.8,
     }
+    /*  -----------------------            --------------------------- */
+
+
+   	item Duckhunt_gameaholic
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 122,
+        Icon	=  duck_gameaholic,
+        WorldStaticModel = duck_gameaholic,
+    }
+
+	model duck_gameaholic
+    {
+		mesh = WorldItems/duck_gameaholic,
+        texture = duck_gameaholic,
+        scale = 0.8,
+    }
+    /*  -----------------------            --------------------------- */
+
+
+   	item Duckhunt_duke
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 123,
+        Icon	=  duck_duke,
+        WorldStaticModel = duck_duke,
+    }
+
+	model duck_duke
+    {
+		mesh = WorldItems/duck_duke,
+        texture = duck_duke,
+        scale = 0.8,
+    }
+
+    /*  -----------------------            --------------------------- */
+
+
+   	item Duckhunt_waterbottle
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 124,
+        Icon	=  duck_waterbottle,
+        WorldStaticModel = duck_waterbottle,
+    }
+
+	model duck_waterbottle
+    {
+		mesh = WorldItems/duck_waterbottle,
+        texture = duck_waterbottle,
+        scale = 0.8,
+    }
+    /*  -----------------------            --------------------------- */
+
+
+   	item Duckhunt_jayne
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 125,
+        Icon	=  duck_jayne,
+        WorldStaticModel = duck_jayne,
+    }
+
+	model duck_jayne
+    {
+		mesh = WorldItems/duck_jayne,
+        texture = duck_jayne,
+        scale = 0.8,
+    }
+
+    /*  -----------------------            --------------------------- */
+
+
+   	item Duckhunt_odin
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 126,
+        Icon	=  duck_odin,
+        WorldStaticModel = duck_odin,
+    }
+
+	model duck_odin
+    {
+		mesh = WorldItems/duck_odin,
+        texture = duck_odin,
+        scale = 0.8,
+    }
+
+
+
+
+
 }
