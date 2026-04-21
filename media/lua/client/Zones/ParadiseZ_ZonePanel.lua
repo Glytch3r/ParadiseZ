@@ -608,12 +608,14 @@ function ParadiseZ.ZoneEditorWindow:prerender()
         local btnSWid = 32
 
         local row1 = {
-            self.btnPoint1, self.btnDelete, self.btnReset,
+            self.btnPoint1, self.btnDelete, self.btnReset, self.btnBackup,
             self.btnRadiation, self.btnHunt, self.btnBlaze, self.btnFrost,
             self.btnBomb, self.btnMineField, self.btnPvP, self.btnNonPvp, self.btnProtected
         }
-        local row1Widths = {btnWid, btnWid, btnWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
-
+        local row1Widths = {btnWid, btnWid, btnWid/2, btnWid/2,
+            btnSWid, btnSWid, btnSWid, btnSWid,
+            btnSWid, btnSWid, btnSWid, btnSWid, btnSWid
+        }
         local x = contentX
         for i, btn in ipairs(row1) do
             btn:setY(btnY)
@@ -626,7 +628,7 @@ function ParadiseZ.ZoneEditorWindow:prerender()
             self.btnNoCamp, self.btnNoFire, self.btnCage, self.btnParty,
             self.btnRally, self.btnSpecial, self.btnTrade, self.btnSprint, self.btnBlocked
         }
-        local row2Widths = {btnWid, btnWid, btnWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
+        local row2Widths = {btnWid, btnWid, btnWid, btnSWid/4, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
 
         x = contentX
         for i, btn in ipairs(row2) do
