@@ -287,6 +287,10 @@ function ParadiseZ.doDrawZone()
     end
     
     local alpha = (not zoneKey or zoneKey == "") and (isAdm and 1 or 0.4) or 0.8
+    md['HUDSettings'] = md['HUDSettings'] or {
+        x = 68,
+        y = 73,
+    }
     local baseX = md['HUDSettings'].x
     local baseY = md['HUDSettings'].y
     local headerY = baseY
