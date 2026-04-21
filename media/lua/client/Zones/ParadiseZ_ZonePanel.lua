@@ -574,9 +574,25 @@ function ParadiseZ.ZoneEditorWindow:new(x, y, width, height)
     o:setResizable(true)
     return o
 end
-
+function ParadiseZ.ZoneEditorWindow:onSelectionChanged(zone, entry)
+    if not zone then return end
+    self.btnDelete.enable = true
+    self.btnTeleport.enable = true
+    local zName = zone.name
+    ParadiseZ.ZoneHighlight(nil,nil, zName)
+    
+end
 function ParadiseZ.ZoneEditorWindow:prerender()
     ISCollapsableWindow.prerender(self)
+
+    local sel = self.datas.selected
+    if sel ~= self._lastSelected then
+        self._lastSelected = sel
+        local entry = self.datas.items[sel]
+        local zone = entry and entry.item
+        self:onSelectionChanged(zone, entry)
+    end
+    
     self.bgTexture = bg_TEX
     if self.bgTexture then
         self.bgX = (self.width / 2) - (self.bgTexture:getWidth() / 2)
@@ -628,7 +644,7 @@ function ParadiseZ.ZoneEditorWindow:prerender()
             self.btnNoCamp, self.btnNoFire, self.btnCage, self.btnParty,
             self.btnRally, self.btnSpecial, self.btnTrade, self.btnSprint, self.btnBlocked
         }
-        local row2Widths = {btnWid, btnWid, btnWid, btnSWid/4, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
+        local row2Widths = {btnWid, btnWid, btnWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid, btnSWid}
 
         x = contentX
         for i, btn in ipairs(row2) do
@@ -706,7 +722,7 @@ function ParadiseZ.ZoneEditorWindow:onOptionMouseDown(button, x, y)
     local selected = self.datas.items[self.datas.selected]
     local pl = getPlayer()
     local zone = selected and selected.item
-    --if not zone then return end
+
     if string.lower(pl:getAccessLevel()) == "admin" then
         if button.internal == "RESET" then
             local function modalPress(target, btn, param1, param2)
@@ -1219,7 +1235,7 @@ function ParadiseZ.ZoneEditorPopupPanel:createChildren()
     local x = 20
     local w = self.width - 40
     local h = 28
-    
+  
     self.entryName = ISTextEntryBox:new(self.zoneRef.name or "", x, y, w, h)
     self.entryName:initialise()
     self.entryName:instantiate()

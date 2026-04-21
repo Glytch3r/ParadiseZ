@@ -36,16 +36,27 @@ function ParadiseZ.getZoneEdgeSquares(zName)
 
     return edgeSquares
 end
-function ParadiseZ.ZoneHighlight()
-    ParadiseZ.clearZoneHighlights()
-    if not ParadiseZ.ZoneHighlighter then return end
+
+function ParadiseZ.ZoneHighlight(x, y, zName)
+    --ParadiseZ.clearZoneHighlights()
+    if not ParadiseZ.ZoneHighlighter then
+        if #ParadiseZ.ZoneHighlightedSquares > 0 then
+            ParadiseZ.clearZoneHighlights()
+        end
+        return 
+    end
     local pl = getPlayer()
     if not pl then return end
-
+    
     local sq = pl:getSquare()
     if not sq then return end
-
-    local zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
+    if zName == nil then
+        if x and y then
+            zName = ParadiseZ.getZoneName(x, y)
+        else
+            zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq)
+        end
+    end
     if not zName then return end
     if zName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
     local r, g, b, a = ParadiseZ.getZoneDataColor(zName)    
