@@ -97,8 +97,102 @@ module ParadiseZ {
     }
 
 
+    item HoodieDOWN_Punisher
+    {
+        DisplayName = Punisher Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieDOWN_Punisher,
+        ClothingItemExtra = HoodieUP_Punisher,
+        ClothingItemExtraOption = UpHoodie,
+        clothingExtraSubmenu = DownHoodie,
+        BodyLocation = Sweater,
+        BloodLocation = Jumper,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        NeckProtectionModifier = 0.5,
+        Insulation = 0.6,
+        WindResistance = 0.25,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
+
+    item HoodieUP_Punisher
+    {
+        DisplayName = Punisher Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieUP_Punisher,
+        ClothingItemExtra = HoodieDOWN_Punisher,
+        ClothingItemExtraOption = DownHoodie,
+        clothingExtraSubmenu = UpHoodie,
+        BodyLocation = SweaterHat,
+        BloodLocation = Jumper;FullHelmet,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        Insulation = 0.55,
+        WindResistance = 0.2,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
 
 
+    item HoodieDOWN_NF
+    {
+        DisplayName = NF Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieDOWN_NF,
+        ClothingItemExtra = HoodieUP_NF,
+        ClothingItemExtraOption = UpHoodie,
+        clothingExtraSubmenu = DownHoodie,
+        BodyLocation = Sweater,
+        BloodLocation = Jumper,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        NeckProtectionModifier = 0.5,
+        Insulation = 0.6,
+        WindResistance = 0.25,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
+
+    item HoodieUP_NF
+    {
+        DisplayName = NF Hoodie,
+        DisplayCategory = Clothing,
+        Type = Clothing,        
+        ClothingItem = HoodieUP_NF,
+        ClothingItemExtra = HoodieDOWN_NF,
+        ClothingItemExtraOption = DownHoodie,
+        clothingExtraSubmenu = UpHoodie,
+        BodyLocation = SweaterHat,
+        BloodLocation = Jumper;FullHelmet,
+        Icon = HoodieWhite,
+        ScratchDefense = 10,
+        Insulation = 0.55,
+        WindResistance = 0.2,
+        FabricType = Cotton,
+        WorldStaticModel = Hoodie_Ground,
+    }
+
+
+
+	item Hat_BalaclavaGhost
+	{
+	    DisplayCategory = Accessory,
+		Type = Clothing,
+		DisplayName = Balaclava,
+		ClothingItem = Hat_BalaclavaGhost,
+		BodyLocation = Mask,
+		BloodLocation = Head,
+		Icon = Balaclava,
+		CanHaveHoles = false,
+        Insulation = 1.0,
+        WindResistance = 1.0,
+        WaterResistance = 0.5,
+        WorldStaticModel = BalaclavaFull_Ground,
+	}
 
 
 

@@ -27,4 +27,27 @@
 		<guid>b5d9a4ef-d662-4d17-a847-c8a14ad9e1ba</guid>
 	</files>	
 
+	<files>
+		<path>media/clothing/clothingItems/HoodieDOWN_Punisher.xml</path>
+		<guid>61b639a7-d608-48d0-89a4-c71c3ce9c95d</guid>
+	</files>	
+	<files>
+		<path>media/clothing/clothingItems/HoodieUP_Punisher.xml</path>
+		<guid>4cda57e1-989b-432f-90c1-13a90f5aeeec</guid>
+	</files>	
+
+	<files>
+		<path>media/clothing/clothingItems/HoodieDOWN_NF.xml</path>
+		<guid>2387f05b-b36a-48dc-b2f1-6d4da7f27279</guid>
+	</files>	
+	<files>
+		<path>media/clothing/clothingItems/HoodieUP_NF.xml</path>
+		<guid>e6ebe606-d446-4c7a-b045-c3f34cb8b21a</guid>
+	</files>	
+
+	<files>
+		<path>media/clothing/clothingItems/Hat_BalaclavaGhost.xml</path>
+		<guid>24668350-86a3-45bf-9522-3c2140142074</guid>
+	</files>	
+
 </fileGuidTable>
