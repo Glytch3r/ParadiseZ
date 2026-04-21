@@ -38,7 +38,7 @@ function ParadiseZ.getZoneEdgeSquares(zName)
 end
 function ParadiseZ.ZoneHighlight()
     ParadiseZ.clearZoneHighlights()
-    
+    if not ParadiseZ.ZoneHighlighter then return end
     local pl = getPlayer()
     if not pl then return end
 
