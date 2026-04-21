@@ -1,4 +1,5 @@
 ParadiseZ = ParadiseZ or {}
+ParadiseZ.noteTags = ParadiseZ.noteTags or {}
 
 function ParadiseZ.textModal(text, callback, target, player, param1, param2)
     local entry = nil
@@ -111,5 +112,26 @@ end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.noteContext)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.noteContext)
 
+local ticks = 0
 
-
+function ParadiseZ.noteHover(pl)
+    ticks = ticks + 1
+    if ticks % 3 == 0 then
+        if not pl then return end    
+        local sq = ParadiseZ.getPointer()
+        if not sq then return end
+        local flr = sq:getFloor()
+        if not flr then return end
+        local note = flr:getModData()['FloorNote']
+        if note ~= nil then 
+            local x, y, z = round(sq:getX()),  round(sq:getY()),  sq:getZ()
+            if x and y and z then
+                SquareString.addSqStr(tostring(note), x, y, z, r, g, b, font, xOffset, yOffset, visibility, ParadiseZ.noteTags)      
+            end
+        else
+            SquareString.clearAllTags(ParadiseZ.noteTags)
+        end
+    end
+end
+Events.OnPlayerUpdate.Remove(ParadiseZ.noteHover)
+Events.OnPlayerUpdate.Add(ParadiseZ.noteHover)

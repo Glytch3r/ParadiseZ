@@ -567,7 +567,6 @@ function ParadiseZ.pickCar(sq)
 	return car
 end
 
-
 function ParadiseZ.getPointer()
 	if not isIngameState() then return nil end
 	local sq = nil
@@ -577,11 +576,11 @@ function ParadiseZ.getPointer()
 		local sq = getCell():getGridSquare(math.floor(mx), math.floor(my), zPos)
 		--if sq and sq:getFloor() then sq:getFloor():setHighlighted(true); return sq end
 		if not sq then return nil end
-		local flr = sq:getFloor()
+	--[[ 	local flr = sq:getFloor()
 		if flr then
 			flr:setHighlighted(true, true)
-		end
-		return sq ;
+		end ]]
+		return sq 
 	end
 	return nil
 end
