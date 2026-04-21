@@ -3,6 +3,8 @@ ParadiseZ.ZoneVisuals = ParadiseZ.ZoneVisuals or {}
 
 ParadiseZ.ZoneVisuals.enabled = true
 ParadiseZ.ZoneVisuals.highlight = true
+ParadiseZ.ZoneVisuals.area = 0
+ParadiseZ.ZoneVisuals.zName = tostring(SandboxVars.ParadiseZ.OutsideStr)
 
 function ParadiseZ.ZoneVisuals.getData()
     return ModData.get("ParadiseZ_ZoneData") or {}
@@ -32,6 +34,8 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                     if wx >= z.x1 and wx <= z.x2 and wy >= z.y1 and wy <= z.y2 then
                         isHovered = true
                         zName = ParadiseZ.getZoneName(wx, wy)
+                        ParadiseZ.ZoneVisuals.zName = zName   
+                        ParadiseZ.ZoneVisuals.area = math.abs((z.x2 - z.x1) * (z.y2 - z.y1))
                     end
                 end
 
@@ -40,25 +44,49 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                     r, g, b, a = 1, 1, 1, 1
                 end
 
-                local fillA = 0.02
+                local fillA = 0.03
                 local borderA = 0.25
                 local borderThickness = 1
 
                 if isHovered then
-                    fillA = 0.03
+                    fillA = 0.04
                     borderA = 0.8
-                    borderThickness = 3
+                    borderThickness = 3       
                 end
 
                 if isometric then
 
+                    local zoom = math.floor(self.mapAPI:getZoomF())
+
+                    local minZoom = 11
+                    local maxZoom = 24
+
+                    local minAlpha = 0.06
+                    local maxAlpha = 0.40
+
+                    local t = (zoom - minZoom) / (maxZoom - minZoom)
+                    if t < 0 then t = 0 end
+                    if t > 1 then t = 1 end
+
+                    local zoomAlpha = maxAlpha + (minAlpha - maxAlpha) * t
+
                     local area = math.abs((z.x2 - z.x1) * (z.y2 - z.y1))
 
-                    if area > 20000 then
-                        fillA = 0
-                    elseif area > 5000 then
-                        fillA = 0.005
+                    local maxArea = 10000
+                    local areaT = 1 - (area / maxArea)
+                    if areaT < 0 then areaT = 0 end
+                    if areaT > 1 then areaT = 1 end
+
+                    local finalAlpha = zoomAlpha * (0.3 + 0.7 * areaT)
+
+                    local baseFill = isHovered and 0.04 or 0.03
+
+                    if area < maxArea then
+                        fillA = finalAlpha
+                    else
+                        fillA = baseFill
                     end
+                    --local stepAdjust = luautils.round(0.3 - ParadiseZ.getPercent(zoom, 1, 24) / 50 * zoom, 3)
 
                     local x1y1x = self.mapAPI:worldToUIX(z.x1, z.y1)
                     local x1y1y = self.mapAPI:worldToUIY(z.x1, z.y1)
@@ -89,7 +117,7 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
                                     x2y1x + off, x2y1y - off,
                                     x2y2x + off, x2y2y + off,
                                     x1y2x - off, x1y2y + off,
-                                    r, g, b, fillA--borderA
+                                    r, g, b, fillA
                                 )
                             end
                         end
@@ -132,6 +160,8 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
         local font = UIFont.Small
         if zName ~= SandboxVars.ParadiseZ.OutsideStr then
             font = UIFont.Large
+        else
+            ParadiseZ.ZoneVisuals.area = 0
         end
 
         local offsetX = SandboxVars.ParadiseZmapVisual.offsetX
@@ -147,9 +177,20 @@ function ParadiseZ.ZoneVisuals.drawWorldMap(self)
 
         if isInvertedX then drawX = mx - offsetX end
         if isInvertedY then drawY = my - offsetY end
-
+        
         if ParadiseZ.ZoneVisuals.enabled2 then
             self:drawText(zName, drawX, drawY, colR, colG, colB, 1, font)
+            if getCore():getDebug() then 
+                local zoom = round(self.mapAPI:getZoomF())
+                local area = round(ParadiseZ.ZoneVisuals.area)
+                coordStr = tostring(coordStr) 
+                .."\nArea: ".. tostring(area) 
+                .."\nZoom: ".. tostring(zoom)
+                .."\nRes: ".. tostring(0.08)
+  
+            end
+            
+            self.mapAPI:getZoomF()
             self:drawText(tostring(coordStr), drawX, drawY + 15, colR, colG, colB, 1, UIFont.Medium)
         end
     end

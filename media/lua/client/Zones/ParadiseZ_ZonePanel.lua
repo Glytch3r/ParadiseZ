@@ -1080,7 +1080,7 @@ function ParadiseZ.ZoneEditorWindow:update()
         self.btnSpecial:setImage(getFlagTexture("ParadiseZ_Zone_Special", false))
         self.btnTrade:setImage(getFlagTexture("ParadiseZ_Zone_Trade", false))
         self.btnSprint:setImage(getFlagTexture("ParadiseZ_Zone_Sprint", false))
-        --**
+        
         
         self.btnDelete:setImage(delete_TEX_OFF)
         self.btnTeleport:setImage(TP_TEX_OFF)

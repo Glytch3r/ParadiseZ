@@ -1,5 +1,13 @@
 ParadiseZ = ParadiseZ or {}
 
+function ParadiseZ.getPercent(value, min, max)
+    if max == min then return 1 end
+    local t = (value - min) / (max - min)
+    if t < 0 then t = 0 end
+    if t > 1 then t = 1 end
+    return t
+end
+
 ParadiseZ.ZoneColorList = {
     HQ = { r = 0, g = 0, b = 1 },
     Outside = { r = 1, g = 0.4, b = 0 },
