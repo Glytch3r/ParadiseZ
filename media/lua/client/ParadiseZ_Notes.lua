@@ -1,6 +1,5 @@
 ParadiseZ = ParadiseZ or {}
-ParadiseZ.noteTags = ParadiseZ.noteTags or {}
-
+SquareString._groups["Notes"] = {}
 function ParadiseZ.textModal(text, callback, target, player, param1, param2)
     local entry = nil
 
@@ -113,10 +112,11 @@ Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.noteContext)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.noteContext)
 
 local ticks = 0
-
 function ParadiseZ.noteHover(pl)
     ticks = ticks + 1
     if ticks % 3 == 0 then
+        SquareString._groups["Notes"] = SquareString._groups["Notes"] or {}
+        local group = SquareString._groups["Notes"]
         if not pl then return end    
         local sq = ParadiseZ.getPointer()
         if not sq then return end
@@ -126,10 +126,12 @@ function ParadiseZ.noteHover(pl)
         if note ~= nil then 
             local x, y, z = round(sq:getX()),  round(sq:getY()),  sq:getZ()
             if x and y and z then
-                SquareString.addSqStr(tostring(note), x, y, z, r, g, b, font, xOffset, yOffset, visibility, ParadiseZ.noteTags)      
+                --if not SquareString.getSqStr(x, y, z, group) then
+                    SquareString.addSqStr(tostring(note), x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)      
+                --end
             end
         else
-            SquareString.clearAllTags(ParadiseZ.noteTags)
+            SquareString.clearAllTags(group)
         end
     end
 end

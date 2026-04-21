@@ -1,9 +1,26 @@
-
 SquareString = SquareString or {}
-SquareString._tags = {}
+
+SquareString._groups = SquareString._groups or {}
+SquareString._activeGroup = SquareString._activeGroup or "default"
+
+function SquareString.getGroup(group)
+    group = group or SquareString._activeGroup
+    SquareString._groups[group] = SquareString._groups[group] or {}
+    return SquareString._groups[group]
+end
+
+function SquareString.setActiveGroup(group)
+    SquareString._activeGroup = group
+end
+
+
+
+
+
 function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
     if not isIngameState() then return nil end
-    group = group or SquareString._tags
+
+    local gTable = SquareString.getGroup(group)
 
     if x == nil or y == nil or z == nil then
         local player = getPlayer()
@@ -18,36 +35,38 @@ function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, vi
     xOffset = xOffset or 0
     yOffset = yOffset or 0
     visibility = visibility or 360
-    
+
     local tag = TextDrawObject.new()
     tag:setDefaultFont(font)
     tag:ReadString(font, tostring(str), -1)
     tag:setDefaultColors(r, g, b)
     tag:setVisibleRadius(visibility)
-    group[tag] = {
+
+    gTable[tag] = {
         x = x, y = y, z = z,
         r = r, g = g, b = b,
-        xOffset = xOffset, yOffset = yOffset
+        xOffset = xOffset,
+        yOffset = yOffset
     }
+
     return tag
 end
 
-
-
 function SquareString.delTagObj(tagObj, group)
-    group = group or SquareString._tags
-    if group[tagObj] then
-        group[tagObj] = nil
+    local gTable = SquareString.getGroup(group)
+    if gTable[tagObj] then
+        gTable[tagObj] = nil
         return true
     end
     return false
 end
 
+
 function SquareString.delSqStr(x, y, z, group)
-    group = group or SquareString._tags
-    for tag, data in pairs(group) do
+    local gTable = SquareString.getGroup(group)
+    for tag, data in pairs(gTable) do
         if data.x == x and data.y == y and data.z == z then
-            group[tag] = nil
+            gTable[tag] = nil
             return true
         end
     end
@@ -55,8 +74,8 @@ function SquareString.delSqStr(x, y, z, group)
 end
 
 function SquareString.getSqStr(x, y, z, group)
-    group = group or SquareString._tags
-    for tag, data in pairs(group) do
+    local gTable = SquareString.getGroup(group)
+    for tag, data in pairs(gTable) do
         if data.x == x and data.y == y and data.z == z then
             return tag
         end
@@ -65,23 +84,53 @@ function SquareString.getSqStr(x, y, z, group)
 end
 
 function SquareString.clearAllTags(group)
-    group = group or SquareString._tags
-    for tag in pairs(group) do
-        group[tag] = nil
+    local gTable = SquareString.getGroup(group)
+    for tag in pairs(gTable) do
+        gTable[tag] = nil
     end
 end
 
-function SquareString.renderAllTags(group)
-    group = group or SquareString._tags
+function SquareString.renderAllTags()
     if not isIngameState() then return end
+
     local zoom = getCore():getZoom(0)
-    for tag, data in pairs(group) do
-        local screenX = (IsoUtils.XToScreen(data.x + data.xOffset, data.y, data.z, 0) - IsoCamera.getOffX()) / zoom 
-        local screenY = (IsoUtils.YToScreen(data.x + data.yOffset, data.y, data.z, 0) - IsoCamera.getOffY()) / zoom
-        tag:AddBatchedDraw(screenX, screenY, data.r, data.g, data.b, 1, false)
+
+    for _, gTable in pairs(SquareString._groups) do
+        for tag, data in pairs(gTable) do
+            local screenX = (IsoUtils.XToScreen(data.x + data.xOffset, data.y, data.z, 0) - IsoCamera.getOffX()) / zoom
+            local screenY = (IsoUtils.YToScreen(data.x, data.y + data.yOffset, data.z, 0) - IsoCamera.getOffY()) / zoom
+            tag:AddBatchedDraw(screenX, screenY, data.r, data.g, data.b, 1, false)
+        end
     end
 end
+
 Events.OnPostRender.Remove(SquareString.renderAllTags)
 Events.OnPostRender.Add(SquareString.renderAllTags)
+--[[ 
+SquareString._groups["Notes"] = {}
+
+local pl = getPlayer()
+local sq = ParadiseZ.getPointer()
+local x, y, z = round(sq:getX()),  round(sq:getY()),  sq:getZ()
+if not (x and y and z) then return end
+SquareString.addSqStr(note, x, y, z, r, g, b, font, xOffset, yOffset, visibility, SquareString._groups["Notes"])
+SquareString.clearAllTags(SquareString._groups["Notes"])
+ ]]
+
 
 -----------------------            ---------------------------
+--[[ 
+local zoom = getCore():getZoom(0)
+local pl = getPlayer()
+local x, y, z = round(pl:getX()),  round(pl:getY()),  pl:getZ() or 0
+if not (x and y and z) then return end
+local tag = TextDrawObject.new()
+local tagX = (IsoUtils.XToScreen(x, y, z, 0) - IsoCamera.getOffX()) / zoom
+local tagY = (IsoUtils.YToScreen(x, y, z, 0) - IsoCamera.getOffY() - 130) / zoom
+
+local mpc = getCore():getMpTextColor()
+tag:setDefaultColors(mpc:getR(), mpc:getG(), mpc:getB())
+tag:setVisibleRadius(180)
+tag:ReadString(UIFont.Large, tostring('msg'), -1)
+tag:AddBatchedDraw(tagX, tagY, true, 1)
+ ]]
