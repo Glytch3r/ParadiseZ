@@ -23,6 +23,30 @@
 ParadiseZ = ParadiseZ or {}
 --client\ParadiseZ_Color.lua
 
+ParadiseZ.ZoneColorList = {
+    HQ = { r = 0, g = 0, b = 1 },
+    Outside = { r = 1, g = 0.4, b = 0 },
+    Zone = { r = 1, g = 1, b = 1 },
+    NonPvp = { r = 0, g = 1, b = 0 },
+    PvP = { r = 0.9, g = 0.2, b = 0.2 },
+    Blocked = { r = 0.13, g = 0.13, b = 0.13 },
+    Protected = { r = 0.84, g = 0.76, b = 0.67 },
+    Radiation = { r = 1, g = 1, b = 1 },
+    Hunt = { r = 1, g = 0, b = 0 },
+    Blaze = { r = 1, g = 0, b = 0 },
+    Frost = { r = 0.5, g = 0.4, b = 1 },
+    Bomb = { r = 1, g = 0, b = 0 },
+    MineField = { r = 1, g = 0, b = 0 },
+    NoCamp = { r = 0.7, g = 0.7, b = 0.7 },
+    NoFire = { r = 0.8, g = 0.8, b = 0.8 },
+    Cage = { r = 0.7, g = 0.7, b = 0.7 },
+    Party = { r = 1, g = 1, b = 0.6 },
+    Rally = { r = 0, g = 1, b = 0 },
+    Special = { r = 0.9, g = 0.4, b = 0.9 },
+    Trade = { r = 0, g = 1, b = 0 },
+    Sprint = { r = 1, g = 0.7, b = 0.7 },
+}
+
 ParadiseZ.colorValues = {
     { r = 0.5, g = 0.5, b = 0.5 }, --1 Gray
     { r = 1, g = 0, b = 0 },       --2 Red
