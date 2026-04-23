@@ -60,7 +60,35 @@ function SquareString.delTagObj(tagObj, group)
     return false
 end
 
+function SquareString.delBySquare(sq, group)
+    if not sq then return false end
 
+    local x, y, z = sq:getX(), sq:getY(), sq:getZ()
+    local gTable = SquareString.getGroup(group)
+
+    for tag, data in pairs(gTable) do
+        if data.x == x and data.y == y and data.z == z then
+            gTable[tag] = nil
+            return true
+        end
+    end
+
+    return false
+end
+function SquareString.hasTagAtSquare(sq, group)
+    if not sq then return false end
+
+    local x, y, z = sq:getX(), sq:getY(), sq:getZ()
+    local gTable = SquareString.getGroup(group)
+
+    for _, data in pairs(gTable) do
+        if data.x == x and data.y == y and data.z == z then
+            return true
+        end
+    end
+
+    return false
+end
 function SquareString.delSqStr(x, y, z, group)
     local gTable = SquareString.getGroup(group)
     for tag, data in pairs(gTable) do

@@ -48,20 +48,33 @@ function ParadiseZ.getNoteColor(sq)
 end
 
 function ParadiseZ.showNote(sq)
+    if not sq then return end
+
+    local group = "Notes"
     local x, y, z = round(sq:getX()), round(sq:getY()), sq:getZ()
-    if x and y and z then
-        local note = ParadiseZ.getNote(sq)
-        local group = SquareString._groups["Notes"]
-        SquareString.addSqStr(tostring(note), x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
-    end
+    if not (x and y and z) then return end
+
+    if SquareString.getSqStr(x, y, z, group) then return end
+
+    local note = ParadiseZ.getNote(sq)
+    local col = ParadiseZ.getNoteColor(sq) or {r=1,g=1,b=1}
+
+    SquareString.addSqStr(
+        tostring(note),
+        x, y, z,
+        col.r, col.g, col.b,
+        UIFont.NewLarge,
+        0, 0,
+        360,
+        group
+    )
 end
 
 local ticks = 0
 function ParadiseZ.noteHover(pl)
     ticks = ticks + 1
     if ticks % 3 == 0 then
-        SquareString._groups["Notes"] = SquareString._groups["Notes"] or {}
-        local group = SquareString._groups["Notes"]
+        local group = "Notes"
         if not pl then return end
         local sq = ParadiseZ.getPointer()
         if not sq then return end
@@ -69,7 +82,9 @@ function ParadiseZ.noteHover(pl)
         if ParadiseZ.isHasNote(sq) then
             ParadiseZ.showNote(sq)
         else
-            --SquareString.clearAllTags(group)
+            if SquareString.hasTagAtSquare(sq, group) then
+                SquareString.delBySquare(sq, group)
+            end
         end
 
         local rad = 5
@@ -79,12 +94,15 @@ function ParadiseZ.noteHover(pl)
                 local sq2 = pl:getCell():getOrCreateGridSquare(x + xDelta, y + yDelta, z)    
                 if ParadiseZ.isHasNote(sq2) then
                     ParadiseZ.showNote(sq2)
+                else
+                    if SquareString.hasTagAtSquare(sq2, group) then
+                        SquareString.delBySquare(sq2, group)
+                    end
                 end
             end
         end
     end
 end
-
 Events.OnPlayerUpdate.Remove(ParadiseZ.noteHover)
 Events.OnPlayerUpdate.Add(ParadiseZ.noteHover)
 -----------------------            ---------------------------
