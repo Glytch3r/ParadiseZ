@@ -15,8 +15,8 @@ module ParadiseZ {
     
 	model duck_jim
     {
-		mesh = WorldItems/Ducks/duck_jim,
-        texture = duck_jim,
+		mesh = WorldItems/duck_jim,
+        texture = Ducks/duck_jim,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -32,8 +32,8 @@ module ParadiseZ {
 
 	model duck_goro
     {
-		mesh = WorldItems/Ducks/duck_goro,
-        texture = duck_goro,
+		mesh = WorldItems/duck_goro,
+        texture = Ducks/duck_goro,
         scale = 0.9,
     }
      
@@ -50,8 +50,8 @@ module ParadiseZ {
 
 	model duck_tenorphans
     {
-		mesh = WorldItems/Ducks/duck_tenorphans,
-        texture = duck_tenorphans,
+		mesh = WorldItems/duck_tenorphans,
+        texture = Ducks/duck_tenorphans,
         scale = 0.8,
     }
     /*  -----------------------           --------------------------- */
@@ -68,8 +68,8 @@ module ParadiseZ {
     
 	model duck_glytch3r
     {
-		mesh = WorldItems/Ducks/duck_glytch3r,
-        texture = duck_glytch3r,
+		mesh = WorldItems/duck_glytch3r,
+        texture = Ducks/duck_glytch3r,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -85,8 +85,8 @@ module ParadiseZ {
 
 	model duck_kit
     {
-		mesh = WorldItems/Ducks/duck_kit,
-        texture = duck_kit,
+		mesh = WorldItems/duck_kit,
+        texture = Ducks/duck_kit,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -103,8 +103,8 @@ module ParadiseZ {
 
 	model duck_fooze
     {
-		mesh = WorldItems/Ducks/duck_fooze,
-        texture = duck_fooze,
+		mesh = WorldItems/duck_fooze,
+        texture = Ducks/duck_fooze,
         scale = 0.8,
     }
 
@@ -122,8 +122,8 @@ module ParadiseZ {
 
 	model duck_sierra
     {
-		mesh = WorldItems/Ducks/duck_sierra,
-        texture = duck_sierra,
+		mesh = WorldItems/duck_sierra,
+        texture = Ducks/duck_sierra,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -141,8 +141,8 @@ module ParadiseZ {
 
 	model duck_gameaholic
     {
-		mesh = WorldItems/Ducks/duck_gameaholic,
-        texture = duck_gameaholic,
+		mesh = WorldItems/duck_gameaholic,
+        texture = Ducks/duck_gameaholic,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -160,8 +160,8 @@ module ParadiseZ {
 
 	model duck_duke
     {
-		mesh = WorldItems/Ducks/duck_duke,
-        texture = duck_duke,
+		mesh = WorldItems/duck_duke,
+        texture = Ducks/duck_duke,
         scale = 0.8,
     }
 
@@ -180,8 +180,8 @@ module ParadiseZ {
 
 	model duck_waterbottle
     {
-		mesh = WorldItems/Ducks/duck_waterbottle,
-        texture = duck_waterbottle,
+		mesh = WorldItems/duck_waterbottle,
+        texture = Ducks/duck_waterbottle,
         scale = 0.8,
     }
     /*  -----------------------            --------------------------- */
@@ -199,8 +199,8 @@ module ParadiseZ {
 
 	model duck_jayne
     {
-		mesh = WorldItems/Ducks/duck_jayne,
-        texture = duck_jayne,
+		mesh = WorldItems/duck_jayne,
+        texture = Ducks/duck_jayne,
         scale = 0.8,
     }
 
@@ -219,13 +219,31 @@ module ParadiseZ {
 
 	model duck_odin
     {
-		mesh = WorldItems/Ducks/duck_odin,
-        texture = duck_odin,
+		mesh = WorldItems/duck_odin,
+        texture = Ducks/duck_odin,
         scale = 0.8,
     }
 
 
 
 
+    /*  -----------------------            --------------------------- */
+
+   	item Duckhunt_kashi
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 127,
+        Icon	=  duck_kashi,
+        WorldStaticModel = duck_kashi,
+    }
+
+	model duck_kashi
+    {
+		mesh = WorldItems/duck_kashi,
+        texture = Ducks/duck_kashi,
+        scale = 0.8,
+    }
 
 }
