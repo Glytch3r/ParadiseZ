@@ -16,7 +16,6 @@ end
 
 
 
-
 function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
     if not isIngameState() then return nil end
 

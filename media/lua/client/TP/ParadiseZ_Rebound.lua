@@ -11,8 +11,9 @@ function ParadiseZ.doRegularTp(pl, x, y, z)
     if pl:getVehicle() then
         ParadiseZ.forceExitCar()
     end
-    if not x or not y or not z then return end
-    ParadiseZ.doTp(pl, x, y, z)
+    if x and y and z then 
+        ParadiseZ.doTp(pl, x, y, z)
+    end
 end
 
 function ParadiseZ.spawnRebound()

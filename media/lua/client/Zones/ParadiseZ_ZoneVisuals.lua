@@ -2,6 +2,7 @@ ParadiseZ = ParadiseZ or {}
 ParadiseZ.ZoneVisuals = ParadiseZ.ZoneVisuals or {}
 
 ParadiseZ.ZoneVisuals.enabled = true
+ParadiseZ.ZoneVisuals.enabled2 = true
 ParadiseZ.ZoneVisuals.highlight = true
 ParadiseZ.ZoneVisuals.area = 0
 ParadiseZ.ZoneVisuals.zName = tostring(SandboxVars.ParadiseZ.OutsideStr)

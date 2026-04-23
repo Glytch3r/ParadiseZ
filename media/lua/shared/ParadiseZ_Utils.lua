@@ -103,4 +103,3 @@ function ParadiseZ.doRoll(percent)
     if percent == 0 then return false end
 	return percent >= ZombRand(1, 101)
 end
-
