@@ -6,6 +6,12 @@ option ParadiseZ.EveryoneCanWriteNotes
 	page = ParadiseZ, translation = ParadiseZ_EveryoneCanWriteNotes,
 }
 
+option ParadiseZ.NotesVisibilityDistance
+{
+	type = integer, min = 0, max = 500, default = 5,
+	page = ParadiseZ, translation = ParadiseZ_NotesVisibilityDistance,
+}
+
 option ParadiseZ.ClonerDisplayName
 {
 	type = boolean, default = true,

@@ -13,18 +13,15 @@ function SquareString.setActiveGroup(group)
     SquareString._activeGroup = group
 end
 
-
-
-
 function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
     if not isIngameState() then return nil end
 
     local gTable = SquareString.getGroup(group)
 
     if x == nil or y == nil or z == nil then
-        local player = getPlayer()
-        if not player then return nil end
-        local sq = player:getSquare()
+        local pl = getPlayer()
+        if not pl then return nil end
+        local sq = pl:getSquare()
         if not sq then return nil end
         x, y, z = sq:getX(), sq:getY(), sq:getZ()
     end
@@ -45,7 +42,8 @@ function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, vi
         x = x, y = y, z = z,
         r = r, g = g, b = b,
         xOffset = xOffset,
-        yOffset = yOffset
+        yOffset = yOffset,
+        text = tostring(str)
     }
 
     return tag
@@ -75,9 +73,19 @@ function SquareString.delBySquare(sq, group)
 
     return false
 end
+
+function SquareString.getSqStr(x, y, z, group)
+    local gTable = SquareString.getGroup(group)
+    for tag, data in pairs(gTable) do
+        if data.x == x and data.y == y and data.z == z then
+            return tag, data
+        end
+    end
+    return nil
+end
+
 function SquareString.hasTagAtSquare(sq, group)
     if not sq then return false end
-
     local x, y, z = sq:getX(), sq:getY(), sq:getZ()
     local gTable = SquareString.getGroup(group)
 
@@ -88,26 +96,6 @@ function SquareString.hasTagAtSquare(sq, group)
     end
 
     return false
-end
-function SquareString.delSqStr(x, y, z, group)
-    local gTable = SquareString.getGroup(group)
-    for tag, data in pairs(gTable) do
-        if data.x == x and data.y == y and data.z == z then
-            gTable[tag] = nil
-            return true
-        end
-    end
-    return false
-end
-
-function SquareString.getSqStr(x, y, z, group)
-    local gTable = SquareString.getGroup(group)
-    for tag, data in pairs(gTable) do
-        if data.x == x and data.y == y and data.z == z then
-            return tag
-        end
-    end
-    return nil
 end
 
 function SquareString.clearAllTags(group)
@@ -133,31 +121,3 @@ end
 
 Events.OnPostRender.Remove(SquareString.renderAllTags)
 Events.OnPostRender.Add(SquareString.renderAllTags)
---[[ 
-SquareString._groups["Notes"] = {}
-
-local pl = getPlayer()
-local sq = ParadiseZ.getPointer()
-local x, y, z = round(sq:getX()),  round(sq:getY()),  sq:getZ()
-if not (x and y and z) then return end
-SquareString.addSqStr(note, x, y, z, r, g, b, font, xOffset, yOffset, visibility, SquareString._groups["Notes"])
-SquareString.clearAllTags(SquareString._groups["Notes"])
- ]]
-
-
------------------------            ---------------------------
---[[ 
-local zoom = getCore():getZoom(0)
-local pl = getPlayer()
-local x, y, z = round(pl:getX()),  round(pl:getY()),  pl:getZ() or 0
-if not (x and y and z) then return end
-local tag = TextDrawObject.new()
-local tagX = (IsoUtils.XToScreen(x, y, z, 0) - IsoCamera.getOffX()) / zoom
-local tagY = (IsoUtils.YToScreen(x, y, z, 0) - IsoCamera.getOffY() - 130) / zoom
-
-local mpc = getCore():getMpTextColor()
-tag:setDefaultColors(mpc:getR(), mpc:getG(), mpc:getB())
-tag:setVisibleRadius(180)
-tag:ReadString(UIFont.Large, tostring('msg'), -1)
-tag:AddBatchedDraw(tagX, tagY, true, 1)
- ]]

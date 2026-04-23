@@ -20,8 +20,25 @@
 -----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
 ----------------------------------------------------------------
 
-ParadiseZ = ParadiseZ or {}
 --client\ParadiseZ_Color.lua
+ParadiseZ = ParadiseZ or {}
+
+function ParadiseZ.promptColor(onDone)
+    local x = getMouseX()
+    local y = getMouseY()
+
+    local picker = ISColorPicker:new(x, y)
+    picker:initialise()
+    picker:addToUIManager()
+
+    picker:setPickedFunc(function(target, color, mouseUp)
+        if not color then return end
+        if onDone then
+            onDone(color.r, color.g, color.b)
+        end
+    end)
+end
+
 
 ParadiseZ.ZoneColorList = {
     HQ = { r = 0, g = 0, b = 1 },
