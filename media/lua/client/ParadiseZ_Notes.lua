@@ -170,14 +170,15 @@ Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.noteContext)
 
 
 -----------------------            ---------------------------
-
 function ParadiseZ.syncNotes(pl)
     if not pl then return end
 
     local group = "Notes"
     local gTable = SquareString.getGroup(group)
 
-    local px, py, pz = pl:getX(), pl:getY(), pl:getZ()
+    local px = math.floor(pl:getX())
+    local py = math.floor(pl:getY())
+    local pz = pl:getZ()
 
     local rad = SandboxVars.ParadiseZ.NotesVisibilityDistance or 5
     local radSq = rad * rad
@@ -185,7 +186,9 @@ function ParadiseZ.syncNotes(pl)
     local hoverSq = ParadiseZ.getPointer()
     local hx, hy, hz = nil, nil, nil
     if hoverSq then
-        hx, hy, hz = hoverSq:getX(), hoverSq:getY(), hoverSq:getZ()
+        hx = hoverSq:getX()
+        hy = hoverSq:getY()
+        hz = hoverSq:getZ()
     end
 
     local visible = {}
@@ -267,7 +270,6 @@ end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.syncNotes)
 Events.OnPlayerUpdate.Add(ParadiseZ.syncNotes)
-
 -----------------------            ---------------------------
 --[[ 
 

@@ -11,9 +11,8 @@ function ParadiseZ.doRegularTp(pl, x, y, z)
     if pl:getVehicle() then
         ParadiseZ.forceExitCar()
     end
-    if x and y and z then 
-        ParadiseZ.doTp(pl, x, y, z)
-    end
+    if not x or not y or not z then return end
+    ParadiseZ.doTp(pl, x, y, z)
 end
 
 function ParadiseZ.spawnRebound()
@@ -22,17 +21,21 @@ function ParadiseZ.spawnRebound()
     if not pl then return false end
     local md = pl:getModData()
     local x, y, z = round(pl:getX()),  round(pl:getY()),  pl:getZ()
-    local zName = ParadiseZ.getZoneName(pl)
-    local isInitRestricted = ParadiseZ.isRestrictedCoord(pl, x, y) and ParadiseZ.isXYZoneInner(x, y, zName)
     if md['Rebound'] == nil then
-        ParadiseZ.saveRebound(pl, zName, isInitRestricted)
+        local isInit = ParadiseZ.isRestrictedCoord(pl, x, y) and ParadiseZ.isXYZoneInner(x, y, zName)
+        ParadiseZ.saveRebound(pl, zName, isInit)
     end
-    local tx = md['Rebound'].x
-    local ty = md['Rebound'].y
-    local tzName = md['Rebound'].name
-    local isTargRestricted = ParadiseZ.isRestrictedCoord(pl, tx, ty) and ParadiseZ.isXYZoneInner(tx, ty, tzName)
-    if isTargRestricted then
-        ParadiseZ.saveRebound(pl, zName, isTargRestricted)
+    if ParadiseZ.checkRestrictions(pl) then
+        local x, y, z = ParadiseZ.getLastCoord(pl, false)
+        if not x or not y or not z then return false end
+        if ParadiseZ.isRestrictedCoord(pl, x, y) then
+            x, y, z = ParadiseZ.getFallbackCoord()
+        end
+        if not x or not y or not z then return false end
+        ParadiseZ.doRegularTp(pl, x, y, z)
+        timer:Simple(3, function() 
+            pl:Say(tostring('Not Allowed From Spawned Location')) 
+        end)
     end
 end
 Events.OnCreatePlayer.Remove(ParadiseZ.spawnRebound)
@@ -61,17 +64,15 @@ function ParadiseZ.saveRebound(pl, zName, isInit)
 
     if isInit then
         local x, y, z = ParadiseZ.parseCoords()
-        zName = ParadiseZ.getZoneName(x, y)
         tab = {
             name = zName,
             x = round(x),
             y = round(y),
             z = z,
-            ax = ParadiseZ.roundN(x, 3),
-            ay = ParadiseZ.roundN(y, 3)
+            ax = ParadiseZ.roundN(pl:getX(), 3),
+            ay = ParadiseZ.roundN(pl:getY(), 3)
         }
     end
-
     md['Rebound'] = tab
     return tab
 
@@ -163,7 +164,10 @@ function ParadiseZ.reboundHandler(pl)
         local sq = getCell():getOrCreateGridSquare(plX, plY, pl:getZ()) 
         if not sq then return end 
         local zName = ParadiseZ.getZoneName(pl) or ParadiseZ.getSqZoneName(sq) 
-        if not zName or zName == tostring(SandboxVars.ParadiseZ.OutsideStr) then return end
+        if not zName then return end
+        if zName == tostring(SandboxVars.ParadiseZ.OutsideStr) then 
+            ParadiseZ.saveRebound(pl, zName)
+        end
         local isRestricted = ParadiseZ.checkRestrictions(pl)
 
 
