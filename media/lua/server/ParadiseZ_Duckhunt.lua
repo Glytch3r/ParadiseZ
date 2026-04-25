@@ -12,10 +12,10 @@ ParadiseZ.duckItems =  {
     "duke",
     "waterbottle",
     "jaynie",
-    "kashi",
     "odin",
-    --"nate",
-    --"shyguy",
+    "kashi",
+    "nate",
+    "shyguy",
 }
 
 function ParadiseZ.duckDrop(zed)

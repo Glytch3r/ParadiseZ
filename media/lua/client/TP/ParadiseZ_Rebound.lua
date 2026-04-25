@@ -7,12 +7,12 @@ LuaEventManager.AddEvent("OnZoneCrossed")
 
 
 function ParadiseZ.doRegularTp(pl, x, y, z)
-    if not pl then return end
+    if not pl then return false end
     if pl:getVehicle() then
         ParadiseZ.forceExitCar()
     end
-    if not x or not y or not z then return end
-    ParadiseZ.doTp(pl, x, y, z)
+    if not x or not y or not z then return false end
+    return ParadiseZ.doTp(pl, x, y, z)
 end
 
 function ParadiseZ.spawnRebound()
@@ -21,6 +21,7 @@ function ParadiseZ.spawnRebound()
     if not pl then return false end
     local md = pl:getModData()
     local x, y, z = round(pl:getX()),  round(pl:getY()),  pl:getZ()
+    local zName = ParadiseZ.getZoneName(x, y)
     if md['Rebound'] == nil then
         local isInit = ParadiseZ.isRestrictedCoord(pl, x, y) and ParadiseZ.isXYZoneInner(x, y, zName)
         ParadiseZ.saveRebound(pl, zName, isInit)
@@ -69,8 +70,8 @@ function ParadiseZ.saveRebound(pl, zName, isInit)
             x = round(x),
             y = round(y),
             z = z,
-            ax = ParadiseZ.roundN(pl:getX(), 3),
-            ay = ParadiseZ.roundN(pl:getY(), 3)
+            ax = ParadiseZ.roundN(x, 3),
+            ay = ParadiseZ.roundN(y, 3)
         }
     end
     md['Rebound'] = tab
@@ -110,17 +111,8 @@ end
 function ParadiseZ.isRestricted(pl)
     pl = pl or getPlayer()
     if not pl then return false end
-    if instanceof(pl, "IsoGridSquare") then
-        return false
-    end
-    local zName = ParadiseZ.getZoneName(sq)
-    local x, y = ParadiseZ.getXY(pl)
-    --if ParadiseZ.isXYZoneInner(x, y, zName) then
-        if ParadiseZ.checkRestrictions(pl) then
-            return true
-        end
-    --end
-    return false
+    if instanceof(pl, "IsoGridSquare") then return false end
+    return ParadiseZ.checkRestrictions(pl) == true
 end
 
 function ParadiseZ.doRebound(pl, isChat)

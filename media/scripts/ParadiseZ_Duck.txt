@@ -187,20 +187,20 @@ module ParadiseZ {
     /*  -----------------------            --------------------------- */
 
 
-   	item Duckhunt_jayne
+   	item Duckhunt_jaynie
     {
         DisplayCategory = Junk,
         Weight   =   0.1,
         Type    =   Normal,
         DisplayName = Duck hunt 125,
-        Icon	=  duck_jayne,
-        WorldStaticModel = duck_jayne,
+        Icon	=  duck_jaynie,
+        WorldStaticModel = duck_jaynie,
     }
 
-	model duck_jayne
+	model duck_jaynie
     {
-		mesh = WorldItems/duck_jayne,
-        texture = Ducks/duck_jayne,
+		mesh = WorldItems/duck_jaynie,
+        texture = Ducks/duck_jaynie,
         scale = 0.8,
     }
 
@@ -243,6 +243,46 @@ module ParadiseZ {
     {
 		mesh = WorldItems/duck_kashi,
         texture = Ducks/duck_kashi,
+        scale = 0.8,
+    }
+
+
+   /*  -----------------------            --------------------------- */
+
+   	item Duckhunt_nate
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 128,
+        Icon	=  duck_nate,
+        WorldStaticModel = duck_nate,
+    }
+
+	model duck_nate
+    {
+		mesh = WorldItems/duck_nate,
+        texture = Ducks/duck_nate,
+        scale = 0.8,
+    }
+
+
+   /*  -----------------------            --------------------------- */
+
+   	item Duckhunt_shyguy
+    {
+        DisplayCategory = Junk,
+        Weight   =   0.1,
+        Type    =   Normal,
+        DisplayName = Duck hunt 129,
+        Icon	=  duck_shyguy,
+        WorldStaticModel = duck_shyguy,
+    }
+
+	model duck_shyguy
+    {
+		mesh = WorldItems/duck_shyguy,
+        texture = Ducks/duck_shyguy,
         scale = 0.8,
     }
 

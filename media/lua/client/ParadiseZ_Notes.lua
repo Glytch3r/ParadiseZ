@@ -154,7 +154,7 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
             end
             getSoundManager():playUISound("UIActivateMainMenuItem")
             context:hideAndChildren()
-        end)
+        end)  
         WriteOpt.iconTexture = getTexture("media/ui/Paradise/context_noteWrite.png")    
 
         if note ~= nil and note ~= "" and note ~= " " then
@@ -191,7 +191,7 @@ function ParadiseZ.syncNotes(pl)
         hz = hoverSq:getZ()
     end
 
-    local visible = {}
+    local visible = {} 
 
     local function processSquare(x, y, z, force)
         local sq = pl:getCell():getGridSquare(x, y, z)
