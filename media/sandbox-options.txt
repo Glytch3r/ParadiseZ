@@ -1,5 +1,12 @@
 VERSION = 1,
 
+option ParadiseZ.NotesMaxLineWidth
+{
+	type = integer, min = 0, max = 100, default = 20,
+	page = ParadiseZ, translation = ParadiseZ_NotesMaxLineWidth,
+}
+
+
 option ParadiseZ.EveryoneCanWriteNotes
 {
 	type = boolean, default = false,

@@ -46,7 +46,7 @@ function ParadiseZ.getNoteColor(sq)
     if not ParadiseZ.isHasNote(sq) then return nil end
     return sq:getFloor():getModData()['FloorNoteColor'] or {r=1,g=1,b=1}
 end
-
+--[[ 
 function ParadiseZ.showNote(sq)
     if not sq then return end
 
@@ -69,10 +69,11 @@ function ParadiseZ.showNote(sq)
         group
     )
 end
-
+ ]]
 -----------------------            ---------------------------
 
 ParadiseZ.contextOpen = false
+
 function ParadiseZ.noteContext(plNum, context, worldobjects, test)
     local group = "Notes"
     local pl = getSpecificPlayer(plNum)
@@ -83,16 +84,16 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
     local note
     local isHasNote = ParadiseZ.isHasNote(sq)
-    
+    local function noteHighlightRemove()
+        flr:setHighlighted(false)
+        Events.OnKeyPressed.Remove(noteHighlightRemovePress)
+        Events.OnMouseDown.Remove(noteHighlightRemove)
+    end
     if isHasNote then
         note = ParadiseZ.getNote(sq)
         
         flr:setHighlighted(true, false)
-        local function noteHighlightRemove()
-            flr:setHighlighted(false)
-            Events.OnKeyPressed.Remove(noteHighlightRemovePress)
-            Events.OnMouseDown.Remove(noteHighlightRemove)
-        end
+ 
         local function noteHighlightRemovePress(key)
             if key == getCore():getKey("CancelAction") or key == Keyboard.KEY_ESCAPE then
                 noteHighlightRemove()
@@ -106,7 +107,6 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
     if canWrite then
         local WriteCaption = "Write Note"
         
-        
         if note ~= nil then
             
             local DelOpt = context:addOptionOnTop("Delete Note", worldobjects, function()
@@ -115,15 +115,16 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
                     md['FloorNote'] = nil
                     md['FloorNoteColor'] = nil
                     flr:transmitModData()
-                    --SquareString.delBySquare(sq, group)
+                    local x,y,z = sq:getX(), sq:getY(), sq:getZ()
+                    SquareString.hide(x,y,z,"Notes")
                     pl:playSoundLocal("MapRemoveMarking")
+                    noteHighlightRemove()
                 end
                 getSoundManager():playUISound("UIActivateMainMenuItem")
                 context:hideAndChildren()
             end)
             DelOpt.iconTexture = getTexture("media/ui/Paradise/context_noteDel.png")  
 
-            
             WriteCaption = "Edit Note"
 
             local RGBOpt = context:addOptionOnTop("Color Note", worldobjects, function()
@@ -132,7 +133,16 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
                         local md = flr:getModData()
                         md['FloorNoteColor'] = {r=r,g=g,b=b}
                         flr:transmitModData()
+                        local x,y,z = sq:getX(), sq:getY(), sq:getZ()
+                        local note = md['FloorNote']
+                        if note then
+                            SquareString.set("Notes", tostring(note), x,y,z,{
+                                r=r,g=g,b=b,
+                                anchor="bottom"
+                            })
+                        end
                         pl:playSoundLocal("MapAddSymbol")
+                        noteHighlightRemove()
                     end)
                 end
                 getSoundManager():playUISound("UIActivateMainMenuItem")
@@ -145,9 +155,15 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
             if luautils.walkAdj(pl, sq) then
                 ParadiseZ.textModal("Enter value:", function(target, value)
                     if value ~= nil and value ~= "" and value ~= " " then
-                        --SquareString.delBySquare(sq, group)                       
-                        flr:getModData()['FloorNote'] = tostring(value)
+                        local md = flr:getModData()
+                        md['FloorNote'] = tostring(value)
                         flr:transmitModData()
+                        local x,y,z = sq:getX(), sq:getY(), sq:getZ()
+                        local col = md['FloorNoteColor'] or {r=1,g=1,b=1}
+                        SquareString.set("Notes", tostring(value), x,y,z,{
+                            r=col.r,g=col.g,b=col.b,
+                            anchor="bottom"
+                        })
                         pl:playSoundLocal("MapAddNote")
                     end
                 end)
@@ -158,8 +174,8 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
         WriteOpt.iconTexture = getTexture("media/ui/Paradise/context_noteWrite.png")    
 
         if note ~= nil and note ~= "" and note ~= " " then
-            local tooltip = ISToolTip:new();
-            tooltip:initialise();
+            local tooltip = ISToolTip:new()
+            tooltip:initialise()
             tooltip.description = tostring(note)
             WriteOpt.toolTip = tooltip    
         end
@@ -167,9 +183,86 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
 end
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.noteContext)
 Events.OnFillWorldObjectContextMenu.Add(ParadiseZ.noteContext)
-
-
 -----------------------            ---------------------------
+function ParadiseZ.syncNotes(pl)
+    if not pl then return end
+
+    local group = "Notes"
+
+    local px = math.floor(pl:getX())
+    local py = math.floor(pl:getY())
+    local pz = pl:getZ()
+
+    local rad = SandboxVars.ParadiseZ.NotesVisibilityDistance or 5
+    local radSq = rad * rad
+
+    local hoverSq = ParadiseZ.getPointer()
+    local hx, hy, hz = nil, nil, nil
+    if hoverSq then
+        hx = hoverSq:getX()
+        hy = hoverSq:getY()
+        hz = hoverSq:getZ()
+    end
+
+    local visible = {}
+
+    local function processSquare(x, y, z, force)
+        local sq = pl:getCell():getGridSquare(x, y, z)
+        if not sq then return end
+
+        local flr = sq:getFloor()
+        if not flr then return end
+
+        local md = flr:getModData()
+        local note = md and md["FloorNote"]
+        if not note then return end
+
+        local dx = x - px
+        local dy = y - py
+        local distSq = dx*dx + dy*dy
+
+        local inRadius = distSq <= radSq
+        local isHover = (hx and x == hx and y == hy and z == hz)
+
+        if not (force or inRadius or isHover) then return end
+
+        local key = x .. ":" .. y .. ":" .. z
+        visible[key] = true
+
+        local col = md["FloorNoteColor"] or {r=1,g=1,b=1}
+
+        SquareString.set(group, tostring(note), x, y, z, {
+            r = col.r,
+            g = col.g,
+            b = col.b,
+            anchor = "bottom",
+            xOffset = 0,
+            yOffset = 0
+        })
+    end
+
+    for x = px - rad, px + rad do
+        for y = py - rad, py + rad do
+            processSquare(x, y, pz, false)
+        end
+    end
+
+    if hx and hy and hz then
+        processSquare(hx, hy, hz, true)
+    end
+
+    local gTable = SquareString.getGroup(group)
+    for key, entry in pairs(gTable) do
+        if not visible[key] then
+            entry.visible = false
+        end
+    end
+end
+
+Events.OnPlayerUpdate.Remove(ParadiseZ.syncNotes)
+Events.OnPlayerUpdate.Add(ParadiseZ.syncNotes)
+-----------------------            ---------------------------
+--[[ 
 function ParadiseZ.syncNotes(pl)
     if not pl then return end
 
@@ -270,6 +363,7 @@ end
 
 Events.OnPlayerUpdate.Remove(ParadiseZ.syncNotes)
 Events.OnPlayerUpdate.Add(ParadiseZ.syncNotes)
+ ]]
 -----------------------            ---------------------------
 --[[ 
 
