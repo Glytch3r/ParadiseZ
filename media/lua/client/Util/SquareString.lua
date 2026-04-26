@@ -13,9 +13,55 @@ function SquareString.setActiveGroup(group)
     SquareString._activeGroup = group
 end
 
+function SquareString.addLineBreaks(str)
+    if not str or str == "" then return str end
+
+    str = str:gsub("<br%s*/?>", "\n")
+    str = str:gsub("/n", "\n")
+    str = str:gsub("<LINE>", "\n")
+
+    local maxWords = 10
+    local out = {}
+    local line = {}
+    local count = 0
+
+    for word in str:gmatch("%S+") do
+        if word:find("\n") then
+            for part in word:gmatch("[^\n]+") do
+                count = count + 1
+                line[#line + 1] = part
+                if count >= maxWords then
+                    out[#out + 1] = table.concat(line, " ")
+                    line = {}
+                    count = 0
+                end
+            end
+            out[#out + 1] = table.concat(line, " ")
+            line = {}
+            count = 0
+        else
+            count = count + 1
+            line[#line + 1] = word
+            if count >= maxWords then
+                out[#out + 1] = table.concat(line, " ")
+                line = {}
+                count = 0
+            end
+        end
+    end
+
+    if #line > 0 then
+        out[#out + 1] = table.concat(line, " ")
+    end
+
+    return table.concat(out, "\n")
+end
+
+
 function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
     if not isIngameState() then return nil end
-
+    if not str then return nil end
+    str = SquareString.addLineBreaks(str)
     local gTable = SquareString.getGroup(group)
 
     if x == nil or y == nil or z == nil then

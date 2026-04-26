@@ -73,14 +73,14 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
     if pvpDmg and targ == getPlayer() then
         local dmg = ParadiseZ.getPvpWpnDmg(wpn, char)
         local md = targ:getModData()
-        
-        md.LifePoints = math.max(0, (md.LifePoints or 100) - (dmg+bonus))
+        local lowest = 0
+        if pl:isGodMod() then lowest = 1 end
+        md.LifePoints = math.max(lowest, (md.LifePoints or 100) - (dmg+bonus))
         md.LifeBarFlash = 0.4
         if ParadiseZ.doRoll(SandboxVars.ParadiseZpvp.PvPInjuryChance) and isFirearm then
             if not targ:HasTrait('InjuredPvP') then
                 targ:getTraits():add('InjuredPvP')
                 targ:addLineChatElement('PvP Injured')
-
             end
         end
 
@@ -93,7 +93,6 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
-
 
 function ParadiseZ.pvpHeal(player, context, items)
     local pl = getSpecificPlayer(player)
@@ -135,10 +134,126 @@ function ParadiseZ.pvpHeal(player, context, items)
         opt.toolTip = tt
     end
 end
-
 Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.pvpHeal)
 
 
+function ParadiseZ.exploHandler(bomb, sq)
+    if bomb and bomb.getObjectName then
+        local isTrap = bomb:getObjectName()
+        local pl = getPlayer() 
+        if isTrap and isTrap == "IsoTrap" then
+            local dmg = 0
+            if bomb.getExplosionPower then 
+                dmg = bomb:getExplosionPower() 
+            end
+            
+            local rad 
+            if bomb.getExplosionRange then
+                rad = bomb:getExplosionRange()
+            end           
+
+            local isDontDmg = ParadiseZ.isPvE(pl) or ParadiseZ.isPveZone(pl) 
+            if rad and sq then                 
+                local x, y, z = sq:getX(), sq:getY(), sq:getZ()
+                for xDelta = -rad, rad do
+                    for yDelta = -rad, rad do
+                        local sq = pl:getCell():getOrCreateGridSquare(x + xDelta, y + yDelta, z)
+                        for i=0, sq:getMovingObjects():size()-1 do
+                            local zed = sq:getMovingObjects()
+                            if zed and instanceof(zed, "IsoZombie") then
+                                if ParadiseZ.isClosestPl(pl, zed) then
+                                    local zDmg = dmg
+                                    local reduced = math.floor(zDmg * ParadiseZ.checkDist(zed, sq) / rad)
+                                    zDmg = ZombRand(zDmg - reduced, zDmg)
+                                    local newHealth = math.max(0, obj:getHealth() - zDmg)
+                                    obj:setHealth(newHealth)
+                                    obj:update()
+                                end
+                            end
+                        end
+                    end
+                end
+                
+                
+                local checkDist = ParadiseZ.checkDist(pl, sq)
+                local isWithinRange = checkDist and checkDist <= rad
+                if isWithinRange and not isDontDmg then 
+                    local md = pl:getModData()
+                    local reduced = math.floor(dmg * checkDist / rad)
+                    dmg = ZombRand(dmg - reduced, dmg)
+                    local lowest = 0
+                    if pl:isGodMod() then lowest = 1 end
+                    md.LifePoints = math.max(lowest, (md.LifePoints or 100) - dmg)
+                    md.LifeBarFlash = 0.4
+                    if ParadiseZ.doRoll(SandboxVars.ParadiseZpvp.PvPInjuryChance) then
+                        if not pl:HasTrait('InjuredPvP') then
+                            pl:getTraits():add('InjuredPvP')
+                            pl:addLineChatElement('PvP Injured')
+                        end
+                    end
+                    
+                    if md.LifePoints <= 0 then
+                        if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
+                            pl:Kill(pl)
+                        end    
+                    end
+                end
+            end
+            
+
+            if sq then                
+                local zName = ParadiseZ.getZoneName(sq)
+                if zName and zName ~= tostring(SandboxVars.ParadiseZ.OutsideStr) then                    
+                    local zone = ParadiseZ.ZoneData[zName]
+                    if zone then
+                        if zone.isNoFire then
+                            if bomb.setFirePower then bomb:setFirePower(0) end
+                            if bomb.setFireRange then bomb:setFireRange(0) end
+                        end
+                    end
+                end
+            end
+
+            if bomb.setExplosionRange then bomb:setExplosionRange(0) end
+            if bomb.setExtraDamage then bomb:setExtraDamage(0) end            
+            if bomb.setExplosionPower then bomb:setExplosionPower(0) end
+
+        end
+    end
+end
+Events.OnThrowableExplode.Remove(ParadiseZ.exploHandler)
+Events.OnThrowableExplode.Add(ParadiseZ.exploHandler)
+
+--[[
+    if bomb.setSmokeRange then bomb:setSmokeRange(0) end
+    if bomb.setNoiseRange then bomb:setNoiseRange(0) end
+    if bomb.setNoiseDuration then bomb:setNoiseDuration(0) end
+    if bomb.setTimerBeforeExplosion then bomb:setTimerBeforeExplosion(0) end 
+]]
+--[[ 
+function test(bomb, sq)    
+    local pl = getPlayer() 
+    local rad = bomb:getExplosionRange()
+    if rad and sq then 
+        local checkDist = ParadiseZ.checkDist(pl, sq)
+        local isWithinRange = checkDist <= rad
+
+        print('--------------------------------------')
+        print('--------------------------------------')
+
+        print('rad: '..tostring(rad))
+        print('checkDist: '..tostring(checkDist))
+        print('isWithinRange: '..tostring(isWithinRange))
+
+        print('--------------------------------------')
+        print('--------------------------------------')
+
+    end
+    Events.OnThrowableExplode.Remove(test)
+end
+Events.OnThrowableExplode.Add(test)
+
+ ]]
 
 --[[ 
 function ParadiseZ.AvoidDmg(char, targ, wpn, dmg)

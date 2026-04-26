@@ -83,7 +83,7 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
     local isAdm = string.lower(pl:getAccessLevel()) == "admin"
     local note
     local isHasNote = ParadiseZ.isHasNote(sq)
-
+    
     if isHasNote then
         note = ParadiseZ.getNote(sq)
         
@@ -145,7 +145,7 @@ function ParadiseZ.noteContext(plNum, context, worldobjects, test)
             if luautils.walkAdj(pl, sq) then
                 ParadiseZ.textModal("Enter value:", function(target, value)
                     if value ~= nil and value ~= "" and value ~= " " then
-                        --SquareString.delBySquare(sq, group)
+                        --SquareString.delBySquare(sq, group)                       
                         flr:getModData()['FloorNote'] = tostring(value)
                         flr:transmitModData()
                         pl:playSoundLocal("MapAddNote")
