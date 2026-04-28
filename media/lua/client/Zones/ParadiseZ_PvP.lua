@@ -87,12 +87,21 @@ function ParadiseZ.pvpHit(char, targ, wpn, damage)
         if md.LifePoints <= 0 then
             if not SandboxVars.ParadiseZpvp.teleportPvpDeath then   
                 targ:Kill(char)
+                local atkr = char:getUsername()
+                ParadiseZ.Scoreboard[atkr] = ParadiseZ.Scoreboard[atkr] or {}
+                ParadiseZ.Scoreboard[atkr].pvpKillCount = ParadiseZ.Scoreboard[atkr].pvpKillCount or 0
+                ParadiseZ.Scoreboard[atkr].pvpKillCount = ParadiseZ.Scoreboard[atkr].pvpKillCount + 1
+                ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard[atkr], atkr)
             end    
         end
     end
 end
 Events.OnWeaponHitCharacter.Remove(ParadiseZ.pvpHit)
 Events.OnWeaponHitCharacter.Add(ParadiseZ.pvpHit)
+
+
+
+
 
 function ParadiseZ.pvpHeal(player, context, items)
     local pl = getSpecificPlayer(player)
@@ -223,7 +232,68 @@ function ParadiseZ.exploHandler(bomb, sq)
 end
 Events.OnThrowableExplode.Remove(ParadiseZ.exploHandler)
 Events.OnThrowableExplode.Add(ParadiseZ.exploHandler)
+-----------------------            ---------------------------
+--[[ 
+function ParadiseZ.onExploHit(atkr, targ, bomb, dmg)
+    if bomb and bomb.getObjectName then
+        local isTrap = bomb:getObjectName()
+        if isTrap and isTrap == "IsoTrap" then
+            targ:setAttackedBy(atkr)
+            print('-----------------------            ---------------------------')
+            print('was hit by bomb')
+        else
+            print('-----------------------            ---------------------------')
+            print('was not hit by bomb')
+        end
+    end
+end
+Events.OnWeaponHitCharacter.Remove(ParadiseZ.onExploHit)
+Events.OnWeaponHitCharacter.Add(ParadiseZ.onExploHit)
 
+
+function ParadiseZ.exploHandler(bomb, sq)
+    local attackerStr = bomb:getModData()['Attacker']
+    if attackerStr then
+        print('-----------------------            ---------------------------')
+        print(tostring(attackerStr))
+        local pl = getPlayer() 
+        local user = tostring(pl:getUsername() )
+
+        if user then
+            local checkDist = ParadiseZ.checkDist(pl, sq)
+            local rad 
+            if bomb.getExplosionRange then
+                rad = bomb:getExplosionRange()
+            end        
+            if rad then
+                local isWithinRange = checkDist and checkDist <= rad
+
+                local attacker = getPlayerFromUsername(attackerStr)
+                if attacker then
+                    pl:setAttackedBy(attacker)
+                end
+            end
+            if user == attackerStr then
+                print('-----------------------            ---------------------------')
+                print('you hit yourself')
+            end
+        end
+    else
+        print('-----------------------            ---------------------------')
+        print('attackerStr ModData not found')
+    end
+end
+Events.OnThrowableExplode.Remove(ParadiseZ.TestExploHandler)
+Events.OnThrowableExplode.Add(ParadiseZ.TestExploHandler)
+
+function ParadiseZ.ThrowHandler(pl, bomb)
+    local user = pl:getUsername() 
+    bomb:getModData()['Attacker'] = tostring(user)    
+end
+Events.OnWeaponSwing.Remove(ParadiseZ.ThrowHandler)
+Events.OnWeaponSwing.Add(ParadiseZ.ThrowHandler)
+
+ ]]
 --[[
     if bomb.setSmokeRange then bomb:setSmokeRange(0) end
     if bomb.setNoiseRange then bomb:setNoiseRange(0) end

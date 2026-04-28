@@ -1,4 +1,3 @@
-
 --server/ParadiseZ_ServerData.lua
 if isClient() then return end
 
@@ -18,21 +17,6 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
             ParadiseZ.ZoneData[k] = v
         end
 
---[[ 
-        ParadiseZ.ZoneData["Monmouth County Power Station"] = {
-            name = "Monmouth County Power Station",
-            x1 = 11809,
-            y1 = 7876,
-            x2 = 11870,
-            y2 = 7943,
-            isKos = SandboxVars.ParadiseZ.RadZoneisKos or false,
-            isPvE = SandboxVars.ParadiseZ.RadZoneisPvE or false,
-            isSafe = SandboxVars.ParadiseZ.RadZoneisSafe or false,
-            isBlocked = SandboxVars.ParadiseZ.RadZoneisBlocked or false,
-            isRad = true,
-        }
- ]]
-
         ModData.transmit("ParadiseZ_ZoneData")
         sendServerCommand("ParadiseZ", "Sync", { data = ParadiseZ.ZoneData })
         
@@ -40,6 +24,10 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
         ParadiseZ_Gift[args.user] = true
         ModData.transmit("ParadiseZ_Gift")
         sendServerCommand("ParadiseZ", "Gift", { user = args.user })
+    elseif command == "Scoreboard" and args.user and args.data then
+        ParadiseZ.Scoreboard[args.user] = args.data
+        ModData.transmit("ParadiseZ_Scoreboard")
+        sendServerCommand("ParadiseZ", "Scoreboard", { user = args.user, data = args.data })
     end
 end
 Events.OnClientCommand.Add(ParadiseZ.OnClientCommand)
@@ -47,6 +35,7 @@ Events.OnClientCommand.Add(ParadiseZ.OnClientCommand)
 function ParadiseZ.DataInit()
 	ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData")
 	ParadiseZ_Gift = ModData.getOrCreate("ParadiseZ_Gift")
+	ParadiseZ.Scoreboard = ModData.getOrCreate("ParadiseZ_Scoreboard")
 
 end
 

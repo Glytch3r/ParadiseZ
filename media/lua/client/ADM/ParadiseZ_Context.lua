@@ -55,6 +55,20 @@ function ParadiseZ.context(plNum, context, worldobjects)
         return 
     end
  ]]
+
+    local optTip = context:addOptionOnTop("Scoreboard Panel", worldobjects, function()
+        if ParadiseZ.ScoreboardUI.instance then
+            ParadiseZ.closeScoreboard()
+        else
+            ParadiseZ.openScoreboard()
+        end
+		getSoundManager():playUISound("UIActivateMainMenuItem")
+		context:hideAndChildren()
+	end)
+
+
+
+
     if string.lower(pl:getAccessLevel()) ~= "admin" then 
         return         
     end
@@ -94,6 +108,14 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     
+
+
+
+
+
+
+
+
     addSafeOption(opt, "Zone Highlights: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.ZoneHighlighter or false)), function() 
         ParadiseZ.ZoneHighlighter = not ParadiseZ.ZoneHighlighter 
         if not ParadiseZ.ZoneHighlighter then

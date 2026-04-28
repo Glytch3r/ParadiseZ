@@ -13,7 +13,12 @@ function ParadiseZ.saveZoneData(data)
 		sendClientCommand("ParadiseZ", "Sync", {  data = data })
 	end	
 end
-
+function ParadiseZ.saveScoreboard(data, user)
+    if not data then return end    
+	if isClient() then 
+		sendClientCommand("ParadiseZ", "Scoreboard", { data = data, user = user })
+	end	
+end
 function ParadiseZ.saveUtilityData(data)
     if not data then return end
 	if isClient() then 
@@ -66,6 +71,11 @@ function ParadiseZ.ClientSync(module, command, args)
  
     elseif command == "Gift" and args.user then        
         ParadiseZ_Gift[args.user] = true
+    elseif command == "Scoreboard" and args.user and args.data then      
+        ParadiseZ.Scoreboard[args.user] = args.data
+        if ParadiseZ.ScoreboardUI and ParadiseZ.ScoreboardUI.instance then
+            ParadiseZ.ScoreboardUI.instance:updatePlayerList()
+        end
     end
 end
 Events.OnServerCommand.Add(ParadiseZ.ClientSync)
@@ -74,13 +84,17 @@ function ParadiseZ.DataInit()
     --if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
     if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
     if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
+    if ModData.exists("ParadiseZ_Scoreboard") then ModData.remove("ParadiseZ_Gift"); end
+
     --ParadiseZ.UtilityData = ModData.getOrCreate("ParadiseZ_UtilityData");
     ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData");
 	ParadiseZ_Gift = ModData.getOrCreate("ParadiseZ_Gift")
+	ParadiseZ.Scoreboard = ModData.getOrCreate("ParadiseZ_Scoreboard")
 
     --ModData.request("ParadiseZ_UtilityData");
     ModData.request("ParadiseZ_ZoneData");
     ModData.request("ParadiseZ_Gift");
+    ModData.request("ParadiseZ_Scoreboard");
 end
 
 Events.OnInitGlobalModData.Add(ParadiseZ.DataInit)
@@ -98,6 +112,10 @@ function ParadiseZ.RecieveData(key, data)
         if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
         ModData.add("ParadiseZ_Gift", data) 
         ParadiseZ_Gift = data
+    elseif key == "ParadiseZ_Scoreboard" then
+        if ModData.exists("ParadiseZ_Scoreboard") then ModData.remove("ParadiseZ_Scoreboard"); end
+        ModData.add("ParadiseZ_Scoreboard", data) 
+        ParadiseZ.Scoreboard = data
     end
 end
 Events.OnReceiveGlobalModData.Add(ParadiseZ.RecieveData)
@@ -116,3 +134,28 @@ function ParadiseZ.Clone_ZoneData(t1, t2)
         end
     end
 end
+-----------------------            ---------------------------
+function ParadiseZ.deathCounter(targ)
+    local pl = getPlayer()
+    if targ == pl then
+        local user = pl:getUsername() 
+        ParadiseZ.Scoreboard[user] = ParadiseZ.Scoreboard[user] or {}      
+        ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount or 0
+        ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount + 1
+        ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard[user], user)
+    end
+end
+Events.OnPlayerDeath.Add(ParadiseZ.deathCounter)
+
+function ParadiseZ.initScoreboardPlayerData(targ)
+    local pl = getPlayer()
+    if pl then
+        local user = pl:getUsername() 
+        ParadiseZ.Scoreboard[user] = ParadiseZ.Scoreboard[user] or {}      
+        ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount or 0
+        ParadiseZ.Scoreboard[user].pvpKillCount = ParadiseZ.Scoreboard[user].pvpKillCount or 0
+        ParadiseZ.Scoreboard[user].zedKillCount = pl:getZombieKills()
+        ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard[user], user)
+    end
+end
+Events.OnCreatePlayer.Add(ParadiseZ.initScoreboardPlayerData)
