@@ -147,6 +147,11 @@ function ParadiseZ.deathCounter(targ)
         ParadiseZ.Scoreboard[user] = ParadiseZ.Scoreboard[user] or {}      
         ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount or 0
         ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount + 1
+        if not ParadiseZ.Scoreboard[user].timeAlive then
+            ParadiseZ.Scoreboard[user].timeAlive = pl:getTimeSurvived()
+        else
+            ParadiseZ.Scoreboard[user].timeAlive = ParadiseZ.Scoreboard[user].timeAlive + pl:getTimeSurvived()
+        end
         ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard[user], user)
     end
 end
