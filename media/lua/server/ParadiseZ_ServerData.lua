@@ -18,16 +18,27 @@ function ParadiseZ.OnClientCommand(module, command, player, args)
         end
 
         ModData.transmit("ParadiseZ_ZoneData")
-        sendServerCommand("ParadiseZ", "Sync", { data = ParadiseZ.ZoneData })
-        
+        sendServerCommand("ParadiseZ", "Sync", { data = ParadiseZ.ZoneData })        
     elseif command == "Gift" and args.user then
         ParadiseZ_Gift[args.user] = true
         ModData.transmit("ParadiseZ_Gift")
         sendServerCommand("ParadiseZ", "Gift", { user = args.user })
-    elseif command == "Scoreboard" and args.user and args.data then
-        ParadiseZ.Scoreboard[args.user] = args.data
+    elseif command == "Scoreboard" and args.data then
+       ParadiseZ.Scoreboard = ModData.getOrCreate("ParadiseZ_Scoreboard")
+
+        if args.user then
+            ParadiseZ.Scoreboard[args.user] = args.data
+        else
+            for k in pairs(ParadiseZ.Scoreboard) do
+                ParadiseZ.Scoreboard[k] = nil
+            end
+
+            for k, v in pairs(args.data) do
+                ParadiseZ.Scoreboard[k] = v
+            end
+        end
         ModData.transmit("ParadiseZ_Scoreboard")
-        sendServerCommand("ParadiseZ", "Scoreboard", { user = args.user, data = args.data })
+        sendServerCommand("ParadiseZ", "Scoreboard", { user = args.user or nil , data = args.data })
     end
 end
 Events.OnClientCommand.Add(ParadiseZ.OnClientCommand)

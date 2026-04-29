@@ -63,7 +63,6 @@ function ParadiseZ.ClientSync(module, command, args)
             ParadiseZ.ZoneData[k] = v
         end
         
-        
         print("ParadiseZ: Client synced.")
 		if ParadiseZ.ZoneEditorWindow and ParadiseZ.ZoneEditorWindow.instance then
 			ParadiseZ.ZoneEditorWindow.instance:refreshList()
@@ -71,11 +70,17 @@ function ParadiseZ.ClientSync(module, command, args)
  
     elseif command == "Gift" and args.user then        
         ParadiseZ_Gift[args.user] = true
-    elseif command == "Scoreboard" and args.user and args.data then      
-        ParadiseZ.Scoreboard[args.user] = args.data
+    elseif command == "Scoreboard" and args.data then   
+        if  args.user then
+            ParadiseZ.Scoreboard[args.user] = args.data
+        else
+            print("ParadiseZ: Scoreboard synced.")
+        
+            ParadiseZ.initScoreboardPlayerData()
+        end
         if ParadiseZ.ScoreboardUI and ParadiseZ.ScoreboardUI.instance then
             ParadiseZ.ScoreboardUI.instance:updatePlayerList()
-        end
+        end  
     end
 end
 Events.OnServerCommand.Add(ParadiseZ.ClientSync)
@@ -147,14 +152,16 @@ function ParadiseZ.deathCounter(targ)
 end
 Events.OnPlayerDeath.Add(ParadiseZ.deathCounter)
 
-function ParadiseZ.initScoreboardPlayerData(targ)
+function ParadiseZ.initScoreboardPlayerData()
     local pl = getPlayer()
     if pl then
         local user = pl:getUsername() 
         ParadiseZ.Scoreboard[user] = ParadiseZ.Scoreboard[user] or {}      
+        ParadiseZ.Scoreboard[user].user = ParadiseZ.Scoreboard[user].user or user
         ParadiseZ.Scoreboard[user].deathCount = ParadiseZ.Scoreboard[user].deathCount or 0
         ParadiseZ.Scoreboard[user].pvpKillCount = ParadiseZ.Scoreboard[user].pvpKillCount or 0
-        ParadiseZ.Scoreboard[user].zedKillCount = pl:getZombieKills()
+        ParadiseZ.Scoreboard[user].timeAlive= ParadiseZ.Scoreboard[user].timeAlive or pl:getTimeSurvived()
+        --ParadiseZ.Scoreboard[user].lastLogin = ParadiseZ.Scoreboard[user].lastLogin or 
         ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard[user], user)
     end
 end
