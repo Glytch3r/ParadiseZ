@@ -218,13 +218,19 @@ function ParadiseZ.ScoreboardUI:onColumnClick(key)
 end
 
 function ParadiseZ.ScoreboardUI:onReset()
-    for k in pairs(ParadiseZ.Scoreboard) do
-        ParadiseZ.Scoreboard[k] = nil
+    if ParadiseZ.isAdm() then
+        for k in pairs(ParadiseZ.Scoreboard) do
+            ParadiseZ.Scoreboard[k] = nil
+        end
+        ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard, nil)
+        --ModData.remove("ParadiseZ_Scoreboard")
+        self:updatePlayerList()
+    else
+        
     end
-    ParadiseZ.saveScoreboard(ParadiseZ.Scoreboard, nil)
-    --ModData.remove("ParadiseZ_Scoreboard")
-    self:updatePlayerList()
 end
+
+
 
 function ParadiseZ.ScoreboardUI:createChildren()
     ISPanel.createChildren(self)
@@ -257,8 +263,9 @@ function ParadiseZ.ScoreboardUI:createChildren()
     self.reset:initialise()
     self.reset:instantiate()
     self.reset.borderColor = self.buttonBorderColor
+    self.reset.enable = ParadiseZ.isAdm()
     self:addChild(self.reset)
-
+    
     self.close = ISButton:new(self.width - 110, btnY, 100, btnH, "Close", self, ParadiseZ.ScoreboardUI.onOptionMouseDown)
     self.close.internal = "CLOSE"
     self.close:initialise()
