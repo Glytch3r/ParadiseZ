@@ -196,5 +196,34 @@ module ParadiseZ {
 
 
 
+	model TurtBag_WorldStatic
+    {
+        mesh = WorldItems/TurtBag_WorldStatic,
+        scale = 0.75,
+    }
+
+    item TurtBag
+    {
+        DisplayCategory = Bag,
+        Type = Container,
+        DisplayName = Turtle Backpack,
+        ClothingItem = TurtBag,
+        CanBeEquipped = Back,
+        WeightReduction	=	90,
+        Weight	=	2,
+        Capacity	=	40,
+        Icon	=	TurtBag,
+        OpenSound   =   OpenBag,
+        CloseSound   =   CloseBag,
+        PutInSound   =   PutItemInBag,
+        BloodLocation = Bag,
+        RunSpeedModifier = 0.94,
+        CanHaveHoles = false,
+        AttachmentReplacement = Bag,
+        ReplaceInSecondHand = TurtBag_LHand holdingbagleft,
+        ReplaceInPrimaryHand = TurtBag_RHand holdingbagright,
+        WorldStaticModel = TurtBag_WorldStatic,
+        Tooltip = Are you TURTLEY enough for the TURTLE club?,
+    }
 
 }

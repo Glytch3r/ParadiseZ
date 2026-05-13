@@ -50,4 +50,19 @@
 		<guid>24668350-86a3-45bf-9522-3c2140142074</guid>
 	</files>	
 
+
+	<files>
+		<path>media/clothing/clothingItems/TurtBag.xml</path>
+		<guid>7b28610c-84d1-4dbe-87d1-9a2000bf1c5a</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/TurtBag_LHand.xml</path>
+		<guid>4b60df44-db1c-4aa8-933d-4848035bd73d</guid>
+	</files>
+	<files>
+		<path>media/clothing/clothingItems/TurtBag_RHand.xml</path>
+		<guid>4e311b5c-63fa-4276-b955-c0aa3d143bb5</guid>
+	</files>
+
+
 </fileGuidTable>
