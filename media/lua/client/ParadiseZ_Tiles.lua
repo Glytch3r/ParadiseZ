@@ -111,7 +111,7 @@ function ParadiseZ.sprHandler(pl)
                         if sprName and ParadiseZ.List[sprName] then
                             local sprNum = ParadiseZ.getSprNum(sprName)
                             if sprNum then
-                                if obj:isActivated() then
+                                if obj and obj.isActivated and obj:isActivated() then
                                     local nextSprNum = ParadiseZ.Frames[tostring(sprNum)]
                                     if nextSprNum then
                                         ParadiseZ.setSpr(obj, "ParadiseTiles_" .. nextSprNum)
