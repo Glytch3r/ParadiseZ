@@ -460,7 +460,7 @@ function ParadiseZ.tempChangeSpr(fType, sprStr)
         itemScr:DoParam(param2)
     end
 end
-
+--ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD')
 -----------------------            ---------------------------
 function ParadiseZ.die()
 	getPlayer():Kill(nil)

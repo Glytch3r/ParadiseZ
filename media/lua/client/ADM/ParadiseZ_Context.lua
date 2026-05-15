@@ -158,6 +158,10 @@ function ParadiseZ.context(plNum, context, worldobjects)
         end
     end
     addSafeOption(opt, "Spawn TheRange Membership Card", function() pl:getInventory():AddItem('ParadiseZ.TheRangeCard') end, "media/textures/TheRange.png")
+    addSafeOption(opt, "Spawn Alt MP5SD", function() ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD') end, "media/textures/Item_MP5SD.png")
+
+    
+
 
     addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
     addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")
