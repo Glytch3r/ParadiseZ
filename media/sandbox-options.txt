@@ -3,7 +3,7 @@ VERSION = 1,
 
 option ParadiseZ.mp5SkinChanger 
 {
-	type = string, default = Glytch3r;OldmanTurtle,
+	type = string, default = Glytch3r;Oldman Turtle,
 	page = ParadiseZ, translation = ParadiseZ_mp5SkinChanger,
 }
 

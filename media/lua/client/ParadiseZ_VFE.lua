@@ -73,6 +73,20 @@ end
 Events.OnFillInventoryObjectContextMenu.Remove(ParadiseZ.mp5SpriteSwap)
 Events.OnFillInventoryObjectContextMenu.Add(ParadiseZ.mp5SpriteSwap)
 
+function ParadiseZ.mp5ReloadResikin(pl, wpn)
+    if not pl or not wpn then return end
+
+    local user = pl:getUsername()
+    if not ParadiseZ.isAllowedToChange(user) then return end
+
+    if wpn:getFullType() == "Base.MP5SD" and wpn:getWeaponSprite() ~= "alt_MP5SD" then
+        ParadiseZ.cloneWithWeaponSprite(wpn, "alt_MP5SD")
+    end
+end
+
+Events.OnPressReloadButton.Remove(ParadiseZ.mp5ReloadResikin)
+Events.OnPressReloadButton.Add(ParadiseZ.mp5ReloadResikin)
+
 function ParadiseZ.parseMp5AllowedSkinChangeNames()
     local strList = SandboxVars.ParadiseZ.mp5SkinChanger or "Glytch3r;OldmanTurtle"
     local t = {}
