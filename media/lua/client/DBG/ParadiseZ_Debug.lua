@@ -445,21 +445,6 @@ function ParadiseZ.CheckLife()
     end
 end
 
-function ParadiseZ.tempChangeSpr(fType, sprStr)
-    fType = fType or "Base.Katana"
-    sprStr = sprStr or "Knife"
-    local param = "WeaponSprite = "..tostring(sprStr)
-    local itemScr = ScriptManager.instance:getItem(fType)
-    local param2
-    if itemScr then
-        param2 = "WeaponSprite = "..tostring(itemScr:getWeaponSprite())
-        itemScr:DoParam(param)
-        local inv = pl:getInventory() 
-        local item = InventoryItemFactory.CreateItem(fType);
-        inv:AddItem(item)
-        itemScr:DoParam(param2)
-    end
-end
 --ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD')
 -----------------------            ---------------------------
 function ParadiseZ.die()

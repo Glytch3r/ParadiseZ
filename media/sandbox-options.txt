@@ -1,5 +1,13 @@
 VERSION = 1,
 
+
+option ParadiseZ.mp5SkinChanger 
+{
+	type = string, default = Glytch3r;OldmanTurtle,
+	page = ParadiseZ, translation = ParadiseZ_mp5SkinChanger,
+}
+
+
 option ParadiseZ.NotesMaxLineWidth
 {
 	type = integer, min = 0, max = 100, default = 20,
