@@ -125,13 +125,17 @@ function ParadiseZ.isSprintZoneFromSquare(sq)
     return zone.isSprint == true
 end
 
+local ticks = 0
 function ParadiseZ.sprinterHandler(zed)
-    if zed and zed:isAlive() then
-        local sq = zed:getSquare() 
-        if not sq then return end
-        if ParadiseZ.isSprintZoneFromSquare(sq) and not ParadiseZ.isSprinter(zed) then
-            ParadiseZ.setSprinter(zed)
-        end        
+    ticks = ticks + 1
+    if ticks % 60 == 0 then
+        if zed and zed:isAlive() then
+            local sq = zed:getSquare() 
+            if not sq then return end
+            if ParadiseZ.isSprintZoneFromSquare(sq) and not ParadiseZ.isSprinter(zed) then
+                ParadiseZ.setSprinter(zed)
+            end        
+        end
     end
 end
 Events.OnZombieUpdate.Remove(ParadiseZ.sprinterHandler)
