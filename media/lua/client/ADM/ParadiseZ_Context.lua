@@ -143,8 +143,33 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
     addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
     addSafeOption(opt, "Thunder", function() sendClientCommand(pl, "ParadiseZ", "thunder", { })  end, "media/ui/LootableMaps/map_lightning.png")
+
+        
     -----------------------            ---------------------------
-    
+    local hsvSpawn = opt:addOption("Colored Item Spawner")
+    if hsvSpawn then
+        hsvSpawn.iconTexture = getTexture("media/textures/Item_Crayons.png")
+        local hsvSpawnOpt = ISContextMenu:getNew(context)
+        if hsvSpawnOpt then context:addSubMenu(hsvSpawn, hsvSpawnOpt) end
+
+        addSafeOption(hsvSpawnOpt, "HairDye Spawner", function()
+            ParadiseZ.openHSVPanel("Base.HairDyeWhite")
+        end, "media/textures/Item_HairDye.png")
+
+        addSafeOption(hsvSpawnOpt, "LightBulb Spawner", function()
+            ParadiseZ.openHSVPanel("Base.LightBulb")
+        end, "media/textures/Item_LightBulb.png")
+
+        addSafeOption(hsvSpawnOpt, "Trousers Spawner", function()
+            ParadiseZ.openHSVPanel("Base.Trousers_Black")
+        end, "media/textures/Item_Trousers.png")
+
+        addSafeOption(hsvSpawnOpt, "Pen Spawner", function()
+            ParadiseZ.openHSVPanel("Base.Pen")
+        end, "media/textures/Item_Pen.png")
+    end
+
+    -----------------------            ---------------------------
     local zSub = opt:addOption("Z")
     if zSub then
         zSub.iconTexture = getTexture("media/ui/LootableMaps/map_z.png")
@@ -223,6 +248,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
             addSafeOption(context, "Spectate: "..tostring(targUser), function() ParadiseZ.setSpectate(targUser) end, "media/ui/Paradise/SpectateContextIcon.png")
         end
     end
+
+
+
 end
 
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
