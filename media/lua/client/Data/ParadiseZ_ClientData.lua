@@ -89,7 +89,7 @@ function ParadiseZ.DataInit()
     --if ModData.exists("ParadiseZ_UtilityData") then ModData.remove("ParadiseZ_UtilityData"); end
     if ModData.exists("ParadiseZ_ZoneData") then ModData.remove("ParadiseZ_ZoneData"); end
     if ModData.exists("ParadiseZ_Gift") then ModData.remove("ParadiseZ_Gift"); end
-    if ModData.exists("ParadiseZ_Scoreboard") then ModData.remove("ParadiseZ_Gift"); end
+    if ModData.exists("ParadiseZ_Scoreboard") then ModData.remove("ParadiseZ_Scoreboard"); end
 
     --ParadiseZ.UtilityData = ModData.getOrCreate("ParadiseZ_UtilityData");
     ParadiseZ.ZoneData = ModData.getOrCreate("ParadiseZ_ZoneData");

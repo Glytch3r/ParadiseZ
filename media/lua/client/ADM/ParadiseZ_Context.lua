@@ -55,20 +55,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
         return 
     end
  ]]
-
-    local optTip = context:addOptionOnTop("Scoreboard Panel", worldobjects, function()
-        if ParadiseZ.ScoreboardUI.instance then
-            ParadiseZ.closeScoreboard()
-        else
-            ParadiseZ.openScoreboard()
-        end
-		getSoundManager():playUISound("UIActivateMainMenuItem")
-		context:hideAndChildren()
-	end)
-
-
-
-
     if string.lower(pl:getAccessLevel()) ~= "admin" then 
         return         
     end
@@ -108,14 +94,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     
-
-
-
-
-
-
-
-
     addSafeOption(opt, "Zone Highlights: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.ZoneHighlighter or false)), function() 
         ParadiseZ.ZoneHighlighter = not ParadiseZ.ZoneHighlighter 
         if not ParadiseZ.ZoneHighlighter then
@@ -159,9 +137,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
     end
     addSafeOption(opt, "Spawn TheRange Membership Card", function() pl:getInventory():AddItem('ParadiseZ.TheRangeCard') end, "media/textures/TheRange.png")
     addSafeOption(opt, "Spawn Alt MP5SD", function() ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD') end, "media/textures/Item_MP5SD.png")
-
-    
-
 
     addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
     addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")

@@ -445,7 +445,6 @@ function ParadiseZ.CheckLife()
     end
 end
 
---ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD')
 -----------------------            ---------------------------
 function ParadiseZ.die()
 	getPlayer():Kill(nil)

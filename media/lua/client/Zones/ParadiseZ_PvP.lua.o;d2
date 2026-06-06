@@ -143,52 +143,6 @@ local function _pzSafeCall(obj, methodName, ...)
     end
 end
 
-local function _pzSafeNumGetter(obj, methodName)
-    if obj and obj[methodName] then
-        local ok, value = pcall(obj[methodName], obj)
-        if ok and value ~= nil then
-            return tonumber(value) or 0
-        end
-    end
-    return 0
-end
-
-function ParadiseZ._getExplosionPvpTotalDamage(bomb)
-    local power = _pzSafeNumGetter(bomb, "getExplosionPower")
-    local extra = _pzSafeNumGetter(bomb, "getExtraDamage")
-
-    -- Add all explosive damage components together first.
-    -- Distance falloff is applied after this total is known.
-    local total = math.max(0, math.floor(power + extra))
-    return total, power, extra
-end
-
-function ParadiseZ._rollExplosionPvpDamage(totalDmg, rad, checkDist)
-    totalDmg = math.max(0, math.floor(tonumber(totalDmg) or 0))
-    rad = tonumber(rad) or 0
-    checkDist = tonumber(checkDist) or 0
-
-    if totalDmg <= 0 or rad <= 0 then return 0, 0, 0 end
-    if checkDist >= rad then return 0, 0, 0 end
-
-    -- Divide the already-combined total damage into radius bands.
-    -- Example: totalDmg=70, rad=7:
-    -- dist 0 = 60-70, dist 1 = 50-60, ... dist 6 = 0-10, dist >= 7 = 0.
-    local step = totalDmg / rad
-    local high = math.floor(step * (rad - checkDist))
-    local low = math.floor(step * (rad - checkDist - 1))
-
-    low = math.max(0, math.min(totalDmg, low))
-    high = math.max(0, math.min(totalDmg, high))
-    if high < low then high = low end
-
-    local rolled = low
-    if high > low then
-        rolled = ZombRand(low, high + 1)
-    end
-    return rolled, low, high
-end
-
 function ParadiseZ._snapshotExplosionHealth(pl)
     if not pl then return nil end
 
@@ -323,10 +277,16 @@ function ParadiseZ._applyExplosionPvpDamage(pl, boomSq, baseDmg, rad)
     if ParadiseZ.isPvE(pl) or ParadiseZ.isPveZone(pl) then return end
 
     local checkDist = ParadiseZ.checkDist(pl, boomSq)
-    if not checkDist or checkDist >= rad then return end
+    if not checkDist or checkDist > rad then return end
 
-    local dmg = ParadiseZ._rollExplosionPvpDamage(baseDmg, rad, checkDist)
-    if dmg <= 0 then return end
+    local dmg = math.max(0, math.floor(tonumber(baseDmg) or 0))
+    local reduced = math.floor(dmg * checkDist / math.max(1, rad))
+    local minDmg = math.max(0, dmg - reduced)
+    if dmg > minDmg then
+        dmg = ZombRand(minDmg, dmg + 1)
+    else
+        dmg = minDmg
+    end
 
     local md = pl:getModData()
     local lowest = 0
@@ -363,7 +323,10 @@ end
 function ParadiseZ.exploHandler(bomb, sq)
     if not bomb or not bomb.getObjectName or bomb:getObjectName() ~= "IsoTrap" then return end
 
-    local dmg = ParadiseZ._getExplosionPvpTotalDamage(bomb)
+    local dmg = 0
+    if bomb.getExplosionPower then
+        dmg = bomb:getExplosionPower() or 0
+    end
 
     local rad = 0
     if bomb.getExplosionRange then

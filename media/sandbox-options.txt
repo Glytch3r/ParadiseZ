@@ -1,30 +1,33 @@
 VERSION = 1,
 
-
-option ParadiseZ.mp5SkinChanger 
+option ParadiseZ.mp5SkinChanger
 {
-	type = string, default = Glytch3r;Oldman Turtle,
+	type = string, default = Glytch3r;Oldman Turtle;JimValentine,
 	page = ParadiseZ, translation = ParadiseZ_mp5SkinChanger,
 }
-
-
-option ParadiseZ.NotesMaxLineWidth
-{
-	type = integer, min = 0, max = 100, default = 20,
-	page = ParadiseZ, translation = ParadiseZ_NotesMaxLineWidth,
-}
-
 
 option ParadiseZ.EveryoneCanWriteNotes
 {
 	type = boolean, default = false,
-	page = ParadiseZ, translation = ParadiseZ_EveryoneCanWriteNotes,
+	page = ParadiseZnotes, translation = ParadiseZnotes_EveryoneCanWriteNotes,
 }
 
 option ParadiseZ.NotesVisibilityDistance
 {
 	type = integer, min = 0, max = 500, default = 5,
-	page = ParadiseZ, translation = ParadiseZ_NotesVisibilityDistance,
+	page = ParadiseZnotes, translation = ParadiseZnotes_NotesVisibilityDistance,
+}
+
+option ParadiseZ.NotesMaxLineWidth
+{
+	type = integer, min = 1, max = 1000, default = 70,
+	page = ParadiseZnotes, translation = ParadiseZnotes_NotesMaxLineWidth,
+}
+
+option ParadiseZ.NotesUpdateTicks
+{
+	type = integer, min = 1, max = 25, default = 5,
+	page = ParadiseZnotes, translation = ParadiseZnotes_NotesUpdateTicks,
 }
 
 option ParadiseZ.ClonerDisplayName
@@ -654,4 +657,60 @@ option ParadiseZmapVisual.isInvertedY
 	type = boolean, default = true,
 	page = ParadiseZmapVisual, translation = ParadiseZmapVisual_isInvertedY,
 
+}
+
+
+option ParadiseZ.AutoFarmEnabled
+{
+    type = boolean, default = true,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmEnabled,
+}
+
+option ParadiseZ.AutoFarmCropRadius
+{
+    type = enum, numValues = 3, default = 2,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmCropRadius,
+    valueTranslation = ParadiseZ_AutoFarmCropRadius,
+}
+
+option ParadiseZ.AutoFarmWaterSourceRadius
+{
+    type = integer, min = 5, max = 25, default = 15,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmWaterSourceRadius,
+}
+
+option ParadiseZ.AutoFarmWaterTileFallback
+{
+    type = boolean, default = true,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmWaterTileFallback,
+}
+
+option ParadiseZ.AutoFarmDisableAutoReplant
+{
+    type = boolean, default = false,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmDisableAutoReplant,
+}
+
+option ParadiseZ.AutoFarmDisableAutoDig
+{
+    type = boolean, default = false,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmDisableAutoDig,
+}
+
+option ParadiseZ.AutoFarmDisableAutoTreat
+{
+    type = boolean, default = false,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmDisableAutoTreat,
+}
+
+option ParadiseZ.AutoFarmDisableAutoHarvest
+{
+    type = boolean, default = false,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmDisableAutoHarvest,
+}
+
+option ParadiseZ.AutoFarmDisableAutoClearReceding
+{
+    type = boolean, default = false,
+    page = ParadiseZ_AutoFarm, translation = ParadiseZ_AutoFarmDisableAutoClearReceding,
 }

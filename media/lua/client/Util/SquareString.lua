@@ -3,8 +3,62 @@ SquareString = SquareString or {}
 SquareString._groups = SquareString._groups or {}
 SquareString._activeGroup = SquareString._activeGroup or "default"
 
-local function xyzStr(x,y,z)
-    return tostring(x)..":"..tostring(y)..":"..tostring(z)
+-- Notes-specific rendering constants. Sandbox values override these fallbacks.
+SquareString.NotesWrapWidth = SquareString.NotesWrapWidth or 70
+SquareString.NotesExtraAnchorLines = SquareString.NotesExtraAnchorLines or 3
+
+local function xyzKey(x, y, z)
+    return tostring(x) .. ":" .. tostring(y) .. ":" .. tostring(z)
+end
+
+local function clampInt(value, fallback, minValue, maxValue)
+    local n = tonumber(value)
+    if not n then n = fallback end
+    n = math.floor(n)
+    if minValue and n < minValue then n = minValue end
+    if maxValue and n > maxValue then n = maxValue end
+    return n
+end
+
+local function getNotesWrapWidth()
+    local sv = SandboxVars and SandboxVars.ParadiseZ
+    return clampInt(sv and sv.NotesMaxLineWidth, SquareString.NotesWrapWidth or 70, 1, 1000)
+end
+
+local function getDrawObjectHeight(tagObj, font)
+    if tagObj then
+        pcall(function()
+            tagObj:calculateDimensions()
+        end)
+
+        local ok, h = pcall(function()
+            return tagObj:getHeight()
+        end)
+
+        if ok and h and h > 0 then
+            return h
+        end
+    end
+
+    local tm = getTextManager()
+    if tm then
+        local ok, h = pcall(function()
+            return tm:getFontHeight(font)
+        end)
+
+        if ok and h and h > 0 then
+            return h
+        end
+    end
+
+    return 20
+end
+
+local function getOneLineHeight(font, wrapWidth)
+    local tag = TextDrawObject.new()
+    tag:setDefaultFont(font)
+    tag:ReadString(font, "X", wrapWidth or -1)
+    return getDrawObjectHeight(tag, font)
 end
 
 function SquareString.getGroup(group)
@@ -13,50 +67,16 @@ function SquareString.getGroup(group)
     return SquareString._groups[group]
 end
 
-
 function SquareString.setActiveGroup(group)
-    SquareString._activeGroup = group
-end
-
-function SquareString.delTagObj(tagObj, group)
-    local gTable = SquareString.getGroup(group)
-    if gTable[tagObj] then
-        gTable[tagObj] = nil
-        return true
-    end
-    return false
-end
-
-function SquareString.delBySquare(sq, group)
-    if not sq then return false end
-
-    local x, y, z = sq:getX(), sq:getY(), sq:getZ()
-    local gTable = SquareString.getGroup(group)
-
-    for tag, data in pairs(gTable) do
-        if data.x == x and data.y == y and data.z == z then
-            gTable[tag] = nil
-            return true
-        end
-    end
-
-    return false
-end
-
-function SquareString.getSqStr(x, y, z, group)
-    local gTable = SquareString.getGroup(group)
-    for tag, data in pairs(gTable) do
-        if data.x == x and data.y == y and data.z == z then
-            return tag, data
-        end
-    end
-    return nil
+    SquareString._activeGroup = group or "default"
 end
 
 function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, visibility, group)
     if not isIngameState() then return nil end
     if not str then return nil end
-    local gTable = SquareString.getGroup(group)
+
+    local groupName = group or SquareString._activeGroup
+    local gTable = SquareString.getGroup(groupName)
 
     if x == nil or y == nil or z == nil then
         local pl = getPlayer()
@@ -72,127 +92,94 @@ function SquareString.addSqStr(str, x, y, z, r, g, b, font, xOffset, yOffset, vi
     yOffset = yOffset or 0
     visibility = visibility or 360
 
-    local tag = TextDrawObject.new(r, g, b, true, true)
+    local key = xyzKey(x, y, z)
+    local text = tostring(str)
+    local wrapWidth = -1
+    if groupName == "Notes" then
+        wrapWidth = getNotesWrapWidth()
+    end
+
+    local entry = gTable[key]
+    local tag = entry and entry.tag or TextDrawObject.new()
     tag:setDefaultFont(font)
 
-    local NotesMaxLineWidth = SandboxVars.ParadiseZ.NotesMaxLineWidth or 90
-    tag:ReadString(font, tostring(str), NotesMaxLineWidth)
-    tag:setAllowLineBreaks(true)
+    if not entry or entry.text ~= text or entry.wrapWidth ~= wrapWidth or entry.font ~= font then
+        pcall(function() tag:Clear() end)
+        tag:ReadString(font, text, wrapWidth)
+        pcall(function() tag:setAllowLineBreaks(true) end)
+    end
+
     tag:setDefaultColors(r, g, b)
     tag:setVisibleRadius(visibility)
 
-    gTable[tag] = {
+    local notePixelUp = nil
+    if groupName == "Notes" then
+        local singleH = getOneLineHeight(font, wrapWidth)
+        local fullH = getDrawObjectHeight(tag, font)
+        local bottomAnchorUp = math.max(0, fullH - singleH)
+        local fixedUp = singleH * (SquareString.NotesExtraAnchorLines or 3)
+        notePixelUp = bottomAnchorUp + fixedUp
+    end
+
+    entry = {
+        tag = tag,
         x = x, y = y, z = z,
         r = r, g = g, b = b,
         xOffset = xOffset,
         yOffset = yOffset,
-        text = tostring(str)
+        text = text,
+        font = font,
+        wrapWidth = wrapWidth,
+        notePixelUp = notePixelUp
     }
 
-    return tag
+    gTable[key] = entry
+    return tag, entry
 end
 
-function SquareString.set(group, str, x, y, z, opt)
-    if not isIngameState() then return end
-    if not str then return end
-
-    local g = SquareString.getGroup(group)
-    local key = xyzStr(x,y,z)
-
-    opt = opt or {}
-    local r,gc,b = opt.r or 1, opt.g or 1, opt.b or 1
-    local font = opt.font or UIFont.NewLarge
-
-    local entry = g[key]
-
-    if not entry then
-        local tag = TextDrawObject.new(r,gc,b,true,true)
-        tag:setDefaultFont(font)
-        tag:setAllowLineBreaks(true)
-
-        entry = {
-            tag = tag,
-            x=x,y=y,z=z,
-            text = "",
-            r=r,g=gc,b=b,
-            visible = true,
-            anchor = opt.anchor or "bottom",
-            xOffset = opt.xOffset or 0,
-            yOffset = opt.yOffset or 0
-        }
-
-        g[key] = entry
-    end
-
-    if entry.text ~= str then
-        entry.text = str
-        entry.tag:Clear()
-
-        local NotesMaxLineWidth = SandboxVars.ParadiseZ.NotesMaxLineWidth or 90
-        entry.tag:ReadString(font, tostring(str), NotesMaxLineWidth)
-    end
-
-    if entry.r ~= r or entry.g ~= gc or entry.b ~= b then
-        entry.r,entry.g,entry.b = r,gc,b
-        entry.tag:setDefaultColors(r,gc,b)
-    end
-
-    entry.visible = true
-end
-
-function SquareString.hasTagAtSquare(sq, group)
+function SquareString.delBySquare(sq, group)
     if not sq then return false end
-    local x, y, z = sq:getX(), sq:getY(), sq:getZ()
+
+    local key = xyzKey(sq:getX(), sq:getY(), sq:getZ())
     local gTable = SquareString.getGroup(group)
 
-    for _, data in pairs(gTable) do
-        if data.x == x and data.y == y and data.z == z then
-            return true
-        end
+    if gTable[key] then
+        gTable[key] = nil
+        return true
     end
 
     return false
 end
 
-function SquareString.clearAllTags(group)
-    local gTable = SquareString.getGroup(group)
-    for tag in pairs(gTable) do
-        gTable[tag] = nil
+function SquareString.getSqStr(x, y, z, group)
+    local entry = SquareString.getGroup(group)[xyzKey(x, y, z)]
+    if entry then
+        return entry.tag, entry
     end
-end
-function SquareString.hide(x,y,z,group)
-    local g = SquareString.getGroup(group)
-    local e = g[xyzStr(x,y,z)]
-    if e then e.visible = false end
+    return nil, nil
 end
 
-function SquareString.remove(x,y,z,group)
-    local g = SquareString.getGroup(group)
-    g[xyzStr(x,y,z)] = nil
-end
-
-function SquareString.renderAll()
+function SquareString.renderAllTags()
     if not isIngameState() then return end
 
     local zoom = getCore():getZoom(0)
 
-    for _,g in pairs(SquareString._groups) do
-        for _,e in pairs(g) do
-            if e.visible then
-                local sx = (IsoUtils.XToScreen(e.x+e.xOffset, e.y, e.z, 0) - IsoCamera.getOffX()) / zoom
-                local sy = (IsoUtils.YToScreen(e.x, e.y+e.yOffset, e.z, 0) - IsoCamera.getOffY()) / zoom
+    for _, gTable in pairs(SquareString._groups) do
+        for _, data in pairs(gTable) do
+            local tag = data.tag
+            if tag then
+                local screenX = (IsoUtils.XToScreen(data.x + data.xOffset, data.y, data.z, 0) - IsoCamera.getOffX()) / zoom
+                local screenY = (IsoUtils.YToScreen(data.x, data.y + data.yOffset, data.z, 0) - IsoCamera.getOffY()) / zoom
 
-                if e.anchor == "bottom" then
-                    sy = sy - e.tag:getHeight()
-                elseif e.anchor == "middle" then
-                    sy = sy - (e.tag:getHeight() / 2)
+                if data.notePixelUp then
+                    screenY = screenY - data.notePixelUp
                 end
 
-                e.tag:AddBatchedDraw(sx, sy, e.r, e.g, e.b, 1, true)
+                tag:AddBatchedDraw(screenX, screenY, data.r, data.g, data.b, 1, false)
             end
         end
     end
 end
 
-Events.OnPostRender.Remove(SquareString.renderAll)
-Events.OnPostRender.Add(SquareString.renderAll)
+Events.OnPostRender.Remove(SquareString.renderAllTags)
+Events.OnPostRender.Add(SquareString.renderAllTags)
