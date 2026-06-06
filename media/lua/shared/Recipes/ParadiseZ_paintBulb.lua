@@ -52,3 +52,13 @@ function ParadiseZ_paintBulb_OnCreate(items, result, player)
         result:setCondition(condition)
     end
 end
+
+--[[ 
+    local itemFullType = "Base.LightBulbRed"
+    local param = "ConditionMax = 100"
+    local item = ScriptManager.instance:getItem(itemFullType)
+    if item then
+        item:DoParam(param)
+    end
+    getPlayer():getSquare():AddWorldInventoryItem(tostring(itemFullType), 0.5, 0.5, 0);
+ ]]
