@@ -46,6 +46,37 @@ module Base {
         Category:Welding,
     }
 
+    recipe Make Woodglue
+    {
+
+        Result:Woodglue,
+        Twigs=5/TreeBranch=1,
+        CanBeDoneFromFloor:true,
+        keep [Recipe.GetItemTypes.Saw],
+        destroy WaterPot/WaterSaucepan,
+        Glue=1,
+
+        OnCreate:Recipe.OnCreate.AddBaseIngredientToCookingVessel,
+        AnimNode:Disassemble,
+        Time:180.0,
+    }
+
+    recipe Make DuctTape
+    {
+
+        Result:DuctTape,
+        destroy RippedSheets=4,
+        Glue=1,
+
+        Garbagebag=1/GroceryBag1=4/GroceryBag2=4/GroceryBag3=4/GroceryBag4=4/GroceryBag5=4,
+        /* un comment the 2 lines below and comment the line above if you want to change the recipe to my recomended version instead */
+        /* Garbagebag, */
+        /* GroceryBag1=4/GroceryBag2=4/GroceryBag3=4/GroceryBag4=4/GroceryBag5=4, */
+
+        CanBeDoneFromFloor:true,
+        AnimNode:Disassemble,
+        Time:180.0,
+    }
 
 
 

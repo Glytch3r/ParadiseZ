@@ -5,15 +5,6 @@ module ParadiseZ_paintBulb
         Base
     }
 
-    /**************************************************************************
-     * ParadiseZ paintable light bulbs
-     * B41 recipe script
-     *
-     * Paint recipes consume 1 drainable unit of paint.
-     * Cleaning recipes consume 1 drainable unit of gasoline and keep the cloth/tool.
-     * Bulb condition carryover is handled by ParadiseZ_paintBulb_OnCreate in Lua.
-     **************************************************************************/
-
     recipe Paint Light Bulb Red
     {
         LightBulb,
