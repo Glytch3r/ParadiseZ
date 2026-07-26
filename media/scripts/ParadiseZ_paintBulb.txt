@@ -1,0 +1,214 @@
+module ParadiseZ_paintBulb
+{
+    imports
+    {
+        Base
+    }
+
+    recipe Paint Light Bulb Red
+    {
+        LightBulb,
+        PaintRed=1,
+
+        Result:LightBulbRed,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Green
+    {
+        LightBulb,
+        PaintGreen=1,
+
+        Result:LightBulbGreen,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Blue
+    {
+        LightBulb,
+        PaintBlue=1,
+
+        Result:LightBulbBlue,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Yellow
+    {
+        LightBulb,
+        PaintYellow=1,
+
+        Result:LightBulbYellow,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Cyan
+    {
+        LightBulb,
+        PaintCyan=1,
+
+        Result:LightBulbCyan,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Orange
+    {
+        LightBulb,
+        PaintOrange=1,
+
+        Result:LightBulbOrange,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Purple
+    {
+        LightBulb,
+        PaintPurple=1,
+
+        Result:LightBulbPurple,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Paint Light Bulb Pink
+    {
+        LightBulb,
+        PaintPink=1,
+
+        Result:LightBulbPink,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Dip Pink Light Bulb Purple
+    {
+        LightBulbPink,
+        PaintPurple=1,
+
+        Result:LightBulbMagenta,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Red Light Bulb
+    {
+        LightBulbRed,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Green Light Bulb
+    {
+        LightBulbGreen,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Blue Light Bulb
+    {
+        LightBulbBlue,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Yellow Light Bulb
+    {
+        LightBulbYellow,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Cyan Light Bulb
+    {
+        LightBulbCyan,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Orange Light Bulb
+    {
+        LightBulbOrange,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Purple Light Bulb
+    {
+        LightBulbPurple,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Pink Light Bulb
+    {
+        LightBulbPink,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+
+    recipe Clean Magenta Light Bulb
+    {
+        LightBulbMagenta,
+        [Recipe.GetItemTypes.Petrol]=1,
+        keep Sponge/RippedSheets/RippedSheetsDirty,
+
+        Result:LightBulb,
+        Time:20.0,
+        Category:Electrical,
+        OnCreate:ParadiseZ_paintBulb_OnCreate,
+    }
+}

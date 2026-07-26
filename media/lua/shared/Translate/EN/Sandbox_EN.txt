@@ -1,4 +1,14 @@
 Sandbox_EN = {
+    Sandbox_ParadiseZnotes = "ParadiseZ Notes",
+    Sandbox_ParadiseZnotes_EveryoneCanWriteNotes = "Everyone Can Write Notes",
+    Sandbox_ParadiseZnotes_EveryoneCanWriteNotes_tooltip = "Allow non-admin players to write, edit, color, and delete floor notes.",
+    Sandbox_ParadiseZnotes_NotesVisibilityDistance = "Notes Visibility Distance",
+    Sandbox_ParadiseZnotes_NotesVisibilityDistance_tooltip = "Tile radius around the player where floor notes are loaded and drawn.",
+    Sandbox_ParadiseZnotes_NotesMaxLineWidth = "Notes Max Line Width",
+    Sandbox_ParadiseZnotes_NotesMaxLineWidth_tooltip = "Maximum wrapped line width for floor-note text. Default is 70.",
+    Sandbox_ParadiseZnotes_NotesUpdateTicks = "Notes Update Ticks",
+    Sandbox_ParadiseZnotes_NotesUpdateTicks_tooltip = "How often the client rescans nearby floor notes. 1 means every player-update tick; 25 is the slowest allowed setting.",
+
     Sandbox_ParadiseZ_TicketTimestampType = "Ticket Timestamp Type",
     Sandbox_ParadiseZ_TicketTimestampType_tooltip = "Ticket Timestamp Type",
     Sandbox_ParadiseZ_TicketTimestampType_option1 = "Game time",
@@ -280,4 +290,37 @@ Sandbox_EN = {
     Sandbox_ParadiseZcolor_Typeless_option9 = "White",
     Sandbox_ParadiseZcolor_Typeless_option10 = "Pink",
     Sandbox_ParadiseZcolor_Typeless_option11 = "Disabled",
+
+    Sandbox_ParadiseZ_AutoFarm = "ParadiseZ| AutoFarm",
+
+    Sandbox_ParadiseZ_AutoFarmEnabled = "Enable Auto-Farm",
+    Sandbox_ParadiseZ_AutoFarmEnabled_tooltip = "Adds the Auto-Farm option to water collectors.",
+
+    Sandbox_ParadiseZ_AutoFarmCropRadius = "Farm Radius",
+    Sandbox_ParadiseZ_AutoFarmCropRadius_tooltip = "Area around the selected water collector used for crops, furrow patterns, and highlights.",
+    Sandbox_ParadiseZ_AutoFarmCropRadius_option1 = "Small (3 tiles)",
+    Sandbox_ParadiseZ_AutoFarmCropRadius_option2 = "Medium (5 tiles)",
+    Sandbox_ParadiseZ_AutoFarmCropRadius_option3 = "Large (7 tiles)",
+
+    Sandbox_ParadiseZ_AutoFarmWaterSourceRadius = "Water Source Radius",
+    Sandbox_ParadiseZ_AutoFarmWaterSourceRadius_tooltip = "Tile radius around the selected water collector used to find water sources for refilling watering cans. Range: 5-25. Default: 15.",
+
+    Sandbox_ParadiseZ_AutoFarmWaterTileFallback = "Use Water Tiles",
+    Sandbox_ParadiseZ_AutoFarmWaterTileFallback_tooltip = "Allows nearby water tiles to refill watering cans when usable object water is unavailable.",
+
+    Sandbox_ParadiseZ_AutoFarmDisableAutoReplant = "Disable Auto-Replant",
+    Sandbox_ParadiseZ_AutoFarmDisableAutoReplant_tooltip = "Prevents Auto-Farm from replanting harvested crops.",
+
+    Sandbox_ParadiseZ_AutoFarmDisableAutoDig = "Disable Auto-Dig",
+    Sandbox_ParadiseZ_AutoFarmDisableAutoDig_tooltip = "Prevents Auto-Farm from digging missing furrows.",
+
+    Sandbox_ParadiseZ_AutoFarmDisableAutoTreat = "Disable Auto-Treat",
+    Sandbox_ParadiseZ_AutoFarmDisableAutoTreat_tooltip = "Prevents Auto-Farm from treating mildew or pest flies.",
+
+    Sandbox_ParadiseZ_AutoFarmDisableAutoHarvest = "Disable Auto-Harvest",
+    Sandbox_ParadiseZ_AutoFarmDisableAutoHarvest_tooltip = "Prevents Auto-Farm from harvesting crops.",
+
+    Sandbox_ParadiseZ_AutoFarmDisableAutoClearReceding = "Disable Auto-Clear Receding",
+    Sandbox_ParadiseZ_AutoFarmDisableAutoClearReceding_tooltip = "Prevents Auto-Farm from clearing receding or dead plants during Tend Crops.",
+
 }

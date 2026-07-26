@@ -55,20 +55,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
         return 
     end
  ]]
-
-    local optTip = context:addOptionOnTop("Scoreboard Panel", worldobjects, function()
-        if ParadiseZ.ScoreboardUI.instance then
-            ParadiseZ.closeScoreboard()
-        else
-            ParadiseZ.openScoreboard()
-        end
-		getSoundManager():playUISound("UIActivateMainMenuItem")
-		context:hideAndChildren()
-	end)
-
-
-
-
     if string.lower(pl:getAccessLevel()) ~= "admin" then 
         return         
     end
@@ -108,14 +94,6 @@ function ParadiseZ.context(plNum, context, worldobjects)
 
     addSafeOption(opt, "Zone Editor Panel", function() ParadiseZ.editor(true); getSoundManager():playUISound("UIActivateMainMenuItem") end, "media/ui/Paradise/ZoneContextIcon.png")
     
-
-
-
-
-
-
-
-
     addSafeOption(opt, "Zone Highlights: "..tostring(ParadiseZ.isOnOrOff(ParadiseZ.ZoneHighlighter or false)), function() 
         ParadiseZ.ZoneHighlighter = not ParadiseZ.ZoneHighlighter 
         if not ParadiseZ.ZoneHighlighter then
@@ -160,16 +138,38 @@ function ParadiseZ.context(plNum, context, worldobjects)
     addSafeOption(opt, "Spawn TheRange Membership Card", function() pl:getInventory():AddItem('ParadiseZ.TheRangeCard') end, "media/textures/TheRange.png")
     addSafeOption(opt, "Spawn Alt MP5SD", function() ParadiseZ.tempChangeSpr('Base.MP5SD', 'alt_MP5SD') end, "media/textures/Item_MP5SD.png")
 
-    
-
-
     addSafeOption(opt, "NVG: "..tostring(ParadiseZ.isOnOrOff(pl:isWearingNightVisionGoggles())), function() pl:setWearingNightVisionGoggles(not pl:isWearingNightVisionGoggles()) end, "media/ui/Paradise/NVGContextIcon.png")
     addSafeOption(opt, "Level Up", function() ParadiseZ.lvlUp() end, "media/ui/Paradise/LvlContextIcon.png")
     addSafeOption(opt, "Suicide", function() pl:Kill(pl) end, "media/ui/Paradise/RIPContextIcon.png")
     addSafeOption(opt, "Explode Here", function() sendClientCommand(pl, 'object', 'addExplosionOnSquare', { x = pl:getX(), y = pl:getY(), z = pl:getZ() }) end, "media/ui/Paradise/ExplodeContextIcon.png")
     addSafeOption(opt, "Thunder", function() sendClientCommand(pl, "ParadiseZ", "thunder", { })  end, "media/ui/LootableMaps/map_lightning.png")
+
+        
     -----------------------            ---------------------------
-    
+    local hsvSpawn = opt:addOption("Colored Item Spawner")
+    if hsvSpawn then
+        hsvSpawn.iconTexture = getTexture("media/textures/Item_Crayons.png")
+        local hsvSpawnOpt = ISContextMenu:getNew(context)
+        if hsvSpawnOpt then context:addSubMenu(hsvSpawn, hsvSpawnOpt) end
+
+        addSafeOption(hsvSpawnOpt, "HairDye Spawner", function()
+            ParadiseZ.openHSVPanel("Base.HairDyeWhite")
+        end, "media/textures/Item_HairDye.png")
+
+        addSafeOption(hsvSpawnOpt, "LightBulb Spawner", function()
+            ParadiseZ.openHSVPanel("Base.LightBulb")
+        end, "media/textures/Item_LightBulb.png")
+
+        addSafeOption(hsvSpawnOpt, "Trousers Spawner", function()
+            ParadiseZ.openHSVPanel("Base.Trousers_Black")
+        end, "media/textures/Item_Trousers.png")
+
+        addSafeOption(hsvSpawnOpt, "Pen Spawner", function()
+            ParadiseZ.openHSVPanel("Base.Pen")
+        end, "media/textures/Item_Pen.png")
+    end
+
+    -----------------------            ---------------------------
     local zSub = opt:addOption("Z")
     if zSub then
         zSub.iconTexture = getTexture("media/ui/LootableMaps/map_z.png")
@@ -248,6 +248,9 @@ function ParadiseZ.context(plNum, context, worldobjects)
             addSafeOption(context, "Spectate: "..tostring(targUser), function() ParadiseZ.setSpectate(targUser) end, "media/ui/Paradise/SpectateContextIcon.png")
         end
     end
+
+
+
 end
 
 Events.OnFillWorldObjectContextMenu.Remove(ParadiseZ.context)
