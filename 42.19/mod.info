@@ -1,0 +1,10 @@
+id=ParadiseZ_42
+name=ParadiseZ_42
+description=ParadiseZ_42
+poster=poster.png
+authors=jimdogman
+icon=icon.png
+
+tiledef=PineHosting 2631
+pack=PineHosting
+
